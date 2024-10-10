@@ -13,6 +13,6 @@ public class Gifticon {
     private String description;
     private int points;
     private String image_url;
-
+    private String created_at;
 
 }
