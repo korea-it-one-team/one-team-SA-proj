@@ -1,0 +1,12 @@
+server:
+  port: 8083
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+  datasource:
+    url: jdbc:log4jdbc:mysql://localhost:3306/one-team-SA-proj
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password:
