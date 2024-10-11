@@ -30,7 +30,7 @@
 
 <div class="main-content">
     <div class="main-title">
-        <h1 class="main-title-content">금일 KBO 기사</h1>
+        <h1 class="main-title-content">최근 해외축구 기사</h1>
     </div>
 
     <!-- 네이버 야구 뉴스 링크 -->
@@ -56,18 +56,17 @@
         $("#loadingSpinner").show();
 
         // 뉴스 가져오는 함수
-        function fetchNews(teamId) {
-            // 스피너 표시
-            $("#loadingSpinner").show();
+        function fetchNews() {
 
             // 뉴스 리스트 초기화
             $('#news-list').empty(); // 기존 뉴스 리스트를 초기화
 
             // 서버로부터 뉴스 데이터를 불러와서 동적으로 페이지에 삽입
             $.ajax({
-                url: "${pageContext.request.contextPath}/getNews",  // 서버의 API 엔드포인트
+                url: "/getNews",  // 서버의 API 엔드포인트
                 method: "GET",  // GET 메서드로 요청
                 success: function (data) {
+                    console.log("data : " + data);
                     // 뉴스 데이터를 리스트로 변환해서 출력
                     let newsHtml = '';
                     $.each(data, function (index, news) {
@@ -99,9 +98,11 @@
                 }
             });
         }
+        fetchNews();
     });
-</script>
 
+
+</script>
 
 </body>
 </html>
