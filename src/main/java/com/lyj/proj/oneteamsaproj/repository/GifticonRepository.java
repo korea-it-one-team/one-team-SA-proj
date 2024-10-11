@@ -15,4 +15,22 @@ public interface GifticonRepository {
     public List<Gifticon> findAll();
 
 
+
+	@Select("""
+        SELECT COUNT(*)
+        FROM gifticons
+        WHERE `name` LIKE CONCAT('%', #{searchKeyword}, '%')
+        """)
+	int getGifticonCount(String searchKeyword);
+
+	@Select("""
+        SELECT *
+        FROM gifticons
+        WHERE `name` LIKE CONCAT('%', #{searchKeyword}, '%')
+        ORDER BY id DESC
+        LIMIT #{limitFrom}, #{limitTake}
+        """)
+	List<Gifticon> getForPrintGifticons(int limitFrom, int limitTake, String searchKeyword);
+
+
 }
