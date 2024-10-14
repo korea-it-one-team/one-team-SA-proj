@@ -66,7 +66,6 @@
                 url: "/getNews",  // 서버의 API 엔드포인트
                 method: "GET",  // GET 메서드로 요청
                 success: function (data) {
-                    console.log("data : " + data);
                     // 뉴스 데이터를 리스트로 변환해서 출력
                     let newsHtml = '';
                     $.each(data, function (index, news) {
@@ -98,10 +97,9 @@
                 }
             });
         }
+
         fetchNews();
     });
-
-
 </script>
 
 </body>
