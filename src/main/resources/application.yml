@@ -32,5 +32,3 @@ spring:
       static-locations: classpath:/static/
 mybatis:
   type-aliases-package: com.lyj.proj.vo
-
-
