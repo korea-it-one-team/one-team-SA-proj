@@ -1,4 +1,4 @@
-package com.lyj.proj.controller;
+package com.lyj.proj.oneteamsaproj.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
