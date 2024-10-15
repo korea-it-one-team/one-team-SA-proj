@@ -1,5 +1,5 @@
 from flask import Flask, request, send_file
-import cv2
+import cv2 #openCV
 import numpy as np
 import io
 from PIL import Image
