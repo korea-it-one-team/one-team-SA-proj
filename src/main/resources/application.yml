@@ -10,3 +10,5 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password:
+custom:
+  genFileDirPath: C:\work_oneteam\one-team-SA-proj

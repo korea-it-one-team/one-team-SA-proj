@@ -125,6 +125,10 @@
 
 <script>
     function exchangeGifticon(id) {
+
+
+
+
         if(confirm("정말 교환하시겠습니까?")){
             alert("교환하기 버튼이 클릭되었습니다. ID: " + id);
         }else{

@@ -13,37 +13,71 @@ CREATE TABLE gifticons (
 );
 
 
-CREATE TABLE users (
-                       id INT AUTO_INCREMENT PRIMARY KEY,
-                       username VARCHAR(50) NOT NULL UNIQUE,
-                       `password` VARCHAR(255) NOT NULL,
-                       email VARCHAR(100) NOT NULL UNIQUE,
-                       points INT DEFAULT 0,
-                       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+# 회원 테이블 생성
+CREATE TABLE `member`(
+                         id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                         regDate DATETIME NOT NULL,
+                         updateDate DATETIME NOT NULL,
+                         loginId CHAR(30) NOT NULL,
+                         loginPw CHAR(100) NOT NULL,
+                         `authLevel` smallint(2) unsigned default 3 comment '권한 레벨 (3=일반,7=관리자)',
+                         `name` char(20) not null,
+                         nickname char(20) not null,
+                         cellphoneNum char(20) not null,
+                         email char(50) not null,
+                         points int not null,
+                         delStatus tinyint(1) unsigned not null default 0 comment '탈퇴 여부 (0=탈퇴 전, 1=탈퇴 후)',
+                         delDate datetime comment '탈퇴 날짜'
 );
 
+#신청내역 테이블 생성
 CREATE TABLE exchange_history (
                                   id INT AUTO_INCREMENT PRIMARY KEY,
                                   user_id INT NOT NULL,
                                   gifticon_id INT NOT NULL,
-                                  exchange_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                                  FOREIGN KEY (user_id) REFERENCES users(id),
-                                  FOREIGN KEY (gifticon_id) REFERENCES gifticons(id)
+                                  points int not null,
+                                  exchange_status char(100) NOT NULL,
+                                  exchange_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
 );
 
+insert into exchange_history
+set user_id = 2,
+gifticon_id = 3,
+exchange_status = 'REQUESTED',
+exchange_date = now();
+
+select * from exchange_history;
+
+select E.*, M.nickName, G.name from exchange_history AS E
+                                        inner join `member` as M
+                                                   on E.user_id = M.id
+                                        inner join gifticons AS G
+                                                   on E.gifticon_id = G.id;
+
+#포인트 사용 내역 테이블 생성
 CREATE TABLE point_transactions (
                                     id INT AUTO_INCREMENT PRIMARY KEY,
                                     user_id INT NOT NULL,
                                     points INT NOT NULL,
-                                    transaction_type ENUM('ADD', 'SUBTRACT') NOT NULL, -- 포인트 추가 또는 차감
-                                    transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                                    FOREIGN KEY (user_id) REFERENCES users(id)
+                                    transaction_type char(150) NOT NULL, -- 포인트 추가 또는 차감
+                                    transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO users (username, PASSWORD, email, points) VALUES
-                                                          ('test1', 'test1', 'user1@example.com', 100),
-                                                          ('test2', 'test2', 'user2@example.com', 150),
-                                                          ('test3', 'test3', 'user3@example.com', 200);
+#교환내역 로그 테이블 생성
+CREATE TABLE exchange_logs (
+                               id INT AUTO_INCREMENT PRIMARY KEY,
+                               exchange_id INT NOT NULL,
+                               log_message TEXT NOT NULL,
+                               log_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                               FOREIGN KEY (exchange_id) REFERENCES exchange_history(id)
+);
+
+
+INSERT INTO `member` (regDate,updateDate, loginId, loginPw, `name`, nickname,cellphoneNum, email, points) VALUES
+                                                                                                              (now(), now(), 'test1', 'test1','test1Name', 'test1Nickname','010-0000-0000', 'user1@example.com', 100),
+                                                                                                              (NOW(), NOW(), 'test2', 'test2','test2Name', 'test2Nickname','010-1234-0000', 'user1@example.com', 100),
+                                                                                                              (NOW(), NOW(), 'test3', 'test3','test3Name', 'test3Nickname','010-5678-0000', 'user1@example.com', 100);
 
 INSERT INTO gifticons (`name`, points, image_url) VALUES
                                                       ('신세계상품권 모바일교환권  1만원(이마트 교환전용)',13000,'https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20200404051421_eadcebac5cf64cd19407128aff11fe2a'),
@@ -76,3 +110,5 @@ INSERT INTO gifticons (`name`, points, image_url) VALUES
                                                       ('세븐일레븐 5만원 모바일상품권', 55000,'https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240912153604_f76082cc041142628e89c389ebd20cd4.jpg');
 
 SELECT * FROM gifticons;
+
+select * from `member`;

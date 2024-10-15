@@ -1,0 +1,94 @@
+@charset "UTF-8";
+
+@font-face {
+	font-family: 'LotteMartDream';
+	font-style: normal;
+	font-weight: 400;
+	src:
+		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamMedium.woff2')
+		format('woff2'),
+		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamMedium.woff')
+		format('woff');
+}
+
+@font-face {
+	font-family: 'LotteMartDream';
+	font-style: normal;
+	font-weight: 700;
+	src:
+		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamBold.woff2')
+		format('woff2'),
+		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamBold.woff')
+		format('woff');
+}
+
+@font-face {
+	font-family: 'LotteMartDream';
+	font-style: normal;
+	font-weight: 300;
+	src:
+		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamLight.woff2')
+		format('woff2'),
+		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamLight.woff')
+		format('woff');
+}
+
+.lottemartdream * {
+	font-family: 'LotteMartDream', sans-serif;
+}
+
+html>body {
+	font-family: 'LotteMartDream', sans-serif;
+}
+
+header>div>ul>li {
+	margin-right: 30px;
+}
+
+.toastui-editor-contents {
+	text-align: center;
+}
+
+/*테마*/
+/* 테마 */
+.btn-theme-toggle>span:first-child {
+	display: none;
+}
+
+html[data-theme="dark"] .btn-theme-toggle>span:first-child {
+	display: inline;
+}
+
+html[data-theme="dark"] * {
+	color: white;
+}
+
+html[data-theme="dark"] .toastui-editor-md-preview {
+	color: white;
+}
+
+html[data-theme="dark"] .toastui-editor-contents * {
+	color: white !important;
+}
+
+html[data-theme="dark"] .btn-theme-toggle>span:last-child {
+	display: none;
+}
+
+/* /* 밝은 테마에서의 네비게이션 2차 메뉴 배경색 */
+/* html[data-theme='light'] header>div>ul>li>ul { */
+/* 	background-color: white; 또는 밝은 테마에 적합한 다른 색상 */
+/* } */
+/* /* 어두운 테마에서의 네비게이션 2차 메뉴 배경색 */
+
+/* html[data-theme='dark'] header>div>ul>li>ul { */
+/* 	background-color: #333333; 또는 어두운 테마에 적합한 다른 색상 */
+/* } */
+
+/* html[data-theme='light'] .toast-ui-editor { */
+/* 	background-color: white; 또는 밝은 테마에 적합한 다른 색상 */
+/* } */
+
+/* html[data-theme='dark'] .toast-ui-editor { */
+/* 	background-color: #333333; */
+/* } 또는 어두운 테마에 적합한 다른 색상 */
