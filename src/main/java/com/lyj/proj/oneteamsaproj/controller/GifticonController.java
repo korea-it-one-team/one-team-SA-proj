@@ -28,7 +28,7 @@ public class GifticonController {
     @Autowired
     private ExchangeService exchangeService;
 
-    @RequestMapping("/exchange/gifticons")
+    @RequestMapping("/gifticons")
     public String getGifticonList(Model model, @RequestParam(defaultValue = "1") int page,
                                   @RequestParam(defaultValue = "") String searchKeyword) {
 
@@ -45,7 +45,7 @@ public class GifticonController {
         return "/usr/article/gifticonList"; // JSP 파일 이름
     }
 
-    @RequestMapping("/exchange/doGifticon")
+    @RequestMapping("/doGifticon")
     @ResponseBody
     public String doGifticon(HttpServletRequest req){
         Rq rq = (Rq) req.getAttribute("rq");
@@ -59,7 +59,7 @@ public class GifticonController {
                        Model model) {
         List<Exchange_History> exchangeList = exchangeService.getExchangeList(search, status);
 
-        System.out.println("dsfsdf : " + exchangeList);
+        System.out.println("dsfsdfzzzz : " + exchangeList);
         model.addAttribute("exchangeList", exchangeList);
         return "/usr/gifticon/exchangeList";
     }

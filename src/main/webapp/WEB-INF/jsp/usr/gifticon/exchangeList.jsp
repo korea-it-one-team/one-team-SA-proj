@@ -29,7 +29,7 @@
 
 <div class="container mt-5">
     <h1 class="text-center mb-4">교환 신청 목록</h1>
-    <form method="GET" action="/list" class="row g-3 mb-4">
+    <form method="GET" action="/exchange/list" class="row g-3 mb-4">
         <div class="col-md-4">
             <input type="text" name="search" class="form-control" placeholder="닉네임 또는 상품 검색">
         </div>
@@ -154,7 +154,11 @@
             url: currentExchangeurl,  // 상태 업데이트
             method: 'POST',
             success: function() {
-                alert('교환이 완료되었습니다.');
+                if (currentExchangeStatus == 'COMPLETED') {
+                    alert('처리가 취소되었습니다.');
+                }else {
+                    alert('처리가 완료되었습니다.');
+                }
                 location.reload();  // 페이지 새로고침
             },
             error: function() {

@@ -17,6 +17,7 @@ public class ExchangeService {
 
     public List<Exchange_History> getExchangeList(String search, String status) {
         // DB 조회 로직 구현 (필터 및 검색 조건 적용)
+        System.out.println("sdfsdnk : " + status);
         return exchangeRepository.gifticon_Application_List(search, status); // 예시로 빈 리스트 반환
     }
 
