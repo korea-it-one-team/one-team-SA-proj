@@ -2,17 +2,18 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 
+<!-- Tailwind와 daisyUI 나중에 로드 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.1.4/tailwind.min.css">
 
 <!-- jQuery와 Bootstrap JS 로드 -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
 <!-- Bootstrap 먼저 로드 -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Tailwind와 daisyUI 나중에 로드 -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.1.4/tailwind.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/daisyui/4.12.10/full.css" />
+
+
+
 
 <head>
     <title>교환 신청 목록</title>
@@ -84,7 +85,8 @@
 </div>
 
 <!-- 모달 -->
-<div class="modal fade" id="exchangeModal" aria-labelledby="exchangeModalLabel" aria-hidden="true">
+<div class="modal fade" id="exchangeModal" data-bs-backdrop="true" data-bs-keyboard="true"
+     tabindex="-1" aria-labelledby="exchangeModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -98,11 +100,9 @@
             </div>
             <div class="modal-footer">
                 <button id="processButton" type="button" class="btn btn-success" onclick="completeExchange()">
-
                 </button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
             </div>
-
         </div>
     </div>
 </div>

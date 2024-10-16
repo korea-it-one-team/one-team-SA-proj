@@ -51,4 +51,13 @@ public interface ExchangeRepository {
 			""")
 	void exchange_Completed(@Param("id") int id, @Param("status") String status);
 
+	@Insert("""
+				insert into exchange_history
+				set user_id = ${member_Id},
+	    		gifticon_id = ${gifticon_Id},
+	    		exchange_status = 'REQUESTED',
+	    		exchange_date = now(),
+	    		points = Select points from gifticons where id = ${id}
+			""")
+	void gifticon_Application(int id, int memberId);
 }

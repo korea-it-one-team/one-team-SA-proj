@@ -57,6 +57,7 @@ public class GifticonController {
     public String list(@RequestParam(required = false) String search,
                        @RequestParam(required = false) String status,
                        Model model) {
+
         List<Exchange_History> exchangeList = exchangeService.getExchangeList(search, status);
 
         System.out.println("dsfsdfzzzz : " + exchangeList);
@@ -95,4 +96,21 @@ public class GifticonController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
+
+    @PostMapping("/gifticons/{id}/application")
+    public ResponseEntity<Map<String, Object>> getGifticonApplication(HttpServletRequest req, @PathVariable int id) {
+        Rq rq = (Rq) req.getAttribute("rq");
+        int loginedMemberId = rq.getLoginedMemberId();
+
+        if (loginedMemberId <= 0) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "로그인이 필요합니다."));
+        }
+
+        boolean application = exchangeService.gifticon_Application(id, loginedMemberId);
+        if (application) {
+            return ResponseEntity.ok(Map.of("message", "교환 신청이 완료되었습니다.", "id", id));
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "교환 신청에 실패했습니다."));
+    }
 }

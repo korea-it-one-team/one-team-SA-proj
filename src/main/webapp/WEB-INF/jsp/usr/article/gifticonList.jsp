@@ -6,6 +6,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/daisyui/4.12.10/full.css" />
 <!-- 테일윈드 -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.1.4/tailwind.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
 
 <style>
     body {
@@ -126,11 +129,21 @@
 <script>
     function exchangeGifticon(id) {
 
-
-
-
         if(confirm("정말 교환하시겠습니까?")){
-            alert("교환하기 버튼이 클릭되었습니다. ID: " + id);
+
+            $.ajax({
+                url: `../gifticons/`+ id + `/application`,  // 상태 업데이트
+                method: 'POST',
+                success: function(response) {
+                    alert(response.message);
+                    location.reload();  // 페이지 새로고침
+                },
+                error: function(xhr) {
+                    const errorResponse = xhr.responseJSON;
+                    alert(errorResponse.message);
+                }
+            });
+
         }else{
             alert("취소하셨습니다.. ID: " + id);
         }

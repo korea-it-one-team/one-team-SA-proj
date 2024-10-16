@@ -4,6 +4,7 @@ import com.lyj.proj.oneteamsaproj.repository.ExchangeRepository;
 import com.lyj.proj.oneteamsaproj.repository.GifticonRepository;
 import com.lyj.proj.oneteamsaproj.vo.Exchange_Detail;
 import com.lyj.proj.oneteamsaproj.vo.Exchange_History;
+import com.lyj.proj.oneteamsaproj.vo.Rq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,5 +50,14 @@ public class ExchangeService {
             return true;
         }
         return false;
+    }
+
+    public boolean gifticon_Application(int id, int memberId) {
+
+        if (memberId <= 0) {
+            return false;
+        };
+        exchangeRepository.gifticon_Application(id, memberId);
+        return true;
     }
 }
