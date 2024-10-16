@@ -22,10 +22,10 @@ spring:
       suffix: .jsp
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://127.0.0.1:3306/oneteam_project?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
-#    url: jdbc:mysql://localhost:3306/oneteam_project?useSSL=false&serverTimezone=UTC
-#    url: jdbc:mysql://127.0.0.1:3306/oneteam_project?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useSSL=false
-    url: jdbc:mysql://localhost:3306/one-team-SA-proj
+#    url: jdbc:mysql://127.0.0.1:3306/one-team-SA-proj?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
+#    url: jdbc:mysql://localhost:3306/one-team-SA-proj?useSSL=false&serverTimezone=UTC
+#    url: jdbc:mysql://127.0.0.1:3306/one-team-SA-proj?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useSSL=false
+    url: jdbc:mysql://localhost:3306/one-team-SA-proj?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useSSL=false
     username: root
     password:
   web:
@@ -35,8 +35,8 @@ mybatis:
   type-aliases-package: com.lyj.proj.vo
 custom:
   type-aliases-package: com.lyj.proj.vo
-  siteName: oneteam_project
+  siteName: kicknalisys
   siteMainUri: http://localhost:8088
   emailFrom: no-reply@localhost
-  emailFromName: oneteam_project
-  genFileDirPath: C:\work_oneteam\one-team-SA-proj
+  emailFromName: kicknalisys
+  genFileDirPath: C:\work_oneteam\one-team-SA-proj\images
