@@ -16,7 +16,7 @@
 <div class="container mt-5">
     <h1 class="text-center mb-4">교환 신청 목록</h1>
 
-    <form method="GET" action="/admin/exchange" class="row g-3 mb-4">
+    <form method="GET" action="/list" class="row g-3 mb-4">
         <div class="col-md-4">
             <input type="text" name="search" class="form-control" placeholder="닉네임 또는 상품 검색">
         </div>
@@ -51,15 +51,25 @@
                 <td>${exchange.nickname}</td>
                 <td>
                         <span class="badge
-                            ${exchange.exchangeStatus == 'REQUESTED' ? 'bg-warning' :
-                              exchange.exchangeStatus == 'COMPLETED' ? 'bg-success' :
+                            ${exchange.exchange_status == 'REQUESTED' ? 'bg-warning' :
+                              exchange.exchange_status == 'COMPLETED' ? 'bg-success' :
                               'bg-secondary'}">
-                                ${exchange.exchangeStatus}
+                                ${exchange.exchange_status}
                         </span>
                 </td>
 <%--                <td>${exchange.exchangeDate}</td>--%>
                 <td>
                     <a href="/admin/exchange/${exchange.id}" class="btn btn-sm btn-outline-primary">상세 보기</a>
+                </td>
+                <td>
+                    <label class="swap swap-flip text-3xl">
+                    <span class="
+                       ${exchange.exchange_status == 'REQUESTED' ? ' swap-off' :
+                     exchange.exchange_status == 'COMPLETED' ? ' swap-on' :
+                       'bg-secondary'}">
+                       ${exchange.exchange_status == 'REQUESTED' ? '😈' : exchange.exchange_status == 'COMPLETED' ? '😇' : ''}
+                    </span>
+                    </label>
                 </td>
             </tr>
         </c:forEach>

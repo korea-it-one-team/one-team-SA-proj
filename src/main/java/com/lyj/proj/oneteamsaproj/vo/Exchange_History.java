@@ -15,11 +15,8 @@ public class Exchange_History {
     private int gifticon_id;
     private String gifticon_Name;
     private int points;
-    private ExchangeStatus exchange_status; // REQUESTED,  COMPLETED
+    private String exchange_status; // REQUESTED,  COMPLETED
     private LocalDateTime exchange_date;
 
-    public enum ExchangeStatus {
-        REQUESTED,  COMPLETED
-    }
 }
 
