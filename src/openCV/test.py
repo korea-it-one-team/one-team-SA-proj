@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, send_file
 import cv2 #openCV
 import numpy as np
@@ -25,5 +26,19 @@ def process_image():
     # 흑백 이미지를 반환
     return send_file(img_io, mimetype='image/jpeg')
 
+@app.route('/health', methods=['GET'])
+def health_check():
+    return "Flask 서버가 실행 중입니다.", 200
+
+@app.route('/shutdown', methods=['GET'])
+def shutdown():
+    shutdown_server = request.environ.get('werkzeug.server.shutdown')
+    if shutdown_server is None:
+        print("Werkzeug 서버가 아니므로 프로세스를 강제 종료합니다.")
+        os._exit(0)  # Python 프로세스 종료
+    else:
+        shutdown_server()
+        return 'Flask 서버가 종료되었습니다.'
+
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000)
