@@ -9,9 +9,21 @@
 <html>
 <head>
     <title>흑백 이미지 테스트</title>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            var img = document.querySelector('img');
+            img.onload = function() {
+                console.log('이미지 로드 완료:', img.src);
+            };
+            img.onerror = function(event) {
+                console.error('이미지 로드 실패:', img.src);
+                console.error('에러 코드:', event);
+            };
+        });
+    </script>
 </head>
 <body>
 <h1>변환된 흑백 이미지</h1>
-<img src="${pageContext.request.contextPath}/images/gray_image.jpg" alt="흑백 이미지" />
+<img src="/images/gray_image.jpg" alt="흑백 이미지" />
 </body>
 </html>

@@ -92,12 +92,10 @@ public class FlaskClient {
                 } else {
                     attempts++;
                     System.out.println("Flask 서버가 아직 준비되지 않았습니다. 재시도 중...");
-                    e.printStackTrace();
                 }
             } catch (Exception e) {
                 attempts++;
                 System.out.println("Flask 서버가 아직 준비되지 않았습니다. 재시도 중...");
-                e.printStackTrace();
             }
 
             try {

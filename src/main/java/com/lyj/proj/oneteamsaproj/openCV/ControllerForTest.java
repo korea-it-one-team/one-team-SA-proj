@@ -27,6 +27,7 @@ public class ControllerForTest {
         int maxRetries = 10;
         int retries = 0;
         long fileSize = 0;
+        boolean fileGenerated = false;
 
         // 파일 크기 확인 시 예외 처리 추가
         while (retries < maxRetries) {
@@ -34,6 +35,7 @@ public class ControllerForTest {
                 fileSize = Files.size(imagePath);
                 if (fileSize > 0) {
                     System.out.println("파일이 성공적으로 생성되었습니다. 파일 크기: " + fileSize);
+                    fileGenerated = true;
                     break;
                 }
             } catch (IOException e) {
@@ -45,8 +47,8 @@ public class ControllerForTest {
             retries++;
         }
 
-        if (fileSize > 0) {
-            System.out.println("파일이 성공적으로 생성되었습니다. 파일 크기: " + fileSize);
+        if (fileGenerated) {
+            System.out.println("파일이 성공적으로 생성되었으므로 요청을 보냅니다. 파일 크기: " + fileSize);
             return "test";  // JSP 페이지 반환
         } else {
             model.addAttribute("error", "이미지 처리에 실패하였습니다.");
