@@ -8,11 +8,9 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.SocketException;
+import java.nio.file.*;
 
 public class FlaskClient {
 
@@ -114,7 +112,7 @@ public class FlaskClient {
             return false;
         } else {
             // Flask 서버가 실행 중일 때 POST 요청을 보냄
-            String imagePath = "C:\\work_oneteam\\one-team-SA-proj\\src\\main\\resources\\static\\images\\test-icon.jpg";
+            String imagePath = "src/main/resources/static/images/test-icon.jpg";
             FileSystemResource imageFile = new FileSystemResource(imagePath);
 
             HttpHeaders headers = new HttpHeaders();
@@ -125,23 +123,86 @@ public class FlaskClient {
 
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
             String flaskUrl = "http://localhost:5000/process"; // 이건 POST 요청을 보낼 URL
-            try {
-                ResponseEntity<byte[]> response = restTemplate.postForEntity(flaskUrl, requestEntity, byte[].class);
 
+            try {
+                System.out.println("POST 요청을 보냅니다. 파일 경로: " + imagePath);
+                ResponseEntity<byte[]> response = restTemplate.postForEntity(flaskUrl, requestEntity, byte[].class);
                 byte[] imageBytes = response.getBody();
                 if (imageBytes != null) {
-                    try (FileOutputStream fos = new FileOutputStream("C:\\work_oneteam\\one-team-SA-proj\\src\\main\\resources\\static\\images\\gray_image.jpg")) {
+                    System.out.println("이미지 응답을 수신했습니다. 이미지를 저장합니다.");
+                    try (FileOutputStream fos = new FileOutputStream("src/main/resources/static/images/gray_image.jpg")) {
                         fos.write(imageBytes);
+                        fos.flush();
+                        System.out.println("이미지가 gray_image.jpg로 성공적으로 저장되었습니다.");
                     }
                 }
             } catch (Exception e) {
+                System.out.println("이미지 처리 중 예외 발생: " + e.getMessage());
                 e.printStackTrace();
             }
+        }
 
+        // 이미지가 저장된 후, 파일 존재 여부 확인
+        File imageFileAfterSave = new File("src/main/resources/static/images/gray_image.jpg");
+        if (imageFileAfterSave.exists()) {
+            System.out.println("파일이 성공적으로 생성되었습니다.");
             // 작업이 끝나면 Flask 서버 종료
             stopFlaskServer();
             return true;
+        } else {
+            System.out.println("파일 생성 실패.");
+            // 작업이 끝나면 Flask 서버 종료
+            stopFlaskServer();
+            return false; // 파일 존재하지 않으면 실패 처리
         }
     }
 }
+
+//        // 이미지가 저장된 후, 파일 존재 여부 확인
+//        File imageFileAfterSave = new File("src/main/resources/static/images/gray_image.jpg");
+//        if (imageFileAfterSave.exists()) {
+//            System.out.println("파일이 성공적으로 생성되었습니다.");
+//            // 작업이 끝나면 Flask 서버 종료
+//            stopFlaskServer();
+//            return true;
+//        } else {
+//            System.out.println("파일 생성 실패.");
+//            // 작업이 끝나면 Flask 서버 종료
+//            stopFlaskServer();
+//            return false; // 파일 존재하지 않으면 실패 처리
+//        }
+
+// WatchService를 이용한 파일 감시 로직 추가
+//Path dir = Paths.get("src/main/resources/static/images");
+//        try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
+//        System.out.println("WatchService를 등록합니다. 디렉토리 경로: " + dir.toString());
+//        dir.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
+//
+//WatchKey key;
+//boolean fileCreated = false;
+//            System.out.println("파일 생성 대기 중...");
+//            while ((key = watchService.take()) != null) {
+//        for (WatchEvent<?> event : key.pollEvents()) {
+//        if (event.kind() == StandardWatchEventKinds.ENTRY_CREATE) {
+//Path createdFilePath = dir.resolve((Path) event.context());
+//                        System.out.println("파일 생성 이벤트 감지: " + createdFilePath.toString());
+//        if (createdFilePath.endsWith("gray_image.jpg")) {
+//        System.out.println("gray_image.jpg 파일이 생성되었습니다.");
+//fileCreated = true;
+//        break;
+//        }
+//        }
+//        }
+//        key.reset();
+//                if (fileCreated) {
+//        break;
+//        }
+//        }
+//        } catch (IOException | InterruptedException e) {
+//        System.out.println("WatchService 중 예외 발생: " + e.getMessage());
+//        e.printStackTrace();
+//stopFlaskServer();
+//            return false;
+//                    }
+
 
