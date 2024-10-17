@@ -18,7 +18,7 @@ public class ControllerForTest {
     public String openCVtest(Model model) throws InterruptedException {
 
         // 요청 전송 및 완료 여부 확인
-        boolean isProcessingComplete = flaskClient.sendRequest();
+        boolean isProcessingComplete = flaskClient.sendRequest("image");
         System.out.println("isProcessingComplete = " + isProcessingComplete);
 
         Path imagePath = Paths.get("src/main/resources/static/images/gray_image.jpg");

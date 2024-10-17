@@ -64,7 +64,7 @@ public class FlaskClient {
         }
     }
 
-    public boolean sendRequest() {
+    public boolean sendRequest(String code) {
         // Flask 서버 시작
         startFlaskServer();
 
@@ -109,35 +109,46 @@ public class FlaskClient {
             System.out.println("Flask 서버 시작에 실패하였습니다.");
             return false;
         } else {
-            // Flask 서버가 실행 중일 때 POST 요청을 보냄
-            String imagePath = "src/main/resources/static/images/test-icon.jpg";
-            FileSystemResource imageFile = new FileSystemResource(imagePath);
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-            body.add("image", imageFile);
-
-            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-            String flaskUrl = "http://localhost:5000/process"; // 이건 POST 요청을 보낼 URL
-
-            try {
-                System.out.println("POST 요청을 보냅니다. 파일 경로: " + imagePath);
-                ResponseEntity<byte[]> response = restTemplate.postForEntity(flaskUrl, requestEntity, byte[].class);
-                byte[] imageBytes = response.getBody();
-                if (imageBytes != null) {
-                    System.out.println("이미지 응답을 수신했습니다. 이미지를 저장합니다.");
-                    try (FileOutputStream fos = new FileOutputStream("src/main/resources/static/images/gray_image.jpg")) {
-                        fos.write(imageBytes);
-                        fos.flush();
-                        System.out.println("이미지가 gray_image.jpg로 성공적으로 저장되었습니다.");
-                    }
-                }
-            } catch (Exception e) {
-                System.out.println("이미지 처리 중 예외 발생: " + e.getMessage());
-                e.printStackTrace();
+            if(code.equals("image")) {
+                return processImage(restTemplate);
+            } else if(code.equals("video")) {
+                return processVideo();
+            } else {
+                System.out.println("처리 요청 불가능한 형식입니다.");
+                return false;
             }
+        }
+    }
+
+    public boolean processImage(RestTemplate restTemplate) {
+        // Flask 서버가 실행 중일 때 POST 요청을 보냄
+        String imagePath = "src/main/resources/static/images/test-icon.jpg";
+        FileSystemResource imageFile = new FileSystemResource(imagePath);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("image", imageFile);
+
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        String flaskUrl = "http://localhost:5000/process"; // 이건 POST 요청을 보낼 URL
+
+        try {
+            System.out.println("POST 요청을 보냅니다. 파일 경로: " + imagePath);
+            ResponseEntity<byte[]> response = restTemplate.postForEntity(flaskUrl, requestEntity, byte[].class);
+            byte[] imageBytes = response.getBody();
+            if (imageBytes != null) {
+                System.out.println("이미지 응답을 수신했습니다. 이미지를 저장합니다.");
+                try (FileOutputStream fos = new FileOutputStream("src/main/resources/static/images/gray_image.jpg")) {
+                    fos.write(imageBytes);
+                    fos.flush();
+                    System.out.println("이미지가 gray_image.jpg로 성공적으로 저장되었습니다.");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("이미지 처리 중 예외 발생: " + e.getMessage());
+            e.printStackTrace();
         }
 
         // 이미지가 저장된 후, 파일 존재 여부 확인
@@ -153,6 +164,10 @@ public class FlaskClient {
             stopFlaskServer();
             return false; // 파일 존재하지 않으면 실패 처리
         }
+    }
+
+    public boolean processVideo() {
+        return false;
     }
 }
 
