@@ -25,6 +25,7 @@ repositories {
 }
 
 dependencies {
+    // HttpHeaders
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
     // SQL 로거
@@ -36,8 +37,6 @@ dependencies {
     implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:2.0.0'
     // Selenium Java
     implementation 'org.seleniumhq.selenium:selenium-java:4.1.2'
-    // HttpHeaders
-    implementation 'org.springframework.boot:spring-boot-starter-web'
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'

@@ -1,0 +1,18 @@
+package com.lyj.proj.oneteamsaproj.vo;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class GameSchedule {
+
+    private String startDate;
+    private String stadium;
+    private String homeTeam;
+    private String awayTeam;
+    private String homeTeamScore;
+    private String awayTeamScore;
+}
