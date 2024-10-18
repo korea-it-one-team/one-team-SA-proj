@@ -4,6 +4,8 @@ import cv2 #openCV
 import numpy as np
 import io
 from PIL import Image
+from ultralytics import YOLO
+import threading
 
 app = Flask(__name__)
 
@@ -27,43 +29,69 @@ def process_image():
     # 흑백 이미지를 반환
     return send_file(img_io, mimetype='image/jpeg')
 
-#욜로
-def load_yolo_model():
-    net = cv2.dnn.readNet('yolov3.weights', 'yolov3.cfg')
-    layer_names = net.getLayerNames()
-    output_layers = [layer_names[i - 1] for i in net.getUnconnectedOutLayers()]
-    return net, output_layers
+# 글로벌 상태 변수
+processing_status = {
+    "status": "idle",  # 처리 상태: idle, processing, completed
+    "progress": 0      # 진행률: 0 ~ 100
+}
 
-def process_yolo_frame(frame, net, output_layers):
-    height, width = frame.shape[:2]
-    blob = cv2.dnn.blobFromImage(frame, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
-    net.setInput(blob)
-    outputs = net.forward(output_layers)
+# YOLOv8 모델 로드
+model = YOLO('yolov8s.pt')
 
-    boxes = []
-    confidences = []
-    class_ids = []
+def update_status(video_path):
+    global processing_status
 
-    for output in outputs:
-        for detection in output:
-            scores = detection[5:]
-            class_id = np.argmax(scores)
-            confidence = scores[class_id]
-            if confidence > 0.5:  # 신뢰도 임계값
-                center_x = int(detection[0] * width)
-                center_y = int(detection[1] * height)
-                w = int(detection[2] * width)
-                h = int(detection[3] * height)
-                x = int(center_x - w / 2)
-                y = int(center_y - h / 2)
+    cap = cv2.VideoCapture(video_path)
 
-                boxes.append([x, y, w, h])
-                confidences.append(float(confidence))
-                class_ids.append(class_id)
+    # 저장할 동영상 경로 (Java static 폴더 경로로 변경)
+    save_path = os.path.join("C:/work_oneteam/one-team-SA-proj/src/main/resources/static/video", "processed_video.mp4")
+    fourcc = cv2.VideoWriter_fourcc(*'avc1')  # 코덱
+    out = cv2.VideoWriter(save_path, fourcc, 20.0, (int(cap.get(3)), int(cap.get(4))))
 
-    return boxes, confidences, class_ids
+    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    processed_frames = 0
 
-#동영상 테스트
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        # YOLOv8을 사용해 객체 감지
+        results = model(frame)
+
+        # 감지된 객체 중 공(class_id 32)에 해당하는 객체에 박스 그리기
+        for result in results:
+            for box in result.boxes:
+                if box.cls == 32:  # YOLOv8에서 축구공 class_id: 32 (COCO 데이터셋 기준)
+                    x1, y1, x2, y2 = map(int, box.xyxy[0])  # 바운딩 박스 좌표
+                    cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)  # 초록색 박스
+
+        # 결과를 새로운 비디오 파일에 저장
+        out.write(frame)
+
+        # 진행률 업데이트
+        processed_frames += 1
+        processing_status['progress'] = int((processed_frames / total_frames) * 100)
+
+    cap.release()
+    out.release()
+
+    # 상태 완료로 설정
+    processing_status['status'] = "completed"
+
+    # 원본 비디오 파일 삭제 (복사해 둔 temp_video 삭제)
+    if os.path.exists(video_path):
+        os.remove(video_path)
+        print(f"원본 비디오 파일 {video_path} 삭제 완료.")
+
+@app.route('/download_video', methods=['GET'])
+def download_video():
+    # Java 프로젝트의 static 폴더에 저장된 동영상 경로로 수정
+    video_path = os.path.join("C:/work_oneteam/one-team-SA-proj/src/main/resources/static/video", "processed_video.mp4")
+
+    # 동영상 파일을 다운로드하여 클라이언트로 전송
+    return send_file(video_path, as_attachment=True)
+
 @app.route('/process_video', methods=['POST'])
 def process_video():
     # 요청에서 동영상 파일을 받음
@@ -75,35 +103,25 @@ def process_video():
     with open(video_path, 'wb') as f:
         f.write(video_bytes)
 
-    cap = cv2.VideoCapture(video_path)
-    net, output_layers = load_yolo_model()
+    # 동영상 처리 시작
+    global processing_status
+    processing_status['status'] = "processing"
+    processing_status['progress'] = 0
 
-    # 저장할 동영상 설정
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # mp4 코덱
-    out = cv2.VideoWriter('processed_video.mp4', fourcc, 20.0, (int(cap.get(3)), int(cap.get(4))))
+    # 동영상 처리 비동기 스레드에서 실행
+    threading.Thread(target=update_status, args=(video_path,)).start()
 
-    while cap.isOpened():
-        ret, frame = cap.read()
-        if not ret:
-            break
+    return jsonify({"message": "동영상 처리를 시작했습니다."})
 
-        # YOLO를 통해 객체 감지
-        boxes, confidences, class_ids = process_yolo_frame(frame, net, output_layers)
+@app.route('/status', methods=['GET'])
+def get_status():
+    # 현재 처리 상태 반환
+    return jsonify(processing_status)
 
-        # 공에 해당하는 class_id만 필터링하여 박스 그리기
-        for i in range(len(boxes)):
-            if class_ids[i] == 0:  # YOLO에서 공을 의미하는 class_id로 변경 필요
-                x, y, w, h = boxes[i]
-                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)  # 초록색 박스
-
-        # 결과를 새로운 비디오 파일에 저장
-        out.write(frame)
-
-    cap.release()
-    out.release()
-
-    # 변환된 동영상을 클라이언트로 반환
-    return send_file('processed_video.mp4', as_attachment=True)
+@app.route('/video-status', methods=['GET'])
+def video_status():
+    global processing_status
+    return jsonify(processing_status)
 
 @app.route('/health', methods=['GET'])
 def health_check():

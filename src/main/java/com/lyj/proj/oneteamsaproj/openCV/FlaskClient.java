@@ -97,7 +97,6 @@ public class FlaskClient {
                 attempts++;
                 System.out.println("Flask 서버가 아직 준비되지 않았습니다. 재시도 중...");
             }
-
             try {
                 Thread.sleep(1000); // 1초 대기
             } catch (InterruptedException ex) {
@@ -112,11 +111,48 @@ public class FlaskClient {
             if(code.equals("image")) {
                 return processImage(restTemplate);
             } else if(code.equals("video")) {
-                return processVideo();
+                return processVideo(restTemplate);
             } else {
                 System.out.println("처리 요청 불가능한 형식입니다.");
                 return false;
             }
+        }
+    }
+
+    public boolean processVideo(RestTemplate restTemplate) {
+        String flaskUrl = "http://localhost:5000/process_video";
+        String videoPath = "src/main/resources/static/video/temp_video.mp4";  // 업로드할 동영상 경로
+        FileSystemResource videoFile = new FileSystemResource(videoPath);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("video", videoFile);
+
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+
+        try {
+            // 동영상 처리가 시작되었음을 로그로 기록
+            System.out.println("동영상 처리를 시작합니다. 파일 경로: " + videoPath);
+
+            // 동영상 처리 요청을 비동기 스레드로 전송
+            new Thread(() -> {
+                try {
+                    // Flask로 POST 요청 보내기 (여기서 실제 처리)
+                    restTemplate.postForEntity(flaskUrl, requestEntity, String.class);  // 결과는 받지 않고 요청만 보냄
+                    System.out.println("Flask로 동영상 처리를 시작하였습니다.");
+                } catch (Exception e) {
+                    System.out.println("동영상 처리 중 예외 발생: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }).start();
+            // 즉시 처리가 시작되었음을 알리고 true 반환
+            return true;
+        } catch (Exception e) {
+            System.out.println("동영상 처리 요청 중 예외 발생: " + e.getMessage());
+            e.printStackTrace();
+            return false;
         }
     }
 
@@ -164,10 +200,6 @@ public class FlaskClient {
             stopFlaskServer();
             return false; // 파일 존재하지 않으면 실패 처리
         }
-    }
-
-    public boolean processVideo() {
-        return false;
     }
 }
 

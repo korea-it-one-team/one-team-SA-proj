@@ -13,5 +13,10 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/images/**")
                 .addResourceLocations("file:src/main/resources/static/images/")
                 .setCachePeriod(0);  // 캐시 기간을 0으로 설정하여 파일 변경 즉시 반영
+
+        // 동영상 경로 설정
+        registry.addResourceHandler("/video/**")
+                .addResourceLocations("file:src/main/resources/static/video/")
+                .setCachePeriod(0);  // 캐시 기간을 0으로 설정
     }
 }
