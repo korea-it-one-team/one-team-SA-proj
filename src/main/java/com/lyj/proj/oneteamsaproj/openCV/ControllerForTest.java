@@ -49,7 +49,6 @@ public class ControllerForTest {
         return status;
     }
 
-
     // Flask 서버에서 상태를 받아오는 로직
     private Map<String, Object> checkProcessingStatus() {
         RestTemplate restTemplate = new RestTemplate();
