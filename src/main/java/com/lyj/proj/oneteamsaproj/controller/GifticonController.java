@@ -52,51 +52,6 @@ public class GifticonController {
         return Ut.jsReplace("", "", "../exchange/gifticons");
     }
 
-    // 교환 신청 목록 조회
-    @RequestMapping("/exchange/list")
-    public String list(@RequestParam(required = false) String search,
-                       @RequestParam(required = false) String status,
-                       Model model) {
-
-        List<Exchange_History> exchangeList = exchangeService.getExchangeList(search, status);
-
-        System.out.println("dsfsdfzzzz : " + exchangeList);
-        model.addAttribute("exchangeList", exchangeList);
-        return "/usr/gifticon/exchangeList";
-    }
-
-    @GetMapping("/exchange/detatil")
-    public ResponseEntity<Map<String, Object>> getExchangeDetails(HttpServletRequest req, int id) {
-        // 교환 상세 정보 가져오기 (DB에서 조회)
-        Rq rq = (Rq) req.getAttribute("rq");
-
-        List<Exchange_Detail> exchange = exchangeService.findById(id, rq.getLoginedMemberId());
-        if (exchange == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("gifticon_Name", exchange.get(0).getGifticon_Name());
-        response.put("member_name", exchange.get(0).getMember_Name());
-        response.put("phone", exchange.get(0).getMember_Phone());
-        response.put("exchange_Status", exchange.get(0).getExchange_Status());
-        response.put("id", exchange.get(0).getExchange_Id());
-
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/exchange/{id}/complete")
-    public ResponseEntity<Void> completeExchange(@PathVariable int id) {
-        // 교환 상태를 "COMPLETED"로 변경
-        boolean updated = exchangeService.completeExchange(id);
-        System.out.println("dsknfknx : " + updated);
-        if (updated) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
-
-
     @PostMapping("/gifticons/{id}/application")
     public ResponseEntity<Map<String, Object>> getGifticonApplication(HttpServletRequest req, @PathVariable int id) {
         Rq rq = (Rq) req.getAttribute("rq");
@@ -106,7 +61,14 @@ public class GifticonController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "로그인이 필요합니다."));
         }
 
+        boolean application_Point = exchangeService.getGifticonPoint(id,rq.getLoginedMember().getPoints(), rq.getLoginedMemberId());
+
+        if (!application_Point) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "보유한 Point가 부족합니다."));
+        }
+
         boolean application = exchangeService.gifticon_Application(id, loginedMemberId);
+
         if (application) {
             return ResponseEntity.ok(Map.of("message", "교환 신청이 완료되었습니다.", "id", id));
         }

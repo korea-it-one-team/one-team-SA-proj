@@ -86,4 +86,11 @@ public interface MemberRepository {
 			""")
 	public void modifyWithoutPw(int loginedMemberId, String name, String cellphoneNum, String email);
 
+	@Update("""
+				update `member`
+				set updateDate = NOW(),
+	    		points = #{point}
+				WHERE id = #{loginedMemberId}
+			""")
+    void modifyPoint(int point, int memberId);
 }

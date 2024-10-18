@@ -2,6 +2,7 @@ package com.lyj.proj.oneteamsaproj.service;
 
 import com.lyj.proj.oneteamsaproj.repository.ExchangeRepository;
 import com.lyj.proj.oneteamsaproj.repository.GifticonRepository;
+import com.lyj.proj.oneteamsaproj.repository.MemberRepository;
 import com.lyj.proj.oneteamsaproj.vo.Exchange_Detail;
 import com.lyj.proj.oneteamsaproj.vo.Exchange_History;
 import com.lyj.proj.oneteamsaproj.vo.Rq;
@@ -16,9 +17,11 @@ public class ExchangeService {
     @Autowired
     private ExchangeRepository exchangeRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
     public List<Exchange_History> getExchangeList(String search, String status) {
         // DB 조회 로직 구현 (필터 및 검색 조건 적용)
-        System.out.println("sdfsdnk : " + status);
         return exchangeRepository.gifticon_Application_List(search, status); // 예시로 빈 리스트 반환
     }
 
@@ -39,7 +42,6 @@ public class ExchangeService {
     public boolean completeExchange(int id) {
     String exchange_status = exchangeRepository.exchange_st(id);
     String status = "1";
-        System.out.println("zxcccc : " + exchange_status);
         if (exchange_status.equals("REQUESTED")){
             status = "COMPLETED";
             exchangeRepository.exchange_Completed(id, status);
@@ -60,4 +62,17 @@ public class ExchangeService {
         exchangeRepository.gifticon_Application(id, memberId);
         return true;
     }
+
+    public boolean getGifticonPoint(int id, int member_points, int member_id) {
+
+        int point = exchangeRepository.getExchangeGifticonPoint(id);
+
+        if(point <= member_points){
+            memberRepository.modifyPoint(point,member_id);
+            return true;
+        }
+
+        return false;
+    }
+
 }

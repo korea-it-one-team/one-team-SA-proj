@@ -1,6 +1,14 @@
 server:
   port: 8083
 spring:
+  cloud:
+    gcp:
+      storage:
+        credentials:
+          location: classpath:${CLASSPATH}
+        project-id: ${PROJECT_ID}
+        bucket: ${BUCKET_KEY}
+
   mvc:
     view:
       prefix: /WEB-INF/jsp/

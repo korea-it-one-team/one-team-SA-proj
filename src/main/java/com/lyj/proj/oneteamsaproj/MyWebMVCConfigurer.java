@@ -58,6 +58,8 @@ public class MyWebMVCConfigurer implements WebMvcConfigurer {
 
 //		상품 관련
 		ir.addPathPatterns("/usr/article/doGifticon");
+		ir.addPathPatterns("/usr/gifticons/**/application");
+
 
 
 //		회원관련
@@ -103,7 +105,8 @@ public class MyWebMVCConfigurer implements WebMvcConfigurer {
 		ir.addPathPatterns("/adm/member/doFindLoginId");
 		ir.addPathPatterns("/adm/member/findLoginPw");
 		ir.addPathPatterns("/adm/member/doFindLoginPw");
-		ir.addPathPatterns("/adm/exchange");
+		ir.addPathPatterns("/adm/exchange/list");
+		ir.addPathPatterns("/adm/exchange/**/application");
 
 	}
 

@@ -14,6 +14,7 @@ public class Gifticon {
     private String name;
     private int points;
     private String image_url;
+    private int stock;
     private LocalDateTime created_at;
 
 }

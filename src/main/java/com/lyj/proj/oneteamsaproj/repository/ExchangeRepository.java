@@ -17,7 +17,7 @@ public interface ExchangeRepository {
 			    <script>
 			        SELECT E.*, M.nickname AS nickname, G.name AS gifticon_Name  
 			        FROM `Exchange_History` AS E 
-			        INNER JOIN `member` AS M ON E.user_id = M.id
+			        INNER JOIN `member` AS M ON E.member_id = M.id
 			        <if test="status == 'REQUESTED' or status == 'COMPLETED'">
 			        	AND E.exchange_status = #{status}
 			        </if>
@@ -35,7 +35,7 @@ public interface ExchangeRepository {
 
 	@Select("""
 			SELECT E.id AS exchange_Id, G.name AS gifticon_Name, M.name AS member_Name, M.cellphoneNum AS member_Phone, E.exchange_status AS exchange_Status FROM `Exchange_History` AS E
-			inner join `member` AS M ON E.user_id = M.id
+			inner join `member` AS M ON E.member_id = M.id
 			inner join `gifticons` AS G ON G.id = E.gifticon_id
 			where E.id = #{id}
 			""")
@@ -53,11 +53,16 @@ public interface ExchangeRepository {
 
 	@Insert("""
 				insert into exchange_history
-				set user_id = ${member_Id},
+				set member_id = ${member_Id},
 	    		gifticon_id = ${gifticon_Id},
 	    		exchange_status = 'REQUESTED',
 	    		exchange_date = now(),
 	    		points = Select points from gifticons where id = ${id}
 			""")
 	void gifticon_Application(int id, int memberId);
+
+	@Select("""
+				SELECT poins FROM gifticons WHERE id = #{id}
+			""")
+	public int getExchangeGifticonPoint(int id);
 }

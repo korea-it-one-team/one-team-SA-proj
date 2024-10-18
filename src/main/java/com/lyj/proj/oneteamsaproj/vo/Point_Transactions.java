@@ -12,12 +12,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Point_Transactions {
     private int id;
-    private int user_id;
+    private int member_Id;
     private int Gifticon_id;
-    private transactionType transaction_type; // "ADD" or "SUBTRACT"
+    private String transaction_type; // "ADD" or "SUBTRACT"
     private LocalDateTime transaction_date;
 
-    public enum transactionType {
-        ADD, SUBTRACT
-    }
 }

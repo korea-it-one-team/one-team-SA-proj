@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 
-<!-- Tailwind와 daisyUI 나중에 로드 -->
+<!-- Tailwind와 나중에 로드 -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.1.4/tailwind.min.css">
 
 <!-- jQuery와 Bootstrap JS 로드 -->
@@ -30,7 +30,7 @@
 
 <div class="container mt-5">
     <h1 class="text-center mb-4">교환 신청 목록</h1>
-    <form method="GET" action="/exchange/list" class="row g-3 mb-4">
+    <form method="GET" action="../exchange/list" class="row g-3 mb-4">
         <div class="col-md-4">
             <input type="text" name="search" class="form-control" placeholder="닉네임 또는 상품 검색">
         </div>
@@ -96,7 +96,7 @@
             <div class="modal-body">
                 <p><strong>상품명:</strong> <span id="gifticonName"></span></p>
                 <p><strong>신청자:</strong> <span id="name"></span></p>
-                <p><strong>전화번호:</strong> <span id="phone"></span></p>
+                <p><strong>전화번호:</strong> <span id="phone"></span> <button id="applicationButton" class="btn btn-outline-secondary" onclick="postgifticon()"> </button></p>
             </div>
             <div class="modal-footer">
                 <button id="processButton" type="button" class="btn btn-success" onclick="completeExchange()">
@@ -137,6 +137,14 @@
                     processButton.text('처리 완료').removeClass('btn-warning').addClass('btn-success');
                 }
 
+                // 문자 전송 버튼 동적 설정
+                const applicationButton = $('#applicationButton');
+                if (currentExchangeStatus === 'COMPLETED') {
+                    applicationButton.text('전송 완료').addClass('btn-secondary').removeClass('btn-outline-secondary').prop('disabled', true);
+                } else {
+                    applicationButton.text('전송하기').removeClass('btn-secondary').addClass('btn-outline-secondary').prop('disabled', false);
+                }
+
                 // Bootstrap 모달 인스턴스 초기화 및 열기
                 exchangeModal = new bootstrap.Modal(document.getElementById('exchangeModal'));
                 exchangeModal.show();
@@ -165,6 +173,26 @@
                 alert('처리하는 데 실패했습니다.');
             }
         });
+    }
+
+    function postgifticon() {
+        if (confirm("정말 전송하시겠습니까?")) {
+            const currentExchangeurl = `../adm/exchange/` + currentExchangeId + `/application`;
+            $.ajax({
+                url: currentExchangeurl,
+                method: 'POST',
+                success: function () {
+
+                    $('#applicationButton').text('전송 완료').addClass('btn-secondary').removeClass('btn-outline-secondary').prop('disabled', true);
+                },
+                error: function () {
+                    alert('문자전송 실패');
+                }
+            });
+
+        }else{
+            alert("취소하셨습니다..");
+        }
     }
 </script>
 
