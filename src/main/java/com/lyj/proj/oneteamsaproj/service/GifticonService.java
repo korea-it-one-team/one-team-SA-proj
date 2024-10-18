@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class GifticonService {
@@ -36,4 +37,10 @@ public class GifticonService {
     }
 
 
+    public String getGifticonUrl(int id) {
+        int gifticonId = gifticonRepository.getGifticonid(id);
+        String gifticon_Stock = gifticonRepository.getGifticonUrl(gifticonId);
+        gifticonRepository.useGifticon(gifticon_Stock);
+        return gifticon_Stock;
+    }
 }

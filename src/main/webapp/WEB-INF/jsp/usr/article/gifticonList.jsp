@@ -49,7 +49,7 @@
         text-decoration: none;
     }
 
-    .point_price{
+    .point_price, .stock{
         text-align: left;
         font-weight: bold;
         font-size: 1.5rem;
@@ -77,8 +77,9 @@
         <div class="card-body">
             <h2 class="card-title">${gifticon.name}</h2>
             <p class="point_price points" data-points="${gifticon.points}">Points: ${gifticon.points}</p>
+            <p class="stock stocks">Stocks : ${gifticon.stock} 개</p>
             <div class="card-actions justify-end">
-                <button class="btn btn-primary" onclick="exchangeGifticon('${gifticon.id}')">교환신청하기</button>
+                <button class="btn btn-primary" onclick="exchangeGifticon('${gifticon.id}','${gifticon.stock}')">교환신청하기</button>
             </div>
         </div>
     </div>
@@ -127,8 +128,11 @@
 
 
 <script>
-    function exchangeGifticon(id) {
-
+    function exchangeGifticon(id,stock) {
+        if (stock <= 0){
+            alert("재고가 없습니다.");
+            return false;
+        }
         if(confirm("정말 교환하시겠습니까?")){
 
             $.ajax({

@@ -1,4 +1,5 @@
 package com.lyj.proj.oneteamsaproj.controller;
+import com.lyj.proj.oneteamsaproj.service.GifticonService;
 import com.lyj.proj.oneteamsaproj.vo.Rq;
 import jakarta.servlet.http.HttpServletRequest;
 import net.nurigo.sdk.NurigoApp;
@@ -19,7 +20,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -32,9 +37,12 @@ public class ExampleController {
 
     final DefaultMessageService messageService;
 
-    public ExampleController() {
+    private final GifticonService gifticonService;
+
+    public ExampleController(GifticonService gifticonService) {
         // 반드시 계정 내 등록된 유효한 API 키, API Secret Key를 입력해주셔야 합니다!
         this.messageService = NurigoApp.INSTANCE.initialize("INSERT_API_KEY", "INSERT_API_SECRET_KEY", "https://api.coolsms.co.kr");
+        this.gifticonService = gifticonService;
     }
 
     /**
@@ -113,26 +121,44 @@ public class ExampleController {
      * MMS 발송 예제
      * 단일 발송, 여러 건 발송 상관없이 이용 가능
      */
-    @PostMapping("adm/exchange/{id}/application")
+    @PostMapping("/exchange/{id}/application1")
     public SingleMessageSentResponse sendMmsByResourcePath(HttpServletRequest req, @PathVariable int id) throws IOException {
         Rq rq = (Rq) req.getAttribute("rq");
 
-        ClassPathResource resource = new ClassPathResource("static/sample.jpg");
-        File file = resource.getFile();
-        String imageId = this.messageService.uploadFile(file, StorageType.MMS, null);
+        String gifticon_Url ="https://storage.googleapis.com/" + gifticonService.getGifticonUrl(id);
+        URL url = new URL(gifticon_Url);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
 
-        Message message = new Message();
-        // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
-        message.setFrom("01012345678");
-        message.setTo("수신번호 입력");
-        message.setText("한글 45자, 영자 90자 이하 입력되면 자동으로 SMS타입의 메시지가 추가됩니다.");
-        message.setImageId(imageId);
+        // InputStream을 통해 이미지 다운로드
+        try (InputStream inputStream = connection.getInputStream()) {
+            // 임시 파일 생성
+            File tempFile = File.createTempFile("image", ".tmp");
+            tempFile.deleteOnExit(); // JVM 종료 시 삭제
 
-        // 여러 건 메시지 발송일 경우 send many 예제와 동일하게 구성하여 발송할 수 있습니다.
-        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
-        System.out.println(response);
+            // InputStream을 파일에 저장
+            try (FileOutputStream outputStream = new FileOutputStream(tempFile)) {
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+            }
 
-        return response;
+            String imageId = this.messageService.uploadFile(tempFile, StorageType.MMS, null);
+
+            Message message = new Message();
+            // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
+            message.setFrom("01012345678");
+            message.setTo("수신번호 입력");
+            message.setText("축하합니다.");
+            message.setImageId(imageId);
+
+//         여러 건 메시지 발송일 경우 send many 예제와 동일하게 구성하여 발송할 수 있습니다.
+            SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+            return response;
+        }
+
     }
 
     /**

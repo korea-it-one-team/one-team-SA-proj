@@ -11,7 +11,8 @@ public interface AmdGifticonRepository {
                 insert into gifticon_Stock
                 set gifticon_id = #{gifticonId},
                 image_url = #{uuid},
-                created_at = NOW()        
+                created_at = NOW(),
+                `use` = 0
             """)
     void gifticonStockSave(int gifticonId, String uuid);
 

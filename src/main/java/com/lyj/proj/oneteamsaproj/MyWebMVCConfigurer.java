@@ -98,7 +98,7 @@ public class MyWebMVCConfigurer implements WebMvcConfigurer {
 
 		// 관리자
 		ir = registry.addInterceptor(needAdminInterceptor);
-		ir.addPathPatterns("/adm/**");
+//		ir.addPathPatterns("/adm/**");
 		ir.addPathPatterns("/adm/member/login");
 		ir.addPathPatterns("/adm/member/doLogin");
 		ir.addPathPatterns("/adm/member/findLoginId");
@@ -106,7 +106,7 @@ public class MyWebMVCConfigurer implements WebMvcConfigurer {
 		ir.addPathPatterns("/adm/member/findLoginPw");
 		ir.addPathPatterns("/adm/member/doFindLoginPw");
 		ir.addPathPatterns("/adm/exchange/list");
-		ir.addPathPatterns("/adm/exchange/**/application");
+//		ir.addPathPatterns("/adm/exchange/**/application");
 
 	}
 

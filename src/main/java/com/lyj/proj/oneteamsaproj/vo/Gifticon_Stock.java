@@ -17,6 +17,7 @@ public class Gifticon_Stock {
     private int gifticon_id;
     private String image_url;
     private MultipartFile image;
+    private int use;
     private LocalDateTime created_at;
 
 }

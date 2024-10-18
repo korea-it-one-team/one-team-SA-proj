@@ -6,7 +6,9 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Mapper
 public interface GifticonRepository {
@@ -40,4 +42,23 @@ public interface GifticonRepository {
            		WHERE id = #{gifticonId}
            """)
 	void stockAdd(int gifticonId, int gifticonStock);
+
+	@Select("""
+			select image_url from gifticon_Stock
+			where gifticon_id = #{id}
+			And `use` = 0
+			order by id desc
+			limit 1
+			""")
+	String getGifticonUrl(int id);
+
+	@Update("""
+			update gifticon_Stock
+			set `use` = 1
+			WHERE image_url = #{url}
+			""")
+	void useGifticon(String url);
+
+	@Select("SELECT gifticon_id from exchange_history where id = #{id}")
+	int getGifticonid(int id);
 }

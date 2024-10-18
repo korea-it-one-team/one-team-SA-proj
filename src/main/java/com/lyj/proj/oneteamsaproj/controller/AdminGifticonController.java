@@ -37,7 +37,7 @@ public class AdminGifticonController {
 
     @PostMapping("gifticon/{getGifticonId}/upload")
     @PatchMapping("")
-    public ResponseEntity<?> uploadStockAndImage(
+    public ResponseEntity<Map<String, Object>> uploadStockAndImage(
             @PathVariable("getGifticonId") int gifticonId,
             @RequestParam("stock") int stock,
             @RequestParam("imageFile") List<MultipartFile> imageFiles) {
@@ -47,7 +47,7 @@ public class AdminGifticonController {
             // 파일 개수로 재고 수량 확인
             if (stock != imageFiles.size()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body("재고 수량이 업로드된 이미지 개수와 일치하지 않습니다.");
+                        .body(Map.of("message","재고 수량이 업로드된 이미지 개수와 일치하지 않습니다."));
             }
 
             // 파일 저장 로직 (예: 로컬 저장, DB 연결 등)
@@ -56,11 +56,11 @@ public class AdminGifticonController {
                 admgifticonService.updateStockAndImage(gifticonId, file);
             }
             // 2. 재고 및 이미지 URL 업데이트
-            return ResponseEntity.ok("재고 및 이미지가 성공적으로 업로드되었습니다.");
+            return ResponseEntity.ok(Map.of("message","재고 및 이미지가 성공적으로 업로드되었습니다."));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("업로드 중 오류가 발생했습니다.");
+                    .body(Map.of("message","업로드 중 오류가 발생했습니다."));
         }
     }
 

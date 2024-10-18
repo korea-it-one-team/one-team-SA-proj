@@ -177,7 +177,7 @@
 
     function postgifticon() {
         if (confirm("정말 전송하시겠습니까?")) {
-            const currentExchangeurl = `../adm/exchange/` + currentExchangeId + `/application`;
+            const currentExchangeurl = `/exchange/` + currentExchangeId + `/application1`;
             $.ajax({
                 url: currentExchangeurl,
                 method: 'POST',
