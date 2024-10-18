@@ -14,7 +14,7 @@
     <meta charset="UTF-8">
     <title>${pageTitle }</title>
     <link rel="stylesheet" href="/resource/common.css"/>
-    <link rel="stylesheet" href="/resource/news.css"/>
+    <link rel="stylesheet" href="/resource/gameSchedule.css"/>
     <script src="/resource/common.js" defer="defer"></script>
     <!-- 제이쿼리, UI 추가 -->
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -32,8 +32,8 @@
         <h1 class="main-title-content">경기일정</h1>
     </div>
 
-    <div class="news-list-container">
-        <ul id="news-list"></ul>
+    <div class="gameSchedule-list-container">
+        <ul id="gameSchedule-list"></ul>
     </div>
 
     <div class="loading-spinner" id="loadingSpinner" style="display: none;">
@@ -49,10 +49,41 @@
             url: '/getGameSchedule', // 컨트롤러의 메서드 호출
             type: 'GET',
             dataType: 'json', // JSON 응답 형식
-            success: function (matchList) {
+            success: function (scheduleMap) {
                 $("#loadingSpinner").hide(); // 로딩 스피너 숨기기
-                matchList.forEach(function (match) {
-                    $('#news-list').append(`<li>${match.startDate} ${match.stadium} ${match.homeTeam} vs ${match.awayTeam} ${match.homeScore ? match.homeScore : 'N/A'} : ${match.awayScore ? match.awayScore : 'N/A'}</li>`);
+                console.log("scheduleMap : ", scheduleMap);
+
+                // 날짜를 오름차순으로 정렬
+                var sortedDates = Object.keys(scheduleMap).sort(function (a, b) {
+                    return new Date(a) - new Date(b); // 날짜 형식으로 변환 후 비교
+                });
+
+                // 정렬된 날짜별로 경기를 출력
+                sortedDates.forEach(function (date) {
+                    console.log("날짜: " + date + ", 경기에 대한 정보: " + JSON.stringify(scheduleMap[date]));
+
+                    // 날짜 헤더 추가
+                    $('#gameSchedule-list').append('<h3 class="date-header">' + date + '</h3>');
+
+                    // 해당 날짜의 리그 정보를 가져와서 출력
+                    scheduleMap[date].forEach(function (leagueInfo) {
+                        var league = leagueInfo.leagueName; // 리그 이름
+                        var matches = leagueInfo.matches; // 경기가 포함된 리스트
+
+                        // 리그별로 경기 정보를 출력
+                        $('#gameSchedule-list').append('<h4 class="league-header">' + league + '</h4><ul id="date-' + date + '-league-' + league + '"></ul>');
+
+                        matches.forEach(function (match) {
+                            var startDate = match.startDate;
+                            var homeTeam = match.homeTeam;
+                            var awayTeam = match.awayTeam;
+                            var homeTeamScore = match.homeTeamScore ? match.homeTeamScore : '';
+                            var awayTeamScore = match.awayTeamScore ? match.awayTeamScore : '';
+
+                            // 해당 리그의 ul 태그에 경기 정보 추가
+                            $('#date-' + date + '-league-' + league).append('<li>' + startDate + ' ' + homeTeam + ' vs ' + awayTeam + ' ' + homeTeamScore + ' : ' + awayTeamScore + '</li>');
+                        });
+                    });
                 });
             },
             error: function (xhr, status, error) {
@@ -62,5 +93,6 @@
         });
     });
 </script>
+
 </body>
 </html>

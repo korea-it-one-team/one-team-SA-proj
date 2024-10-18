@@ -97,7 +97,6 @@
                 }
             });
         }
-
         fetchNews();
     });
 </script>

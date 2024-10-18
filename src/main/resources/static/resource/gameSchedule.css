@@ -1,0 +1,67 @@
+@charset "UTF-8";
+/* 스피너 CSS */
+.spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+}
+
+/* 스피너 애니메이션 */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.main-title {
+    width: 280px;
+    height: 40px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 50px;
+}
+
+.main-title-content {
+    color: #000000;
+    text-align: center;
+    line-height: 18px;
+    font-weight: 700;
+    width: 280px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gameSchedule-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    max-width: 800px; /* 원하는 고정 너비 */
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 70px;
+}
+
+.date-header {
+    border-bottom: 2px solid #000; /* 날짜 헤더에 밑줄 추가 */
+    margin-bottom: 10px; /* 아래쪽 여백 추가 */
+    padding-bottom: 5px; /* 패딩 추가 */
+}
+
+.league-header {
+    border-bottom: 1px solid #666; /* 리그 헤더에 밑줄 추가 */
+    margin-bottom: 8px; /* 아래쪽 여백 추가 */
+    padding-bottom: 4px; /* 패딩 추가 */
+}
