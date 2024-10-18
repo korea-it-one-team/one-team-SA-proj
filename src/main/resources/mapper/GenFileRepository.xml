@@ -23,7 +23,7 @@
         fileExt = #{fileExt}
     </insert>
 
-    <select id="getGenFile" resultType="GenFile">
+    <select id="getGenFile" resultType="com.lyj.proj.oneteamsaproj.vo.GenFile">
         SELECT *
         FROM genFile
         WHERE 1
@@ -44,14 +44,14 @@
         </if>
     </select>
 
-    <select id="getGenFileById" resultType="GenFile">
+    <select id="getGenFileById" resultType="com.lyj.proj.oneteamsaproj.vo.GenFile">
         SELECT *
         FROM genFile
         WHERE 1
         AND id = #{id}
     </select>
 
-    <select id="getGenFiles" resultType="GenFile">
+    <select id="getGenFiles" resultType="com.lyj.proj.oneteamsaproj.vo.GenFile">
         SELECT *
         FROM genFile
         WHERE 1
@@ -68,7 +68,7 @@
     </select>
 
     <select id="getGenFilesByRelTypeCodeAndRelId"
-            resultType="GenFile">
+            resultType="com.lyj.proj.oneteamsaproj.vo.GenFile">
         SELECT *
         FROM genFile
         WHERE 1
@@ -79,7 +79,7 @@
 
     <select
             id="getGenFilesRelTypeCodeAndRelIdsAndTypeCodeAndType2Code"
-            resultType="GenFile">
+            resultType="com.lyj.proj.oneteamsaproj.vo.GenFile">
         SELECT *
         FROM genFile
         WHERE 1

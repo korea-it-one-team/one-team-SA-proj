@@ -1,10 +1,8 @@
 package com.lyj.proj.oneteamsaproj.vo;
 
-
 import com.lyj.proj.oneteamsaproj.util.Ut;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Map;
@@ -13,17 +11,17 @@ import java.util.Map;
 @NoArgsConstructor
 @Data
 public class ResultData<DT> {
-    @Getter
+
     private String ResultCode;
-    @Getter
+
     private String msg;
-    @Getter
+
     private DT data1;
-    @Getter
+
     private String data1Name;
-    @Getter
+
     private Object data2;
-    @Getter
+
     private String data2Name;
 
     private Map<String, Object> body;
