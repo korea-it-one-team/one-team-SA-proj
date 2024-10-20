@@ -32,15 +32,18 @@
         <h1 class="main-title-content">경기일정</h1>
     </div>
 
+    <!-- 경기일정 노출 -->
     <div class="gameSchedule-list-container">
         <ul id="gameSchedule-list"></ul>
     </div>
 
+    <!-- 로딩 스피너 노출 -->
     <div class="loading-spinner" id="loadingSpinner" style="display: none;">
         <div class="spinner"></div>
     </div>
 </div>
 
+<!-- 경기일정 Ajax 요청 -->
 <script>
     $(document).ready(function () {
         $("#loadingSpinner").show();
@@ -70,8 +73,11 @@
                         var league = leagueInfo.leagueName; // 리그 이름
                         var matches = leagueInfo.matches; // 경기가 포함된 리스트
 
+                        // 리그 이름을 안전한 값으로 변환 (공백을 '-'로 대체)
+                        var safeLeague = league.replace(/\s+/g, '-');
+
                         // 리그별로 경기 정보를 출력
-                        $('#gameSchedule-list').append('<h4 class="league-header">' + league + '</h4><ul id="date-' + date + '-league-' + league + '"></ul>');
+                        $('#gameSchedule-list').append('<h4 class="league-header">' + league + '</h4><ul id="date-' + date + '-league-' + safeLeague + '"></ul>');
 
                         matches.forEach(function (match) {
                             var startDate = match.startDate;
@@ -81,7 +87,7 @@
                             var awayTeamScore = match.awayTeamScore ? match.awayTeamScore : '';
 
                             // 해당 리그의 ul 태그에 경기 정보 추가
-                            $('#date-' + date + '-league-' + league).append('<li>' + startDate + ' ' + homeTeam + ' vs ' + awayTeam + ' ' + homeTeamScore + ' : ' + awayTeamScore + '</li>');
+                            $('#date-' + date + '-league-' + safeLeague).append('<li>' + startDate + ' ' + homeTeam + ' vs ' + awayTeam + ' ' + homeTeamScore + ' : ' + awayTeamScore + '</li>');
                         });
                     });
                 });
@@ -93,6 +99,7 @@
         });
     });
 </script>
+
 
 </body>
 </html>
