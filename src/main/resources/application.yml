@@ -1,6 +1,15 @@
 server:
   port: 8088
+
 spring:
+  cloud:
+    gcp:
+      storage:
+        credentials:
+          location: classpath:${CLASSPATH}
+        project-id: ${PROJECT_ID}
+        bucket: ${BUCKET_KEY}
+
   mail:
     host: smtp.gmail.com
     port: 587
@@ -12,6 +21,7 @@ spring:
           auth: true
           starttls:
             enable: true
+
   servlet:
     multipart:
       max-file-size: 100MB
@@ -22,15 +32,12 @@ spring:
       suffix: .jsp
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://127.0.0.1:3306/one-team-SA-proj?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
-#    url: jdbc:mysql://localhost:3306/one-team-SA-proj?useSSL=false&serverTimezone=UTC
-#    url: jdbc:mysql://127.0.0.1:3306/one-team-SA-proj?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useSSL=false
     url: jdbc:mysql://localhost:3306/one-team-SA-proj?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useSSL=false
     username: root
     password:
-  web:
-    resources:
-      static-locations: classpath:/static/
+web:
+  resources:
+    static-locations: classpath:/static/
 mybatis:
   mapper-locations: classpath*:mapper/**/*.xml
   type-aliases-package: com.lyj.proj.oneteamsaproj.vo
@@ -41,6 +48,3 @@ custom:
   emailFrom: no-reply@localhost
   emailFromName: kicknalisys
   genFileDirPath: C:\work_oneteam\one-team-SA-proj\images
-
-
-

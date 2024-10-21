@@ -1,11 +1,10 @@
 package com.lyj.proj.oneteamsaproj.vo;
 
+import java.util.Map;
 import com.lyj.proj.oneteamsaproj.util.Ut;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Map;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,15 +12,10 @@ import java.util.Map;
 public class ResultData<DT> {
 
     private String ResultCode;
-
     private String msg;
-
     private DT data1;
-
     private String data1Name;
-
     private Object data2;
-
     private String data2Name;
 
     private Map<String, Object> body;
@@ -37,7 +31,7 @@ public class ResultData<DT> {
     }
 
     public static <DT> ResultData<DT> from(String ResultCode, String msg, String data1Name, DT data1) {
-        ResultData<DT> rd = new ResultData<DT>();
+        ResultData<DT> rd = new ResultData<>();
         rd.ResultCode = ResultCode;
         rd.msg = msg;
         rd.data1 = data1;
@@ -46,9 +40,8 @@ public class ResultData<DT> {
         return rd;
     }
 
-    public static <DT> ResultData<DT> from(String resultCode, String msg, String data1Name, DT data1, String data2Name,
-                                           DT data2) {
-        ResultData<DT> rd = new ResultData<DT>();
+    public static <DT> ResultData<DT> from(String resultCode, String msg, String data1Name, DT data1, String data2Name, DT data2) {
+        ResultData<DT> rd = new ResultData<>();
         rd.ResultCode = resultCode;
         rd.msg = msg;
         rd.data1Name = data1Name;
@@ -64,17 +57,15 @@ public class ResultData<DT> {
     }
 
     public boolean isFail() {
-        return isSuccess() == false;
+        return !isSuccess();
     }
 
     public static <DT> ResultData<DT> newData(ResultData rd, String dataName, DT newData) {
-
         return from(rd.getResultCode(), rd.getMsg(), dataName, newData);
     }
 
     public void setData2(String data2Name, Object data2) {
         this.data2 = data2;
         this.data2Name = data2Name;
-
     }
 }
