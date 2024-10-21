@@ -167,8 +167,8 @@ public class ExampleController {
             // 5. 메시지 생성 및 설정
             Message message = new Message();
             message.setFrom("01064480039"); // 발신 번호 설정
-            message.setTo("01064480039"); // 수신 번호 설정 (동적으로 처리)
-            message.setText("축하합니다. 교환권이 발송되었습니다.");
+            message.setTo(normalizedPhone); // 수신 번호 설정 (동적으로 처리)
+            message.setText("KICKNALYSIS에서 신청하신 상품 교환권입니다.");
             message.setImageId(imageId); // 업로드된 이미지 ID 설정
 
             // 6. 메시지 전송

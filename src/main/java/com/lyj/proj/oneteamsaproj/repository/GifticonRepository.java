@@ -61,4 +61,7 @@ public interface GifticonRepository {
 
 	@Select("SELECT gifticon_id from exchange_history where id = #{id}")
 	int getGifticonid(int id);
+
+	@Update("UPDATE gifticons SET stock = stock - 1 WHERE id = ${gifticonId}")
+	void stockuse(int gifticonId);
 }

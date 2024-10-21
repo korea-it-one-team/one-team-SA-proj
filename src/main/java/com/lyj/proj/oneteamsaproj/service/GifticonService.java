@@ -39,6 +39,7 @@ public class GifticonService {
 
     public String getGifticonUrl(int id) {
         int gifticonId = gifticonRepository.getGifticonid(id);
+        gifticonRepository.stockuse(gifticonId);
         String gifticon_Stock = gifticonRepository.getGifticonUrl(gifticonId);
         gifticonRepository.useGifticon(gifticon_Stock);
         return gifticon_Stock;

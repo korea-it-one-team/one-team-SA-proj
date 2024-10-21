@@ -100,7 +100,6 @@ public class AdminGifticonController {
     public ResponseEntity<Void> completeExchange(@PathVariable int id) {
         // 교환 상태를 "COMPLETED"로 변경
         boolean updated = exchangeService.completeExchange(id);
-        System.out.println("dsknfknx : " + updated);
         if (updated) {
             return ResponseEntity.ok().build();
         }
