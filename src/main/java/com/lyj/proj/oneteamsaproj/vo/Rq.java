@@ -3,12 +3,10 @@ package com.lyj.proj.oneteamsaproj.vo;
 import java.io.IOException;
 import java.util.Map;
 
-import com.lyj.proj.oneteamsaproj.Util.Ut;
+import com.lyj.proj.oneteamsaproj.util.Ut;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
-
-
 import com.lyj.proj.oneteamsaproj.service.MemberService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,172 +17,180 @@ import lombok.Getter;
 @Component
 @Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class Rq {
-	@Getter
-	boolean isAjax;
-	@Getter
-	private boolean isLogined;
-	@Getter
-	private int loginedMemberId;
-	@Getter
-	private Member loginedMember;
 
-	private HttpServletRequest req;
-	private HttpServletResponse resp;
+    @Getter
+    boolean isAjax;
 
-	private HttpSession session;
+    @Getter
+    private boolean isLogined;
 
-	private Map<String, String> paramMap;
+    @Getter
+    private int loginedMemberId;
 
-	public Rq(HttpServletRequest req, HttpServletResponse resp, MemberService memberService) {
-		this.req = req;
-		this.resp = resp;
-		this.session = req.getSession();
+    @Getter
+    private Member loginedMember;
 
-		HttpSession httpSession = req.getSession();
+    private HttpServletRequest req;
+    private HttpServletResponse resp;
 
-		paramMap = Ut.getParamMap(req);
+    private HttpSession session;
 
-		if (httpSession.getAttribute("loginedMemberId") != null) {
-			isLogined = true;
-			loginedMemberId = (int) httpSession.getAttribute("loginedMemberId");
-			loginedMember = memberService.getMemberById(loginedMemberId);
-		}
+    private Map<String, String> paramMap;
 
-		this.req.setAttribute("rq", this);
+    public Rq(HttpServletRequest req, HttpServletResponse resp, MemberService memberService) {
+        this.req = req;
+        this.resp = resp;
+        this.session = req.getSession();
 
-		String requestUri = req.getRequestURI();
+        HttpSession httpSession = req.getSession();
 
-		boolean isAjax = requestUri.endsWith("Ajax");
+        paramMap = Ut.getParamMap(req);
 
-		if (isAjax == false) {
-			if (paramMap.containsKey("ajax") && paramMap.get("ajax").equals("Y")) {
-				isAjax = true;
-			} else if (paramMap.containsKey("isAjax") && paramMap.get("isAjax").equals("Y")) {
-				isAjax = true;
-			}
-		}
-		if (isAjax == false) {
-			if (requestUri.contains("/get")) {
-				isAjax = true;
-			}
-		}
-		this.isAjax = isAjax;
-	}
+        if (httpSession.getAttribute("loginedMemberId") != null) {
+            isLogined = true;
+            loginedMemberId = (int) httpSession.getAttribute("loginedMemberId");
+            loginedMember = memberService.getMemberById(loginedMemberId);
+        }
+        this.req.setAttribute("rq", this);
 
-	public void printHistoryBack(String msg) throws IOException {
-		resp.setContentType("text/html; charset=UTF-8");
-		println("<script>");
-		if (!Ut.isEmpty(msg)) {
-			println("alert('" + msg + "');");
-		}
-		println("history.back();");
-		println("</script>");
-	}
+        String requestUri = req.getRequestURI();
 
-	private void println(String str) {
-		print(str + "\n");
-	}
+        boolean isAjax = requestUri.endsWith("Ajax");
 
-	private void print(String str) {
-		try {
-			resp.getWriter().append(str);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+        if (isAjax == false) {
+            if (paramMap.containsKey("ajax") && paramMap.get("ajax").equals("Y")) {
+                isAjax = true;
+            } else if (paramMap.containsKey("isAjax") && paramMap.get("isAjax").equals("Y")) {
+                isAjax = true;
+            }
+        }
+        if (isAjax == false) {
+            if (requestUri.contains("/get")) {
+                isAjax = true;
+            }
+        }
+        this.isAjax = isAjax;
+    }
 
-	public void logout() {
-		session.removeAttribute("loginedMemberId");
-		session.removeAttribute("loginedMember");
-	}
+    public void printHistoryBack(String msg) throws IOException {
+        resp.setContentType("text/html; charset=UTF-8");
+        println("<script>");
+        if (!Ut.isEmpty(msg)) {
+            println("alert('" + msg + "');");
+        }
+        println("history.back();");
+        println("</script>");
+    }
 
-	public void login(Member member) {
-		session.setAttribute("loginedMemberId", member.getId());
-		session.setAttribute("loginedMember", member);
-	}
+    private void println(String str) {
+        print(str + "\n");
+    }
 
-	public void initBeforeActionInterceptor() {
-		System.err.println("initBeforeActionInterceptor 실행");
-	}
+    private void print(String str) {
+        try {
+            resp.getWriter().append(str);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	public String historyBackOnView(String msg) {
-		req.setAttribute("msg", msg);
-		req.setAttribute("historyBack", true);
-		return "usr/common/js";
-	}
+    public void logout() {
+        session.removeAttribute("loginedMemberId");
+        session.removeAttribute("loginedMember");
+    }
 
-	public String getCurrentUri() {
-		String currentUri = req.getRequestURI();
-		String queryString = req.getQueryString();
+    public void login(Member member) {
+        session.setAttribute("loginedMemberId", member.getId());
+        session.setAttribute("loginedMember", member);
+    }
 
-		System.err.println(currentUri);
-		System.err.println(queryString);
+    public void initBeforeActionInterceptor() {
+        System.err.println("initBeforeActionInterceptor 실행");
 
-		if (currentUri != null && queryString != null) {
-			currentUri += "?" + queryString;
-		}
+    }
 
-		System.out.println(currentUri);
+    public String historyBackOnView(String msg) {
+        req.setAttribute("msg", msg);
+        req.setAttribute("historyBack", true);
+        return "usr/common/js";
+    }
 
-		return currentUri;
-	}
+    public String getCurrentUri() {
+        String currentUri = req.getRequestURI();
+        String queryString = req.getQueryString();
 
-	public void printReplace(String resultCode, String msg, String replaceUri) {
-		resp.setContentType("text/html; charset=UTF-8");
-		print(Ut.jsReplace(resultCode, msg, replaceUri));
-	}
+        System.err.println(currentUri);
+        System.err.println(queryString);
 
-	public String getEncodedCurrentUri() {
-		return Ut.getEncodedCurrentUri(getCurrentUri());
-	}
+        if (currentUri != null && queryString != null) {
+            currentUri += "?" + queryString;
+        }
 
-	public String getLoginUri() {
-		return "../member/login?afterLoginUri=" + getAfterLoginUri();
-	}
+        System.out.println(currentUri);
 
-	public String getAfterLoginUri() {
-		return getEncodedCurrentUri();
-	}
+        return currentUri;
+    }
 
-	public String jsReplace(String msg, String uri) {
-		return Ut.jsReplace(msg, uri);
-	}
+    public void printReplace(String resultCode, String msg, String replaceUri) {
 
-	public String getImgUri(int id) {
-		return "/common/genFile/file/article/" + id + "/extra/Img/1";
-	}
+        resp.setContentType("text/html; charset=UTF-8");
 
-	public String getProfileFallbackImgUri() {
-		return "https://via.placeholder.com/150/?text=*^_^*";
-	}
+        print(Ut.jsReplace(resultCode, msg, replaceUri));
 
-	public String getProfileFallbackImgOnErrorHtml() {
-		return "this.src = '" + getProfileFallbackImgUri() + "'";
-	}
+    }
 
-	public String getFindLoginIdUri() {
-		return "../member/findLoginId?afterFindLoginIdUri=" + getAfterFindLoginIdUri();
-	}
+    public String getEncodedCurrentUri() {
 
-	private String getAfterFindLoginIdUri() {
-		return getEncodedCurrentUri();
-	}
+        return Ut.getEncodedCurrentUri(getCurrentUri());
+    }
 
-	public String getFindLoginPwUri() {
-		return "../member/findLoginPw?afterFindLoginPwUri=" + getAfterFindLoginPwUri();
-	}
+    public String getLoginUri() {
 
-	private String getAfterFindLoginPwUri() {
-		return getEncodedCurrentUri();
-	}
+        return "../member/login?afterLoginUri=" + getAfterLoginUri();
+    }
 
-	public boolean isAdmin() {
-		if (isLogined == false) {
-			return false;
-		}
+    public String getAfterLoginUri() {
 
-		return loginedMember.isAdmin();
-	}
+        return getEncodedCurrentUri();
+    }
 
+    public String jsReplace(String msg, String uri) {
+        return Ut.jsReplace(msg, uri);
+    }
+
+    public String getImgUri(int id) {
+        return "/common/genFile/file/article/" + id + "/extra/Img/1";
+    }
+
+    public String getProfileFallbackImgUri() {
+        return "https://via.placeholder.com/150/?text=*^_^*";
+    }
+
+    public String getProfileFallbackImgOnErrorHtml() {
+        return "this.src = '" + getProfileFallbackImgUri() + "'";
+    }
+
+    public String getFindLoginIdUri() {
+        return "../member/findLoginId?afterFindLoginIdUri=" + getAfterFindLoginIdUri();
+    }
+
+    private String getAfterFindLoginIdUri() {
+        return getEncodedCurrentUri();
+    }
+
+    public String getFindLoginPwUri() {
+        return "../member/findLoginPw?afterFindLoginPwUri=" + getAfterFindLoginPwUri();
+    }
+
+    private String getAfterFindLoginPwUri() {
+        return getEncodedCurrentUri();
+    }
+
+    public boolean isAdmin() {
+        if (isLogined == false) {
+            return false;
+        }
+
+        return loginedMember.isAdmin();
+    }
 }
-
