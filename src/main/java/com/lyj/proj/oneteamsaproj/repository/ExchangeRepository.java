@@ -65,4 +65,11 @@ public interface ExchangeRepository {
 				SELECT poins FROM gifticons WHERE id = #{id}
 			""")
 	public int getExchangeGifticonPoint(int id);
+
+	@Select("""
+			SELECT M.cellphoneNum from exchange_history AS E
+            inner join member AS M ON E.member_id = M.id
+			where E.id = #{id}
+			""")
+    String getPhoneNum(int id);
 }

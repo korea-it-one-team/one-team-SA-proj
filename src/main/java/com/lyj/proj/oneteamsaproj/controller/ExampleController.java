@@ -1,4 +1,6 @@
 package com.lyj.proj.oneteamsaproj.controller;
+
+import com.lyj.proj.oneteamsaproj.service.ExchangeService;
 import com.lyj.proj.oneteamsaproj.service.GifticonService;
 import com.lyj.proj.oneteamsaproj.vo.Rq;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,10 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.Instant;
@@ -31,6 +30,7 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import io.github.cdimascio.dotenv.Dotenv;
 
 @RestController
 public class ExampleController {
@@ -38,11 +38,22 @@ public class ExampleController {
     final DefaultMessageService messageService;
 
     private final GifticonService gifticonService;
+    private final ExchangeService exchangeService;
 
-    public ExampleController(GifticonService gifticonService) {
+    public ExampleController(GifticonService gifticonService, ExchangeService exchangeService) {
+        Dotenv dotenv = Dotenv.configure().load(); // .env 파일 로드
+
+        String apiKey = dotenv.get("API_KEY");
+        String apiSecret = dotenv.get("API_SECRETKEY");
+
+        if (apiKey == null || apiSecret == null) {
+            throw new IllegalStateException("API_KEY or API_SECRETKEY is not set.");
+        }
+
         // 반드시 계정 내 등록된 유효한 API 키, API Secret Key를 입력해주셔야 합니다!
-        this.messageService = NurigoApp.INSTANCE.initialize("INSERT_API_KEY", "INSERT_API_SECRET_KEY", "https://api.coolsms.co.kr");
+        this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecret, "https://api.coolsms.co.kr");
         this.gifticonService = gifticonService;
+        this.exchangeService = exchangeService;
     }
 
     /**
@@ -125,40 +136,50 @@ public class ExampleController {
     public SingleMessageSentResponse sendMmsByResourcePath(HttpServletRequest req, @PathVariable int id) throws IOException {
         Rq rq = (Rq) req.getAttribute("rq");
 
-        String gifticon_Url ="https://storage.googleapis.com/" + gifticonService.getGifticonUrl(id);
-        URL url = new URL(gifticon_Url);
+        // 1. 수신자 전화번호 가져오기 및 형식 정리
+        String memberPhone = exchangeService.getPhoneNum(id);
+        String normalizedPhone = memberPhone.replaceAll("-", ""); // 하이픈 제거
+
+        // 2. 기프티콘 이미지 URL 생성
+        String gifticonUrl = "https://storage.googleapis.com/" + gifticonService.getGifticonUrl(id);
+        URL url = new URL(gifticonUrl);
+
+        // 3. URL로부터 이미지 다운로드 및 임시 파일 생성
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
+        connection.setDoInput(true);
 
-        // InputStream을 통해 이미지 다운로드
         try (InputStream inputStream = connection.getInputStream()) {
-            // 임시 파일 생성
-            File tempFile = File.createTempFile("image", ".tmp");
-            tempFile.deleteOnExit(); // JVM 종료 시 삭제
+            File tempFile = File.createTempFile("downloaded-", ".jpg");
 
-            // InputStream을 파일에 저장
-            try (FileOutputStream outputStream = new FileOutputStream(tempFile)) {
-                byte[] buffer = new byte[4096];
+            try (OutputStream outputStream = new FileOutputStream(tempFile)) {
+                byte[] buffer = new byte[8192];
                 int bytesRead;
                 while ((bytesRead = inputStream.read(buffer)) != -1) {
                     outputStream.write(buffer, 0, bytesRead);
                 }
             }
 
+            // 4. 이미지 파일 업로드 후 Image ID 획득
             String imageId = this.messageService.uploadFile(tempFile, StorageType.MMS, null);
+            tempFile.deleteOnExit();  // 임시 파일 삭제 예약
 
+            // 5. 메시지 생성 및 설정
             Message message = new Message();
-            // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
-            message.setFrom("01012345678");
-            message.setTo("수신번호 입력");
-            message.setText("축하합니다.");
-            message.setImageId(imageId);
+            message.setFrom("01064480039"); // 발신 번호 설정
+            message.setTo("01064480039"); // 수신 번호 설정 (동적으로 처리)
+            message.setText("축하합니다. 교환권이 발송되었습니다.");
+            message.setImageId(imageId); // 업로드된 이미지 ID 설정
 
-//         여러 건 메시지 발송일 경우 send many 예제와 동일하게 구성하여 발송할 수 있습니다.
-            SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
-            return response;
+            // 6. 메시지 전송
+            return this.messageService.sendOne(new SingleMessageSendingRequest(message));
+
+        } catch (IOException e) {
+            e.printStackTrace(); // 로깅 또는 예외 처리 필요
+            throw new RuntimeException("이미지를 가져오거나 메시지 전송 중 오류가 발생했습니다.", e);
+        } finally {
+            connection.disconnect(); // 연결 해제
         }
-
     }
 
     /**

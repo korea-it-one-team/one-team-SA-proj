@@ -75,4 +75,7 @@ public class ExchangeService {
         return false;
     }
 
+    public String getPhoneNum(int id) {
+        return exchangeRepository.getPhoneNum(id);
+    }
 }

@@ -182,7 +182,7 @@
                 url: currentExchangeurl,
                 method: 'POST',
                 success: function () {
-
+                    alert('문자전송에 성공하였습니다.');
                     $('#applicationButton').text('전송 완료').addClass('btn-secondary').removeClass('btn-outline-secondary').prop('disabled', true);
                 },
                 error: function () {
