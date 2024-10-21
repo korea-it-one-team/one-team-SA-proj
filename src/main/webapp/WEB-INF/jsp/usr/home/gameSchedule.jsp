@@ -73,21 +73,43 @@
                         var league = leagueInfo.leagueName; // 리그 이름
                         var matches = leagueInfo.matches; // 경기가 포함된 리스트
 
-                        // 리그 이름을 안전한 값으로 변환 (공백을 '-'로 대체)
+                        // 리그 이름에 공백이 있으면 '-' 으로 대체
                         var safeLeague = league.replace(/\s+/g, '-');
 
                         // 리그별로 경기 정보를 출력
-                        $('#gameSchedule-list').append('<h4 class="league-header">' + league + '</h4><ul id="date-' + date + '-league-' + safeLeague + '"></ul>');
+                        $('#gameSchedule-list').append('<h4 class="league-header">' + league + '</h4><div class="match-container" id="date-' + date + '-league-' + safeLeague + '"></div>');
 
                         matches.forEach(function (match) {
-                            var startDate = match.startDate;
+                            var startDate = match.startDate; // 전체 시작 시간 문자열
+                            var matchTime = startDate.split('\n')[1]; // ex) "경기 시간 01:45"에서 "01:45" 추출
                             var homeTeam = match.homeTeam;
                             var awayTeam = match.awayTeam;
                             var homeTeamScore = match.homeTeamScore ? match.homeTeamScore : '';
                             var awayTeamScore = match.awayTeamScore ? match.awayTeamScore : '';
 
-                            // 해당 리그의 ul 태그에 경기 정보 추가
-                            $('#date-' + date + '-league-' + safeLeague).append('<li>' + startDate + ' ' + homeTeam + ' vs ' + awayTeam + ' ' + homeTeamScore + ' : ' + awayTeamScore + '</li>');
+                            // 경기 정보를 가로로 배치
+                            var matchHTML;
+                            if (homeTeamScore || awayTeamScore) {
+                                // 스코어가 하나라도 있으면 표시
+                                var homeScoreClass = homeTeamScore > awayTeamScore ? 'high-score' : 'low-score';
+                                var awayScoreClass = awayTeamScore > homeTeamScore ? 'high-score' : 'low-score';
+
+                                matchHTML = '<li>' +
+                                    '<span class ="matchTime">'+ matchTime + '</span>' + '<br>' + // 시간 표시
+                                    homeTeam + '<span class="home-label">홈</span> ' +
+                                    '<span class="score ' + homeScoreClass + '">' + (homeTeamScore ? homeTeamScore : '') + '</span>' +
+                                    ' : ' +
+                                    '<span class="score ' + awayScoreClass + '">' + (awayTeamScore ? awayTeamScore : '') + '</span> ' +
+                                    awayTeam + '<br>' + '</li>';
+                            } else {
+                                matchHTML = '<li>' +
+                                    '<span class ="matchTime">'+ matchTime + '</span>' + '<br>' + // 시간 표시
+                                    homeTeam + '<span class="home-label">홈</span> ' + 'vs ' +
+                                    awayTeam + '<br>' + '</li>'; // 점수가 없는 경우 팀 이름만 표시
+                            }
+
+                            // 해당 리그의 match-container에 경기 정보 추가
+                            $('#date-' + date + '-league-' + safeLeague).append(matchHTML);
                         });
                     });
                 });
@@ -99,7 +121,6 @@
         });
     });
 </script>
-
 
 </body>
 </html>

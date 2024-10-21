@@ -60,8 +60,50 @@
     padding-bottom: 5px; /* 패딩 추가 */
 }
 
+/* 경기 항목에 margin-bottom 추가 */
+#gameSchedule-list li {
+    margin-bottom: 20px; /* 원하는 아래쪽 여백 */
+    display: inline-block; /* 가로로 배치 */
+    width: calc(50% - 10px); /* 두 개의 경기를 가로로 배치하기 위한 너비 */
+    vertical-align: top; /* 상단 정렬 */
+}
+
+/* 경기 목록에 대한 스타일 */
+.match-container {
+    display: flex; /* flexbox로 경기 리스트 배치 */
+    flex-wrap: wrap; /* 줄 바꿈 */
+    justify-content: space-between; /* 간격을 균등하게 */
+}
+/* 리그 헤더 */
 .league-header {
     border-bottom: 1px solid #666; /* 리그 헤더에 밑줄 추가 */
     margin-bottom: 8px; /* 아래쪽 여백 추가 */
     padding-bottom: 4px; /* 패딩 추가 */
+}
+/* 경기시간 스타일 */
+.matchTime {
+    font-weight: bold;
+}
+/* 홈팀 명시 스타일 */
+.home-label {
+    display: inline-block;
+    background-color: #007BFF; /* 원하는 배경색 */
+    color: #FFFFFF; /* 텍스트 색상 */
+    padding: 2px 2px; /* 상하 여백, 좌우 여백 */
+    border-radius: 2px;
+    font-weight: bold;
+    margin: 0 5px; /* '홈'과 팀 이름 사이의 간격 : 좌우 5px */
+    font-size: 0.8rem;
+}
+/* 스코어 스타일 */
+.score {
+    font-weight: bold; /* 스코어 굵게 */
+}
+
+.low-score {
+    color: gray; /* 낮은 점수 색상 */
+}
+
+.high-score {
+    color: black; /* 높은 점수 색상 */
 }
