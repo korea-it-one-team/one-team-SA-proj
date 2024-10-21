@@ -33,8 +33,11 @@ repositories {
 }
 
 dependencies {
+
+    // HttpHeaders
     implementation('org.apache.tomcat.embed:tomcat-embed-jasper')
     implementation group: 'org.glassfish.web', name: 'jakarta.servlet.jsp.jstl', version: '2.0.0'
+    
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
     implementation 'com.google.cloud:spring-cloud-gcp-starter-storage'
