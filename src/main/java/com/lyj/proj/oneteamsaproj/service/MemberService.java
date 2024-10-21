@@ -1,7 +1,7 @@
 package com.lyj.proj.oneteamsaproj.service;
 
 import com.lyj.proj.oneteamsaproj.repository.MemberRepository;
-import com.lyj.proj.oneteamsaproj.util.Ut;
+import com.lyj.proj.oneteamsaproj.Util.Ut;
 import com.lyj.proj.oneteamsaproj.vo.Member;
 import com.lyj.proj.oneteamsaproj.vo.ResultData;
 import org.springframework.beans.factory.annotation.Autowired;

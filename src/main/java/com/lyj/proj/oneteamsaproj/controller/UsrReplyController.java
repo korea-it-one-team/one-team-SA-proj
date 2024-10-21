@@ -2,7 +2,7 @@ package com.lyj.proj.oneteamsaproj.controller;
 
 import com.lyj.proj.oneteamsaproj.service.ReactionPointService;
 import com.lyj.proj.oneteamsaproj.service.ReplyService;
-import com.lyj.proj.oneteamsaproj.util.Ut;
+import com.lyj.proj.oneteamsaproj.Util.Ut;
 import com.lyj.proj.oneteamsaproj.vo.Reply;
 import com.lyj.proj.oneteamsaproj.vo.ResultData;
 import com.lyj.proj.oneteamsaproj.vo.Rq;

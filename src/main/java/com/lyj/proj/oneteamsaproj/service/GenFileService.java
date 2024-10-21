@@ -3,7 +3,7 @@ package com.lyj.proj.oneteamsaproj.service;
 
 import com.google.common.base.Joiner;
 import com.lyj.proj.oneteamsaproj.repository.GenFileRepository;
-import com.lyj.proj.oneteamsaproj.util.Ut;
+import com.lyj.proj.oneteamsaproj.Util.Ut;
 import com.lyj.proj.oneteamsaproj.vo.GenFile;
 import com.lyj.proj.oneteamsaproj.vo.ResultData;
 import org.springframework.beans.factory.annotation.Autowired;
