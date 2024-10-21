@@ -5,6 +5,10 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.6'
 }
 
+ext {
+    springCloudGcpVersion = "5.7.0"
+}
+
 group = 'com.lyj.proj'
 version = '0.0.1-SNAPSHOT'
 
@@ -24,10 +28,20 @@ repositories {
     mavenCentral()
 }
 
+repositories {
+    mavenCentral() // Maven Central Repository 추가
+}
+
 dependencies {
+
     // HttpHeaders
+    implementation('org.apache.tomcat.embed:tomcat-embed-jasper')
+    implementation group: 'org.glassfish.web', name: 'jakarta.servlet.jsp.jstl', version: '2.0.0'
+    
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+    implementation 'com.google.cloud:spring-cloud-gcp-starter-storage'
+    
     // SQL 로거
     implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4:1.16'
     // JSP 엔진
@@ -46,7 +60,20 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'net.nurigo:sdk:4.3.0'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-gcp-starter', version: '1.2.5.RELEASE'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-gcp-storage', version: '1.2.5.RELEASE'
+    implementation 'io.github.cdimascio:dotenv-java:2.2.0'
+
+    // 다른 의존성도 추가할 수 있습니다.
 }
+
+dependencyManagement {
+    imports {
+        mavenBom "com.google.cloud:spring-cloud-gcp-dependencies:$springCloudGcpVersion"
+    }
+}
+
 
 tasks.named('test') {
     useJUnitPlatform()
