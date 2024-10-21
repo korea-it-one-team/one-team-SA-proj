@@ -151,25 +151,3 @@ public class ControllerForTest {
         }
     }
 }
-
-// 이미지 파일 경로
-//            String imagePath = "src/main/resources/static/images/gray_image.jpg";
-//            File imageFile = new File(imagePath);
-
-//            // 파일이 생성될 때까지 기다리기
-//            int attempts = 0;
-//            while (!imageFile.exists() && attempts < 100) {  // 최대 100번 시도
-//                System.out.println("파일이 생성되기를 기다리고 있습니다.");
-//                Thread.sleep(500); // 0.5초 대기
-//                attempts++;
-//            }
-
-//            // 파일이 존재하면 JSP 파일 반환
-//            if (imageFile.exists()) {
-//                System.out.println("파일이 생성되었습니다. 시도 횟수 : " + attempts);
-//                return "test"; // JSP 파일 경로
-//            } else {
-//                // 실패한 경우 에러 페이지로 리다이렉트하거나, 적절한 메시지를 표시
-//                model.addAttribute("error", "이미지 처리에 실패하였습니다.");
-//                return "error"; // 에러 페이지 경로 (필요시)
-//            }

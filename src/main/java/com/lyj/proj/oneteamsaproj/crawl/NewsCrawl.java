@@ -17,7 +17,7 @@ public class NewsCrawl {
         System.setProperty("webdriver.chrome.driver", "C:/work_oneteam/one-team-SA-proj/chromedriver-win64/chromedriver.exe");
 
         ChromeOptions options = new ChromeOptions();
-        // options.addArguments("--headless"); // 필요 시 주석 해제
+        options.addArguments("--headless"); // 필요 시 주석 해제
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
 
