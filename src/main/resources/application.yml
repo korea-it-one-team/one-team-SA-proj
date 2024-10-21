@@ -1,6 +1,15 @@
 server:
   port: 8088
+
 spring:
+  cloud:
+    gcp:
+      storage:
+        credentials:
+          location: classpath:${CLASSPATH}
+        project-id: ${PROJECT_ID}
+        bucket: ${BUCKET_KEY}
+
   mail:
     host: smtp.gmail.com
     port: 587
@@ -11,6 +20,7 @@ spring:
           auth: true
           starttls:
             enable: true
+
   servlet:
     multipart:
       max-file-size: 100MB
@@ -24,10 +34,13 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/oneteam_project?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
     username: root
     password:
-  web:
-    resources:
-      static-locations: classpath:/static/
+
+custom:
+  genFileDirPath: C:\work_oneteam\one-team-SA-proj
+
+web:
+  resources:
+    static-locations: classpath:/static/
+
 mybatis:
   type-aliases-package: com.lyj.proj.vo
-
-
