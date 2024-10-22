@@ -17,7 +17,8 @@ CREATE TABLE gifticon_Stock(
                                id INT AUTO_INCREMENT PRIMARY KEY,
                                `gifticon_id` INT NOT NULL,
                                image_url TEXT NOT NULL,
-                               created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                               created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                               `use` INT NOT NULL
 );
 
 
@@ -123,4 +124,3 @@ SELECT * FROM gifticons;
 SELECT * FROM `member`;
 
 SELECT * FROM exchange_history;
-
