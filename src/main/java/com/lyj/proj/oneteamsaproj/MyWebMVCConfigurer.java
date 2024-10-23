@@ -62,7 +62,6 @@ public class MyWebMVCConfigurer implements WebMvcConfigurer {
         ir.addPathPatterns("/usr/article/doDelete");
 
         // 상품 관련
-        ir.addPathPatterns("/usr/article/doGifticon");
         ir.addPathPatterns("/usr/gifticons/**/application");
 
         // 회원 관련
@@ -81,7 +80,7 @@ public class MyWebMVCConfigurer implements WebMvcConfigurer {
         ir.addPathPatterns("/adm/member/doFindLoginId");
         ir.addPathPatterns("/adm/member/findLoginPw");
         ir.addPathPatterns("/adm/member/doFindLoginPw");
-        ir.addPathPatterns("/adm/exchange/list");
+        ir.addPathPatterns("/adm/exchange/**");
 
         // 댓글 관련
         ir.addPathPatterns("/usr/reply/doWrite");
@@ -110,5 +109,6 @@ public class MyWebMVCConfigurer implements WebMvcConfigurer {
         ir.addPathPatterns("/adm/member/doFindLoginId");
         ir.addPathPatterns("/adm/member/findLoginPw");
         ir.addPathPatterns("/adm/member/doFindLoginPw");
+
     }
 }

@@ -116,7 +116,7 @@
     // 모달 열기 및 데이터 로드
     function openModal(id) {
         currentExchangeId = id;
-        const currentExchangeUrl = `../exchange/detatil?id=` + id;
+        const currentExchangeUrl = `../exchange/detail?id=` + id;
 
         $.ajax({
             url: currentExchangeUrl, // 교환 신청 상세 정보 가져오기
@@ -131,7 +131,7 @@
 
                 // 버튼 텍스트 동적으로 설정
                 const processButton = $('#processButton');
-                if (currentExchangeStatus == 'COMPLETED') {
+                if (currentExchangeStatus === 'COMPLETED') {
                     processButton.text('처리 취소').removeClass('btn-success').addClass('btn-warning');
                 } else {
                     processButton.text('처리 완료').removeClass('btn-warning').addClass('btn-success');
@@ -177,7 +177,7 @@
 
     function postgifticon() {
         if (confirm("정말 전송하시겠습니까?")) {
-            const currentExchangeurl = `/exchange/` + currentExchangeId + `/application1`;
+            const currentExchangeurl = `../exchange/` + currentExchangeId + `/application1`;
             $.ajax({
                 url: currentExchangeurl,
                 method: 'POST',

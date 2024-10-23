@@ -1,6 +1,6 @@
 package com.lyj.proj.oneteamsaproj.controller;
 
-import com.lyj.proj.oneteamsaproj.util.Ut;
+
 import com.lyj.proj.oneteamsaproj.service.ExchangeService;
 import com.lyj.proj.oneteamsaproj.service.GifticonService;
 import com.lyj.proj.oneteamsaproj.vo.Gifticon;
@@ -25,7 +25,7 @@ public class GifticonController {
     @Autowired
     private ExchangeService exchangeService;
 
-    @RequestMapping("/gifticons")
+    @RequestMapping("usr/gifticonsList")
     public String getGifticonList(Model model, @RequestParam(defaultValue = "1") int page,
                                   @RequestParam(defaultValue = "") String searchKeyword) {
 
@@ -42,14 +42,7 @@ public class GifticonController {
         return "/usr/article/gifticonList"; // JSP 파일 이름
     }
 
-    @RequestMapping("/doGifticon")
-    @ResponseBody
-    public String doGifticon(HttpServletRequest req){
-        Rq rq = (Rq) req.getAttribute("rq");
-        return Ut.jsReplace("", "", "../exchange/gifticons");
-    }
-
-    @PostMapping("/gifticons/{id}/application")
+    @PostMapping("usr/gifticons/{id}/application")
     public ResponseEntity<Map<String, Object>> getGifticonApplication(HttpServletRequest req, @PathVariable int id) {
         Rq rq = (Rq) req.getAttribute("rq");
         int loginedMemberId = rq.getLoginedMemberId();

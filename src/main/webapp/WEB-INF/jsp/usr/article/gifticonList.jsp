@@ -136,7 +136,7 @@
         if(confirm("정말 교환하시겠습니까?")){
 
             $.ajax({
-                url: `../gifticons/`+ id + `/application`,  // 상태 업데이트
+                url: `/gifticons/`+ id + `/application`,  // 상태 업데이트
                 method: 'POST',
                 success: function(response) {
                     alert(response.message);

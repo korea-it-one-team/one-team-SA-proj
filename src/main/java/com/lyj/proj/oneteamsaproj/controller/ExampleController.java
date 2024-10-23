@@ -132,7 +132,7 @@ public class ExampleController {
      * MMS 발송 예제
      * 단일 발송, 여러 건 발송 상관없이 이용 가능
      */
-    @PostMapping("/exchange/{id}/application1")
+    @PostMapping("adm/exchange/{id}/application")
     public SingleMessageSentResponse sendMmsByResourcePath(HttpServletRequest req, @PathVariable int id) throws IOException {
         Rq rq = (Rq) req.getAttribute("rq");
 
