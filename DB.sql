@@ -3,6 +3,17 @@ DROP DATABASE IF EXISTS `one-team-SA-proj`;
 CREATE DATABASE `one-team-SA-proj`;
 USE `one-team-SA-proj`;
 
+# 경기일정 테이블 생성
+CREATE TABLE gameSchedule (
+                              id INT AUTO_INCREMENT PRIMARY KEY,
+                              startDate CHAR(100) NOT NULL,
+                              leagueName CHAR(100) NOT NULL DEFAULT '기본값',
+                              homeTeam CHAR(100) NOT NULL,
+                              awayTeam CHAR(100) NOT NULL,
+                              homeTeamScore CHAR(5) NOT NULL,
+                              awayTeamScore CHAR(5) NOT NULL
+);
+
 # 기프티콘 테이블 생성
 CREATE TABLE gifticons (
                            id INT AUTO_INCREMENT PRIMARY KEY,
@@ -160,15 +171,15 @@ updateDate = NOW(),
 title = '제목4',
 `body` = '내용4';
 
-alter table article add column memberId int(10) unsigned not null after updateDate;
+ALTER TABLE article ADD COLUMN memberId INT(10) UNSIGNED NOT NULL AFTER updateDate;
 
-update article
-set memberId = 2
-where id in (1,2);
+UPDATE article
+SET memberId = 2
+WHERE id IN (1,2);
 
-update article
-set memberId = 3
-where id in (3,4);
+UPDATE article
+SET memberId = 3
+WHERE id IN (3,4);
 
 
 # 게시판(board) 테이블 생성
@@ -201,7 +212,7 @@ updateDate = NOW(),
 `code` = 'QnA',
 `name` = '질의응답';
 
-alter table article add column boardId int(10) unsigned not null after `memberId`;
+ALTER TABLE article ADD COLUMN boardId INT(10) UNSIGNED NOT NULL AFTER `memberId`;
 
 UPDATE article
 SET boardId = 1
@@ -215,7 +226,7 @@ UPDATE article
 SET boardId = 3
 WHERE id = 4;
 
-alter table article add column hitCount int(10) unsigned not null default 0 after `body`;
+ALTER TABLE article ADD COLUMN hitCount INT(10) UNSIGNED NOT NULL DEFAULT 0 AFTER `body`;
 
 # reactionPoint 테이블 생성
 CREATE TABLE reactionPoint(
@@ -275,20 +286,20 @@ relId = 1,
 `point` = 1;
 
 # article 테이블에 reactionPoint(좋아요) 관련 컬럼 추가
-alter table article add column goodReactionPoint int(10) unsigned not null default 0;
+ALTER TABLE article ADD COLUMN goodReactionPoint INT(10) UNSIGNED NOT NULL DEFAULT 0;
 ALTER TABLE article ADD COLUMN badReactionPoint INT(10) UNSIGNED NOT NULL DEFAULT 0;
 
 # update join -> 기존 게시글의 good bad RP 값을 RP 테이블에서 추출해서 article table에 채운다
-update article as A
-    inner join (
-    select RP.relTypeCode, Rp.relId,
+UPDATE article AS A
+    INNER JOIN (
+    SELECT RP.relTypeCode, Rp.relId,
     SUM(IF(RP.point > 0,RP.point,0)) AS goodReactionPoint,
     SUM(IF(RP.point < 0,RP.point * -1,0)) AS badReactionPoint
-    from reactionPoint As RP
-    group by RP.relTypeCode,Rp.relId
-    ) as RP_SUM
-on A.id = RP_SUM.relId
-    set A.goodReactionPoint = RP_SUM.goodReactionPoint,
+    FROM reactionPoint AS RP
+    GROUP BY RP.relTypeCode,Rp.relId
+    ) AS RP_SUM
+ON A.id = RP_SUM.relId
+    SET A.goodReactionPoint = RP_SUM.goodReactionPoint,
         A.badReactionPoint = RP_SUM.badReactionPoint;
 
 # reply 테이블 생성
@@ -428,3 +439,5 @@ UPDATE `member`
 SET loginPw = SHA2(loginPw,256);
 
 #######(INIT 끝)
+
+SELECT * FROM gameSchedule;

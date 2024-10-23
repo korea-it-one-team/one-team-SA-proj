@@ -1,27 +1,4 @@
 @charset "UTF-8";
-/* 스피너 CSS */
-.spinner {
-    border: 8px solid #f3f3f3;
-    border-top: 8px solid #3498db;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    animation: spin 1s linear infinite;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 50px;
-}
-
-/* 스피너 애니메이션 */
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
 .main-title {
     width: 280px;
     height: 40px;
@@ -89,11 +66,9 @@
     display: inline-block;
     background-color: #007BFF; /* 원하는 배경색 */
     color: #FFFFFF; /* 텍스트 색상 */
-    padding: 2px 2px; /* 상하 여백, 좌우 여백 */
     border-radius: 2px;
     font-weight: bold;
-    margin: 0 5px; /* '홈'과 팀 이름 사이의 간격 : 좌우 5px */
-    font-size: 0.8rem;
+    font-size: 0.7rem;
 }
 /* 스코어 스타일 */
 .score {
