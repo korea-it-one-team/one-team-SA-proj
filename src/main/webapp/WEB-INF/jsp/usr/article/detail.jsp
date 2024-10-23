@@ -24,23 +24,33 @@
 <script>
 	function ArticleDetail__doIncreaseHitCount() {
 		const localStorageKey = 'article__' + params.id + '__alreadyOnView';
-		if (localStorage.getItem(localStorageKey)) {
-			return;
-		}
+
+		// 이미 조회한 경우 바로 리턴하지 않고 현재 조회수 표시
+        if (localStorage.getItem(localStorageKey)) {
+            $.get('../article/getHitCount', {
+                id: params.id,
+                ajaxMode: 'Y'
+            }, function(data) {
+                $('.article-detail__hit-count').empty().html(data.data1);
+            }, 'json');
+            return;
+        }
+
 		localStorage.setItem(localStorageKey, true);
 
 		$.get('../article/doIncreaseHitCountRd', {
-			id : params.id,
-			ajaxMode : 'Y'
-		}, function(data) {
-			console.log(data);
-			console.log(data.data1);
-			$('.article-detail__hit-count').empty().html(data.data1);
-		}, 'json')
+            id: params.id,
+            ajaxMode: 'Y'
+        }, function(data) {
+            if(data.resultCode.startsWith('S-')) {
+                $('.article-detail__hit-count').empty().html(data.data1);
+            }
+        }, 'json');
 	}
 	$(function() {
-		// 		ArticleDetail__doIncreaseHitCount();
-		setTimeout(ArticleDetail__doIncreaseHitCount, 2000);
+		// 페이지 로드 즉시 조회수 증가 처리
+		ArticleDetail__doIncreaseHitCount();
+		// setTimeout(ArticleDetail__doIncreaseHitCount, 2000);
 	})
 </script>
 
@@ -57,15 +67,13 @@
 		}
 	}
 function doGoodReaction(articleId) {
-		if(isNaN(params.memberId) == true) {
-			if(confirm('로그인 페이지로 이동하겠습니까?')) {
-// 				console.log(window.location.href);
-// 				console.log(encodeURIComponent(window.location.href));
-				var currentUri = encodeURIComponent(window.location.href);
-				window.location.href = '../member/login?afterLoginUri=' + currentUri;
-				// 로그인 페이지에서 원래 페이지의 정보를 포함시켜서 보냄.
-			}
-			return;
+			if(isNaN(params.memberId)) {
+            	if(confirm('로그인 페이지로 이동하겠습니까?')) {
+                	var currentUri = encodeURIComponent(window.location.href);
+                	window.location.href = '../member/login?afterLoginUri=' + currentUri;
+            	}
+            return;
+
 		}
 
 		$.ajax({
@@ -82,26 +90,29 @@ function doGoodReaction(articleId) {
 				if(data.resultCode.startsWith('S-')){
 					var likeButton = $('#likeButton');
 					var likeCount = $('#likeCount');
-					var likeCountC = $('.likeCount');
+					// var likeCountC = $('.likeCount');
+					var likeCountBtn = likeButton.find('.likeCount');
 					var DislikeButton = $('#DislikeButton');
 					var DislikeCount = $('#DislikeCount');
-					var DislikeCountC = $('.DislikeCount');
+					// var DislikeCountC = $('.DislikeCount');
+					var DislikeCountBtn = DislikeButton.find('.DislikeCount');
 
-					if(data.resultCode == 'S-1'){
-						likeButton.toggleClass('btn-outline');
-						likeCount.text(data.data1);
-						likeCountC.text(data.data1);
-					}else if(data.resultCode == 'S-2'){
-						DislikeButton.toggleClass('btn-outline');
-						DislikeCount.text(data.data2);
-						DislikeCountC.text(data.data2);
-						likeButton.toggleClass('btn-outline');
-						likeCount.text(data.data1);
-					}else {
-						likeButton.toggleClass('btn-outline');
-						likeCount.text(data.data1);
-						likeCountC.text(data.data1);
-					}
+					// 모든 좋아요 카운트 업데이트
+                    likeCount.text(data.data1);
+                    likeCountBtn.text(data.data1);
+
+                    // 모든 싫어요 카운트 업데이트
+                    DislikeCount.text(data.data2);
+                    DislikeCountBtn.text(data.data2);
+
+					if(data.resultCode == 'S-1') {
+                        likeButton.toggleClass('btn-outline');
+                    } else if(data.resultCode == 'S-2') {
+                        DislikeButton.removeClass('btn-outline');
+                        likeButton.toggleClass('btn-outline');
+                    } else {
+                        likeButton.toggleClass('btn-outline');
+                    }
 
 				}else {
 					alert(data.msg);
@@ -115,10 +126,9 @@ function doGoodReaction(articleId) {
 		});
 	}
 function doBadReaction(articleId) {
-	if(isNaN(params.memberId) == true) {
+	// if(isNaN(params.memberId) == true) {
+	if(isNaN(params.memberId)) {
 		if(confirm('로그인 페이지로 이동하겠습니까?')) {
-//				console.log(window.location.href);
-//				console.log(encodeURIComponent(window.location.href));
 			var currentUri = encodeURIComponent(window.location.href);
 			window.location.href = '../member/login?afterLoginUri=' + currentUri;
 		}
@@ -138,28 +148,29 @@ function doBadReaction(articleId) {
 				if(data.resultCode.startsWith('S-')){
 					var likeButton = $('#likeButton');
 					var likeCount = $('#likeCount');
-					var likeCountC = $('.likeCount');
+					// var likeCountC = $('.likeCount');
+					var likeCountBtn = likeButton.find('.likeCount');
 					var DislikeButton = $('#DislikeButton');
 					var DislikeCount = $('#DislikeCount');
-					var DislikeCountC = $('.DislikeCount');
+					// var DislikeCountC = $('.DislikeCount');
+					var DislikeCountBtn = DislikeButton.find('.DislikeCount');
 
-					if(data.resultCode == 'S-1'){
-						DislikeButton.toggleClass('btn-outline');
-						DislikeCount.text(data.data2);
-						DislikeCountC.text(data.data2);
-					}else if(data.resultCode == 'S-2'){
-						likeButton.toggleClass('btn-outline');
-						likeCount.text(data.data1);
-						likeCountC.text(data.data1);
-						DislikeButton.toggleClass('btn-outline');
-						DislikeCount.text(data.data2);
-						DislikeCountC.text(data.data2);
+					// 모든 좋아요 카운트 업데이트
+                    likeCount.text(data.data1);
+                    likeCountBtn.text(data.data1);
 
-					}else {
-						DislikeButton.toggleClass('btn-outline');
-						DislikeCount.text(data.data2);
-						DislikeCountC.text(data.data2);
-					}
+                    // 모든 싫어요 카운트 업데이트
+                    DislikeCount.text(data.data2);
+                    DislikeCountBtn.text(data.data2);
+
+					if(data.resultCode == 'S-1') {
+                        DislikeButton.toggleClass('btn-outline');
+                    } else if(data.resultCode == 'S-2') {
+                        likeButton.removeClass('btn-outline');
+                        DislikeButton.toggleClass('btn-outline');
+                    } else {
+                        DislikeButton.toggleClass('btn-outline');
+                    }
 
 				}else {
 					alert(data.msg);
