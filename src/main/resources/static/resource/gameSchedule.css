@@ -1,4 +1,5 @@
 @charset "UTF-8";
+
 .main-title {
     width: 280px;
     height: 40px;
@@ -35,6 +36,7 @@
     border-bottom: 2px solid #000; /* 날짜 헤더에 밑줄 추가 */
     margin-bottom: 10px; /* 아래쪽 여백 추가 */
     padding-bottom: 5px; /* 패딩 추가 */
+    width:800px;
 }
 
 /* 경기 항목에 margin-bottom 추가 */
@@ -56,17 +58,28 @@
     border-bottom: 1px solid #666; /* 리그 헤더에 밑줄 추가 */
     margin-bottom: 8px; /* 아래쪽 여백 추가 */
     padding-bottom: 4px; /* 패딩 추가 */
+    width:800px;
+}
+/* 경기 하나당 최소 너비 설정 */
+.match-item{
+    min-width: 400px;
 }
 /* 경기시간 스타일 */
 .matchTime {
+    display: inline-block;
     font-weight: bold;
+    min-width: 40px; /* 최소 너비 */
 }
 /* 홈팀 명시 스타일 */
 .home-label {
     display: inline-block;
     background-color: #007BFF; /* 원하는 배경색 */
     color: #FFFFFF; /* 텍스트 색상 */
-    border-radius: 2px;
+    height: 8px; /* 높이 16px */
+    width: 12px; /* 너비 20px */
+    text-align: center;
+    padding: 4px 4px; /* 상하 여백, 좌우 여백 */
+    border-radius: 3px;
     font-weight: bold;
     font-size: 0.7rem;
 }

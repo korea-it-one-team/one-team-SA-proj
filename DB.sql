@@ -7,6 +7,7 @@ USE `one-team-SA-proj`;
 CREATE TABLE gameSchedule (
                               id INT AUTO_INCREMENT PRIMARY KEY,
                               startDate CHAR(100) NOT NULL,
+                              matchTime CHAR(100) NOT NULL,
                               leagueName CHAR(100) NOT NULL DEFAULT '기본값',
                               homeTeam CHAR(100) NOT NULL,
                               awayTeam CHAR(100) NOT NULL,

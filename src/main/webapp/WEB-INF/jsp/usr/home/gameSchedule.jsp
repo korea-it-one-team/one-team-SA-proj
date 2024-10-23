@@ -32,32 +32,56 @@
         <h1 class="main-title-content">경기 일정</h1>
     </div>
 
-    <!-- 경기일정 노출 -->
+    <!-- 경기 일정 노출 -->
     <div class="gameSchedule-list-container">
         <ul id="gameSchedule-list">
+            <c:set var="currentDate" value=""/>
+            <c:set var="currentLeague" value=""/>
+
             <c:forEach var="gameSchedule" items="${gameSchedules}">
-                <li>
-                    <span class="matchTime">${gameSchedule.startDate}</span><br>
-                    <span>리그: ${gameSchedule.leagueName}</span><br>
-                    <span>
-                        <span class="home-label">홈</span> <!-- 홈팀 레이블 추가 -->
-                    ${gameSchedule.homeTeam}
+                <!-- 날짜가 바뀔 때마다 새로운 날짜 헤더 출력 -->
+                <c:if test="${currentDate != gameSchedule.startDate}">
+                    <c:set var="currentDate" value="${gameSchedule.startDate}"/>
+                    <h3 class="date-header">${gameSchedule.startDate}</h3> <!-- 날짜 헤더 스타일 적용 -->
+                </c:if>
+
+                <!-- 리그가 바뀔 때마다 새로운 리그 헤더 출력 및 리그별 블록 시작 -->
+                <c:if test="${currentLeague != gameSchedule.leagueName}">
+                    <c:set var="currentLeague" value="${gameSchedule.leagueName}"/>
+                    <h4 class="league-header">${gameSchedule.leagueName}</h4> <!-- 리그 헤더 스타일 적용 -->
+                    <!-- 리그별로 게임을 묶을 블록 시작 -->
+                    <div class="league-block">
+                    <div class="match-container"> <!-- 경기 항목을 담을 컨테이너 -->
+                </c:if>
+
+                <!-- 경기 항목 -->
+                <li class="match-item">
+                    <!-- 경기 시작 시간 -->
+                    <span class="matchTime">${gameSchedule.matchTime}</span>
+                    <div class="home-label">홈</div>
+                    <span>${gameSchedule.homeTeam}</span>
                     <c:if test="${gameSchedule.homeTeamScore != '' && gameSchedule.awayTeamScore != ''}">
-                        <c:set var="homeScoreClass" value="${gameSchedule.homeTeamScore > gameSchedule.awayTeamScore ? 'high-score' : 'low-score'}"/>
-                        <c:set var="awayScoreClass" value="${gameSchedule.awayTeamScore > gameSchedule.homeTeamScore ? 'high-score' : 'low-score'}"/>
+                        <c:set var="homeScoreClass"
+                               value="${gameSchedule.homeTeamScore > gameSchedule.awayTeamScore ? 'high-score' : 'low-score'}"/>
+                        <c:set var="awayScoreClass"
+                               value="${gameSchedule.awayTeamScore > gameSchedule.homeTeamScore ? 'high-score' : 'low-score'}"/>
                         <span class="score ${homeScoreClass}">${gameSchedule.homeTeamScore}</span> :
                         <span class="score ${awayScoreClass}">${gameSchedule.awayTeamScore}</span>
                     </c:if>
                     <c:if test="${gameSchedule.homeTeamScore == '' || gameSchedule.awayTeamScore == ''}">
                         vs
                     </c:if>
-                    ${gameSchedule.awayTeam}
-                </span>
+                    <span>${gameSchedule.awayTeam}</span>
                 </li>
+
+                <!-- 리그가 끝날 때 리그 블록 닫기 -->
+                <c:if test="${currentLeague != gameSchedule.leagueName || gameSchedule == gameSchedules[gameSchedules.size()-1]}">
+                    </div> <!-- 경기 항목 컨테이너 종료 -->
+                    </div> <!-- 리그 블록 종료 -->
+                </c:if>
             </c:forEach>
         </ul>
     </div>
-
 
 </div>
 

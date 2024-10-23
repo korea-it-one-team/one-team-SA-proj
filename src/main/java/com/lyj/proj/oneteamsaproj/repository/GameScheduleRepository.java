@@ -9,7 +9,7 @@ import java.util.List;
 public interface GameScheduleRepository {
 
     // 모든 경기 일정을 조회하는 메서드
-    @Select("SELECT * FROM gameSchedule")
+    @Select("SELECT * FROM gameSchedule ORDER BY startDate ASC")
     List<GameSchedule> findAll();
 
     // 특정 시작 날짜, 리그 시간, 리그 이름, 홈팀, 원정팀에 해당하는 경기를 조회하는 메서드
