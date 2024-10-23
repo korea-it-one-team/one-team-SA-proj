@@ -27,6 +27,10 @@
     </style>
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', function() {
+            let retryCount = 0;
+            const maxRetries = 5;  // 재시도 최대 횟수
+            const retryInterval = 5000;  // 재시도 간격 (5초)
+
             function checkStatus() {
                 fetch('/video-status')
                     .then(response => response.json())
@@ -42,12 +46,25 @@
                             console.log("동영상 처리가 완료되었습니다.");
                             window.location.href = 'openCV/result'; // 처리가 완료되면 결과 페이지로 이동
                         } else {
-                            setTimeout(checkStatus, 3000); // 3초마다 상태 체크
+                            retryCount = 0;  // 재시도 횟수 초기화 (정상 통신 시)
+                            setTimeout(checkStatus, retryInterval); // 5초마다 상태 체크
                             console.log("아직 동영상이 처리 중입니다.");
                         }
                     })
-                    .catch(error => console.error('상태 확인 오류:', error));
+                    .catch(error => {
+                        console.error('상태 확인 오류:', error);
+                        retryCount++;  // 재시도 횟수 증가
+
+                        if (retryCount < maxRetries) {
+                            console.log(`연결이 끊겼습니다. 재시도 중... (${retryCount}/${maxRetries})`);
+                            setTimeout(checkStatus, retryInterval);  // 일정 시간 후 재연결 시도
+                        } else {
+                            console.error('최대 재시도 횟수를 초과했습니다. 다시 시도해 주세요.');
+                            alert('서버와의 연결이 불안정합니다. 다시 시도해 주세요.');
+                        }
+                    });
             }
+
             checkStatus(); // 상태 체크 시작
         });
     </script>

@@ -37,3 +37,4 @@ out/
 .vscode/
 /venv/
 *.json
+src/main/resources/static/video/*.mp4
