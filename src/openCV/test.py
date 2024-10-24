@@ -122,17 +122,22 @@ def is_on_green_field(frame, x1, y1, x2, y2):
     hsv_player_area = cv2.cvtColor(player_area, cv2.COLOR_BGR2HSV)
 
     # 초록색 범위 설정 (HSV 기준)
-    green_lower = np.array([35, 40, 40], dtype=np.uint8)
-    green_upper = np.array([85, 255, 255], dtype=np.uint8)
+    green_lower = np.array([30, 40, 40], dtype=np.uint8)  # 범위를 더 넓게 설정
+    green_upper = np.array([90, 255, 255], dtype=np.uint8)
 
     # 초록색 바닥 필터링
     mask = cv2.inRange(hsv_player_area, green_lower, green_upper)
     green_pixels_ratio = cv2.countNonZero(mask) / (player_area.size / 3)
 
+    # 필드로 감지된 영역에 박스 그리기 (디버깅용)
+    if green_pixels_ratio > 0.5:
+        cv2.rectangle(frame, (x1, y2-10), (x2, y2), (0, 255, 255), 2)  # 노란색으로 필드 박스 표시
+
     # 일정 비율 이상 초록색일 때만 True 반환 (예: 50% 이상)
     return green_pixels_ratio > 0.5
 
-# 비디오 처리 함수
+
+# 비디오 처리 함수 (필드 영역을 디버깅할 수 있도록 필드로 인식한 영역에 박스를 그리는 코드가 추가됨)
 def update_status(video_path):
     global processing_status
 
