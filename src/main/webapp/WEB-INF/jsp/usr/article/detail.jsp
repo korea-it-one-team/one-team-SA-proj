@@ -7,50 +7,52 @@
 
 <!-- <iframe src="http://localhost:8080/usr/article/doIncreaseHitCount?id=757" frameborder="0"></iframe> -->
 <!-- 변수 -->
+<!-- JSTL 변수를 JavaScript에서 사용할 때, 문자열로 변환 -->
 <script>
-	const params = {};
-	params.id = parseInt('${param.id}');
-	params.memberId = parseInt('${loginedMemberId}')
+    const params = {};
+    params.id = parseInt('${param.id}');
+    params.memberId = parseInt('${loginedMemberId}');
+    var isAlreadyAddGoodRp = ${isAlreadyAddGoodRp ? 'true' : 'false'};
+    var isAlreadyAddBadRp = ${isAlreadyAddBadRp ? 'true' : 'false'};
 
-	console.log(params);
-	console.log(params.id);
-	console.log(params.memberId);
-
-	var isAlreadyAddGoodRp = ${isAlreadyAddGoodRp};
-	var isAlreadyAddBadRp = ${isAlreadyAddBadRp};
+    console.log(params);
+    console.log(params.id);
+    console.log(params.memberId);
 </script>
 
 <!-- 조회수 -->
 <script>
-	function ArticleDetail__doIncreaseHitCount() {
+function ArticleDetail__doIncreaseHitCount() {
+		// 게시글의 ID를 기반으로 localStorage에 키 설정
 		const localStorageKey = 'article__' + params.id + '__alreadyOnView';
 
 		// 이미 조회한 경우 바로 리턴하지 않고 현재 조회수 표시
         if (localStorage.getItem(localStorageKey)) {
+            // 이미 조회한 경우 조회수 표시만 갱신하고 조회수 증가 요청은 하지 않음
             $.get('../article/getHitCount', {
                 id: params.id,
                 ajaxMode: 'Y'
             }, function(data) {
                 $('.article-detail__hit-count').empty().html(data.data1);
             }, 'json');
-            return;
+            return; // 이미 조회한 경우 더 이상 진행하지 않음
         }
 
-		localStorage.setItem(localStorageKey, true);
-
+		// 처음 조회하는 경우, 조회수 증가 요청을 보내고 localStorage에 기록
 		$.get('../article/doIncreaseHitCountRd', {
             id: params.id,
             ajaxMode: 'Y'
         }, function(data) {
             if(data.resultCode.startsWith('S-')) {
                 $('.article-detail__hit-count').empty().html(data.data1);
+				// 조회 완료 후 해당 게시글 ID로 localStorage에 기록
+				localStorage.setItem(localStorageKey, true);
             }
         }, 'json');
 	}
 	$(function() {
 		// 페이지 로드 즉시 조회수 증가 처리
 		ArticleDetail__doIncreaseHitCount();
-		// setTimeout(ArticleDetail__doIncreaseHitCount, 2000);
 	})
 </script>
 
@@ -272,10 +274,6 @@ function doModifyReply(replyId) {
 							👎 DISLIKE
 							<span class="DislikeCount">${article.badReactionPoint}</span>
 						</button>
-						<%-- 						<a href="/usr/reactionPoint/doGoodReaction?relTypeCode=article&relId=${param.id }&replaceUri=${rq.currentUri}" --%>
-						<%-- 							class="btn btn-outline btn-success">👍 LIKE ${article.goodReactionPoint}</a>  --%>
-						<%-- 						<a href="/usr/reactionPoint/doBadReaction?relTypeCode=article&relId=${param.id }&replaceUri=${rq.currentUri}"  --%>
-						<%-- 							class="btn btn-outline btn-error">👎 DISLIKE ${article.badReactionPoint}</a> --%>
 					</td>
 				</tr>
 				<tr>

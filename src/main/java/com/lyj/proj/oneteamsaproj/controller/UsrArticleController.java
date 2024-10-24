@@ -138,9 +138,6 @@ public class UsrArticleController {
 
         }
 
-        // getter, setter 잘 알아보자... ㅠㅠ
-//		article.setTitle(title);
-//		article.setBody(body);
 
         article = articleService.getArticleById(id);
 
