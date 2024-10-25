@@ -29,12 +29,12 @@ function ArticleDetail__doIncreaseHitCount() {
 		// 이미 조회한 경우 바로 리턴하지 않고 현재 조회수 표시
         if (localStorage.getItem(localStorageKey)) {
             // 이미 조회한 경우 조회수 표시만 갱신하고 조회수 증가 요청은 하지 않음
-            $.get('../article/getHitCount', {
-                id: params.id,
-                ajaxMode: 'Y'
-            }, function(data) {
-                $('.article-detail__hit-count').empty().html(data.data1);
-            }, 'json');
+            // $.get('../article/getHitCount', {
+            //     id: params.id,
+            //     ajaxMode: 'Y'
+            // }, function(data) {
+            //     $('.article-detail__hit-count').empty().html(data.data1);
+            // }, 'json');
             return; // 이미 조회한 경우 더 이상 진행하지 않음
         }
 
