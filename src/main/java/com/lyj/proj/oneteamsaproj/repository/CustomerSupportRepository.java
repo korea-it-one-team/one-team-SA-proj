@@ -4,6 +4,7 @@ import com.lyj.proj.oneteamsaproj.vo.*;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -38,4 +39,11 @@ public interface CustomerSupportRepository {
 
     @Select("SELECT * FROM consultations WHERE member_id = #{memberId}")
     List<Consultation> getHistory(int memberId);
+
+    @Update("""
+            UPDATE consultations
+            SET answer = ${answer}
+            WHERE id = #{id}
+            """)
+    void updateAnswer(int id, String answer);
 }

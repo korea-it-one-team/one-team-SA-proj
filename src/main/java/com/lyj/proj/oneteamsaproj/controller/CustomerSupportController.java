@@ -32,7 +32,8 @@ public class CustomerSupportController {
         if(rq.getLoginedMemberId() != 0){
             member_id = rq.getLoginedMemberId();
             member_status = rq.getLoginedMember().getAuthLevel() == 7 ? "관리자" : "유저";
-        }
+        };
+
         // DB에서 FAQ, 상담내역 등을 불러와서 모델에 추가
         List<faq_Categorys> categorys = customerSupportService.getcategorys();
         List<Faq> faqs = customerSupportService.getFaqs();
@@ -41,6 +42,12 @@ public class CustomerSupportController {
         model.addAttribute("categorys",categorys);
         model.addAttribute("faqs",faqs);
         model.addAttribute("consultataions",consultataions);
+        if (member_status.equals("관리자")){
+            model.addAttribute("isAdmin",true);
+        }else {
+            model.addAttribute("isAdmin",false);
+        };
+
         return "usr/service/customer_support"; // JSP 파일 이름
     }
 
@@ -56,5 +63,12 @@ public class CustomerSupportController {
         return ResponseEntity.ok(consultation);
     }
 
-    // 기타 메서드들...
+    @PostMapping("/save-answer")
+    @ResponseBody
+    public String saveAnswer(@RequestParam int id, @RequestParam String answer) {
+        System.out.println("saknffnk : " + id );
+        System.out.println("zzzzzzzz : " + answer );
+        customerSupportService.updateAnswer(id, answer);
+        return "redirect:/consultation-history"; // 상담 내역 페이지로 리다이렉트
+    }
 }

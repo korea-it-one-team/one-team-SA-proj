@@ -21,9 +21,9 @@
     </script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // 카테고리 클릭 시 FAQ 토글
-            $('.category-title').on('click', function() {
+            $('.category-title').on('click', function () {
                 const faqList = $(this).next('.faq-list');
                 $('.faq-list').not(faqList).addClass('hidden');
                 faqList.removeClass('hidden');
@@ -31,16 +31,16 @@
             });
 
             // 질문 클릭 시 답변 표시/숨기기
-            $('.faq-question').on('click', function() {
+            $('.faq-question').on('click', function () {
                 $(this).next('.faq-answer').slideToggle();
             });
         });
     </script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // 상담 저장 처리
-            $('form').on('submit', function(event) {
+            $('form').on('submit', function (event) {
                 event.preventDefault(); // 기본 제출 방지
 
                 const title = $('#title').val();
@@ -49,22 +49,14 @@
                 $.ajax({
                     url: '/submit-consultation',
                     method: 'POST',
-                    data: { title: title, content: content },
-                    success: function(response) {
-                        // 상담 내역 업데이트
-                        $('#history ul').append(`
-                        <li>
-                            <a href="#" class="text-blue-500 hover:underline">${response.title}</a>
-                            <span class="text-gray-500">답변대기중</span>
-                        </li>
-                    `);
-                        // 상담 내역 섹션 표시
-                        showSection('history');
-                        // 폼 초기화
-                        $('#title').val('');
-                        $('#content').val('');
+                    data: {title: title, content: content},
+                    success: function (response) {
+                        alert('상담 저장이 완료 되었습니다.');
+                        // 페이지 새로고침
+                        location.reload();
+
                     },
-                    error: function() {
+                    error: function () {
                         alert('상담 저장 중 오류가 발생했습니다.'); // 에러 처리
                     }
                 });
@@ -132,66 +124,85 @@
         <button class="btn btn-primary" onclick="showSection('history')">상담내역</button>
     </div>
 
-<div id="faq" class="content-section">
-    <h2 class="text-2xl font-bold mb-6 ">자주 묻는 질문 Q&A</h2>
-    <div id="faq-list" class="flex flex-wrap gap-4 mb-4">
-        <c:forEach var="category" items="${categorys}">
-            <div>
-                <h3 class="category-title btn btn-outline" data-category-id="${category.id}">
-                    ${category.category_name}
-                </h3>
-                <div class="faq-list hidden mt-2" data-category-id="${category.id}">
-                    <c:forEach var="faq" items="${faqs}">
-                        <c:if test="${faq.category_name == category.category_name}">
-                            <h4 class="faq-question cursor-pointer" data-faq-id="${faq.id}">
-                                ${faq.question}
-                            </h4>
-                            <div class="faq-answer hidden" data-faq-id="${faq.id}">
-                                <p>${faq.answer}</p>
-                            </div>
-                        </c:if>
-                    </c:forEach>
+    <div id="faq" class="content-section">
+        <h2 class="text-2xl font-bold mb-6 ">자주 묻는 질문 Q&A</h2>
+        <div id="faq-list" class="flex flex-wrap gap-4 mb-4">
+            <c:forEach var="category" items="${categorys}">
+                <div>
+                    <h3 class="category-title btn btn-outline" data-category-id="${category.id}">
+                            ${category.category_name}
+                    </h3>
+                    <div class="faq-list hidden mt-2" data-category-id="${category.id}">
+                        <c:forEach var="faq" items="${faqs}">
+                            <c:if test="${faq.category_name == category.category_name}">
+                                <h4 class="faq-question cursor-pointer" data-faq-id="${faq.id}">
+                                        ${faq.question}
+                                </h4>
+                                <div class="faq-answer hidden" data-faq-id="${faq.id}">
+                                    <p>${faq.answer}</p>
+                                </div>
+                            </c:if>
+                        </c:forEach>
+                    </div>
                 </div>
-            </div>
-        </c:forEach>
+            </c:forEach>
+        </div>
     </div>
-</div>
 
     <div id="consultation" class="content-section" style="display: none;">
         <h2 class="text-xl font-semibold">1:1 상담</h2>
         <form action="" method="post">
-        <div class="mb-4">
+            <div class="mb-4">
                 <label for="title" class="block text-sm font-medium">제목:</label>
                 <input type="text" class="input input-bordered w-full" id="title" name="title" required>
             </div>
             <div class="mb-4">
                 <label for="content" class="block text-sm font-medium">내용:</label>
-                <textarea class="textarea textarea-bordered w-full h-80" id="content" name="content" required></textarea>
+                <textarea class="textarea textarea-bordered w-full h-80" id="content" name="content"
+                          required></textarea>
             </div>
             <button type="submit" class="btn btn-success">저장</button>
         </form>
     </div>
 
+    <div id="history" class="content-section" style="display: none;">
+        <h2 class="text-xl font-semibold">상담내역</h2>
+        <ul class="space-y-4"> <!-- 각 항목 간격 추가 -->
+            <c:forEach var="consultataion" items="${consultataions}">
+                <li class="p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"> <!-- 카드 스타일 추가 -->
+                    <a href="#" onclick="showConsultationDetails(${consultataion.id})"
+                       class="text-blue-600 font-bold hover:underline">
+                            ${consultataion.title}
+                    </a>
 
-<div id="history" class="content-section" style="display: none;">
-    <h2 class="text-xl font-semibold">상담내역</h2>
-    <ul>
-        <c:forEach var="consultataion" items="${consultataions}">
-            <li>
-                <a href="#" onclick="showConsultationDetails(${consultataion.id})" class="text-blue-500 hover:underline">
-                    ${consultataion.title}
-                </a>
+                    <div class="hidden content_answer${consultataion.id} content_answer mt-2"> <!-- 상단 마진 추가 -->
+                        <div class="bg-gray-100 p-3 rounded-lg border-l-4 border-blue-500"> <!-- 답변 박스 스타일 -->
+                            <span class="text-gray-700 font-semibold">내용:</span>
+                            <p class="text-gray-600">${consultataion.content}</p>
+                        </div>
+                        <c:if test="${isAdmin}">
+                            <div class="bg-gray-100 p-3 rounded-lg border-l-4 border-green-500 mt-2">
+                                <!-- 수정 가능한 답변 박스 -->
+                                <span class="text-gray-700 font-semibold">답변:</span>
+                                <input type="text" class="input input-bordered w-full mt-1"
+                                       value="${consultataion.answer}"/>
+                                <button class="btn btn-success mt-2" onclick="saveAnswer(${consultataion.id})">저장
+                                </button>
+                            </div>
+                        </c:if>
+                        <c:if test="${!isAdmin}">
+                            <div class="bg-gray-100 p-3 rounded-lg border-l-4 border-green-500 mt-2"> <!-- 일반 답변 박스 -->
+                                <span class="text-gray-700 font-semibold">답변:</span>
+                                <p class="text-gray-600">${consultataion.answer}</p>
+                            </div>
+                        </c:if>
+                    </div>
 
-                <div class="hidden content_answer${consultataion.id} content_answer">
-                <span class="text-gray-500 block">${consultataion.content}</span>
+                </li>
+            </c:forEach>
+        </ul>
+    </div>
 
-                <span class="text-gray-500 block">${consultataion.answer}</span>
-                </div>
-
-            </li>
-        </c:forEach>
-    </ul>
-</div>
 </div>
 
 <script>
@@ -200,7 +211,23 @@
         $('.content_answer' + id).removeClass('hidden');
     }
 
+    function saveAnswer(id) {
+        const answer = $('.content_answer' + id + ' input[type="text"]').val();
 
+        // AJAX 요청으로 답변 저장
+        $.ajax({
+            url: '/save-answer',
+            method: 'POST',
+            data: { id: id, answer: answer },
+            success: function(response) {
+                alert('답변이 저장되었습니다.');
+                location.reload(); // 페이지 새로고침
+            },
+            error: function() {
+                alert('답변 저장 중 오류가 발생했습니다.');
+            }
+        });
+    }
 </script>
 </body>
 </html>

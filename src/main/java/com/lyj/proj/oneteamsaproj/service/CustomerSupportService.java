@@ -34,4 +34,7 @@ public class CustomerSupportService {
         return customerSupportRepository.getHistory(member_id);
     }
 
+    public void updateAnswer(int id, String answer) {
+        customerSupportRepository.updateAnswer(id, answer);
+    }
 }
