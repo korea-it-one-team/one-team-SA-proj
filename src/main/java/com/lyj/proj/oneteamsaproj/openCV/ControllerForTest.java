@@ -84,6 +84,7 @@ public class ControllerForTest {
         } catch (Exception e) {
             System.out.println("동영상 다운로드 중 예외 발생: " + e.getMessage());
             e.printStackTrace();
+            flaskClient.stopFlaskServer();
             return "error";
         }
 

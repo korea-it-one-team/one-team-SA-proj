@@ -74,7 +74,7 @@ public class FlaskClient {
         int attempts = 0;
 
         // 최대 10번 시도, 1초 간격으로 서버 확인
-        while (!serverStarted && attempts < 10) {
+        while (!serverStarted && attempts < 20) {
             try {
                 String flaskUrl = "http://127.0.0.1:5000/health";  // health 체크를 위한 경로
                 System.out.println("Flask URL: " + flaskUrl);

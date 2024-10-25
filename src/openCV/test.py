@@ -47,10 +47,11 @@ team_colors = []  # 초기 팀 색상 저장
 # YOLOv8 모델 로드
 model = YOLO('yolov8s.pt')
 
-# 초기 프레임에서 두 가지 주요 색상 추출 (선수 유니폼 색상)
-def detect_team_colors(video_path, num_frames=10):
+# 팀 색상 감지 함수 (흰색 필터링 강화)
+def detect_team_colors(video_path, num_frames=10, min_people=6):
     cap = cv2.VideoCapture(video_path)
     color_samples = []
+    people_count = 0
 
     for _ in range(num_frames):
         ret, frame = cap.read()
@@ -65,88 +66,137 @@ def detect_team_colors(video_path, num_frames=10):
                     x1, y1, x2, y2 = map(int, box.xyxy[0])
                     player_crop = frame[y1:y2, x1:x2]  # 선수 부분만 크롭
                     avg_color = identify_team_color(player_crop)  # 유니폼 색상 추출 (H, S만 사용)
+                    print(f"Detected player color (HSV): {avg_color}")  # 감지된 색상 출력
                     color_samples.append(avg_color)  # 색상 정보 추가
+                    people_count += 1
 
     cap.release()
 
-    # K-means 클러스터링으로 두 가지 주요 색상 찾기
-    kmeans = KMeans(n_clusters=2)
-    kmeans.fit(color_samples)
-    global team_colors
-    team_colors = kmeans.cluster_centers_  # 두 팀의 색상 중심
+    # 최소 인원 조건을 만족할 때만 팀 색상 결정
+    if people_count >= min_people and len(color_samples) > 0:
+        kmeans = KMeans(n_clusters=2)
+        kmeans.fit(color_samples)
+        global team_colors
+        team_colors = kmeans.cluster_centers_  # 두 팀의 색상 중심 (H, S)
+
+        # KMeans 결과 검토: 너무 편향된 색상일 경우 평균값 사용
+        if np.linalg.norm(team_colors[0] - team_colors[1]) < 10:  # 두 팀의 색상이 너무 유사할 경우
+            print("Warning: KMeans cluster centers are too close. Using median color as fallback.")
+            team_colors = np.median(color_samples, axis=0).reshape(1, -1)  # 중간값 사용
+        else:
+            print(f"KMeans cluster centers detected (HSV): {team_colors}")
+
+        # HSV 값 그대로 로그에 출력 (H, S만 사용)
+        print(f"Detected team colors (HSV - H, S): {team_colors}")
+
+    elif people_count < min_people:
+        print(f"Not enough people detected: {people_count}. Extending frame analysis.")
+    else:
+        team_colors = []  # 색상 샘플이 없으면 빈 리스트로 초기화
 
 # 각 프레임에서 팀 색상에 따라 선수 구분
 def identify_team(hsv_color):
+    global team_colors
+
+    # 팀 색상 초기화 확인 (None인지 먼저 확인하고, 그다음 길이 확인)
+    if team_colors is None or len(team_colors) < 2:
+        print("Error: team_colors not initialized correctly.")
+        return 'unknown'
 
     hsv_color_hs = hsv_color[:2]  # H와 S 값만 사용
 
+    # 팀 색상의 H, S 값만 비교
+    team_1_hs = team_colors[0][:2]  # 팀 1의 H, S 값
+    team_2_hs = team_colors[1][:2]  # 팀 2의 H, S 값
+
     # 각 팀의 색상과 비교 (hsv_color_hs 사용)
-    diff_team_1 = np.linalg.norm(hsv_color_hs - team_colors[0])
-    diff_team_2 = np.linalg.norm(hsv_color_hs - team_colors[1])
+    diff_team_1 = np.linalg.norm(hsv_color_hs - team_1_hs)
+    diff_team_2 = np.linalg.norm(hsv_color_hs - team_2_hs)
+
+    print(f"Comparing with team 1 (HSV): {team_1_hs}, diff: {diff_team_1}")  # 비교 로그 추가
+    print(f"Comparing with team 2 (HSV): {team_2_hs}, diff: {diff_team_2}")  # 비교 로그 추가
 
     if diff_team_1 < diff_team_2:
         return 'team_1'
     else:
         return 'team_2'
 
+# 유니폼 색상 추출 함수 (흰색 필터링 강화)
 def identify_team_color(player_crop):
     hsv_img = cv2.cvtColor(player_crop, cv2.COLOR_BGR2HSV)
 
-    # 상체 부분을 이미지 높이 기준으로 나누어 중간 부분만 사용 (소매, 하의 제외)
-    height, width, _ = hsv_img.shape
-    torso_body = hsv_img[height // 4: 3 * height // 4, :]  # 몸통 부분 (가운데 1/2)
+    # 흰색 필터링 (HSV 범위에서 흰색 제거, 매우 넓은 범위)
+    white_lower = np.array([0, 0, 200], dtype=np.uint8)  # 흰색 필터링 강화 (V 최소값 높임)
+    white_upper = np.array([180, 60, 255], dtype=np.uint8)  # S 값 하한 조정
 
-    # 피부색 필터링 (HSV 범위에서 피부색 제거)
-    skin_lower = np.array([0, 30, 60], dtype=np.uint8)
-    skin_upper = np.array([20, 150, 255], dtype=np.uint8)
+    # 흰색을 제외한 상체 부분 추출
+    mask_white = cv2.inRange(hsv_img, white_lower, white_upper)
+    body_filtered = cv2.bitwise_and(hsv_img, hsv_img, mask=cv2.bitwise_not(mask_white))
 
-    # 피부색을 제외한 상체 부분 추출
-    mask_torso = cv2.inRange(torso_body, skin_lower, skin_upper)
-    torso_filtered = cv2.bitwise_and(torso_body, torso_body, mask=cv2.bitwise_not(mask_torso))
+    # 검정색을 제외하고 H, S 히스토그램 계산
+    mask_non_black = cv2.inRange(body_filtered[:, :, 2], 10, 255)  # V가 10 이상인 픽셀만 사용
+    body_filtered = cv2.bitwise_and(body_filtered, body_filtered, mask=mask_non_black)
 
     # HSV 히스토그램 계산 (가장 눈에 띄는 색상 추출)
-    h_hist = cv2.calcHist([torso_filtered], [0], None, [180], [0, 180])
-    s_hist = cv2.calcHist([torso_filtered], [1], None, [256], [0, 256])
+    h_hist = cv2.calcHist([body_filtered], [0], None, [180], [0, 180])
+    s_hist = cv2.calcHist([body_filtered], [1], None, [256], [50, 256])  # S값이 낮은 색상 필터링
 
     # 가장 빈도가 높은 H, S 값 추출
     dominant_h = np.argmax(h_hist)  # Hue 값에서 가장 빈도가 높은 색상
     dominant_s = np.argmax(s_hist)  # Saturation 값에서 가장 빈도가 높은 채도
 
-    # 항상 일정한 크기의 배열 [H, S] 반환
+    # 일정한 크기의 배열 [H, S] 반환
     return np.array([dominant_h, dominant_s])
 
-# 바닥을 초록색으로 필터링하는 함수
-def is_on_green_field(frame, x1, y1, x2, y2):
-    # 선수의 아래 부분을 기준으로 초록색 바닥인지 확인
-    player_area = frame[y2-10:y2, x1:x2]  # 선수의 발 부분 (하단)
-    hsv_player_area = cv2.cvtColor(player_area, cv2.COLOR_BGR2HSV)
+# 필드 영역을 저해상도로 감지하고, 객체는 원본 해상도에서 탐지
+def detect_green_field_low_res(frame):
+    # 해상도 축소 (필드 감지만 저해상도로 처리)
+    resized_frame = cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
+    hsv_frame = cv2.cvtColor(resized_frame, cv2.COLOR_BGR2HSV)
 
     # 초록색 범위 설정 (HSV 기준)
-    green_lower = np.array([30, 40, 40], dtype=np.uint8)  # 범위를 더 넓게 설정
+    green_lower = np.array([30, 40, 40], dtype=np.uint8)
     green_upper = np.array([90, 255, 255], dtype=np.uint8)
 
     # 초록색 바닥 필터링
-    mask = cv2.inRange(hsv_player_area, green_lower, green_upper)
-    green_pixels_ratio = cv2.countNonZero(mask) / (player_area.size / 3)
+    mask = cv2.inRange(hsv_frame, green_lower, green_upper)
 
-    # 필드로 감지된 영역에 박스 그리기 (디버깅용)
-    if green_pixels_ratio > 0.5:
-        cv2.rectangle(frame, (x1, y2-10), (x2, y2), (0, 255, 255), 2)  # 노란색으로 필드 박스 표시
+    # 컨투어 찾기 (필드 영역 탐색)
+    contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-    # 일정 비율 이상 초록색일 때만 True 반환 (예: 50% 이상)
-    return green_pixels_ratio > 0.5
+    # 가장 큰 컨투어를 필드로 간주
+    if contours:
+        largest_contour = max(contours, key=cv2.contourArea)
+        # 좌표를 원래 해상도로 다시 변환
+        return largest_contour * 2  # 해상도 축소 비율을 고려하여 원래 크기로 복원
 
+    return None  # 필드를 감지하지 못한 경우
 
-# 비디오 처리 함수 (필드 영역을 디버깅할 수 있도록 필드로 인식한 영역에 박스를 그리는 코드가 추가됨)
+# 비디오 처리 함수
 def update_status(video_path):
     global processing_status
-
-    # 동영상 처리 시작 (초기 10프레임에서 팀 색상 감지)
-    detect_team_colors(video_path, num_frames=10)
+    global team_colors
 
     cap = cv2.VideoCapture(video_path)
     if not cap.isOpened():
         return
+
+    # 초기 프레임에서 팀 색상 감지 (최소 인원 기준을 만족할 때까지 시도)
+    frame_count = 10
+    print("Starting team color detection...")  # 색상 감지 시작 로그
+    while (team_colors is None or len(team_colors) < 2) and frame_count <= 50:  # 최대 50프레임까지 시도
+        print(f"Attempting to detect team colors with {frame_count} frames...")
+        detect_team_colors(video_path, num_frames=frame_count)  # 팀 색상 감지 시도
+        frame_count += 10
+
+    # 팀 색상 초기화 확인
+    if team_colors is None or len(team_colors) < 2:
+        print("Error: Could not detect team colors after multiple attempts.")
+        processing_status['status'] = "error"
+        return  # 팀 색상이 감지되지 않으면 종료
+
+    print(f"Detected team colors (HSV): {team_colors}")
+
     save_path = os.path.join("C:/work_oneteam/one-team-SA-proj/src/main/resources/static/video", "processed_video.mp4")
     fourcc = cv2.VideoWriter_fourcc(*'avc1')
     out = cv2.VideoWriter(save_path, fourcc, 20.0, (int(cap.get(3)), int(cap.get(4))))
@@ -159,33 +209,29 @@ def update_status(video_path):
         if not ret:
             break
 
-        # YOLO로 객체 탐지 및 처리 (생략된 코드)
+        # 객체 탐지는 원본 해상도에서 처리
         results = model(frame)
 
         for result in results:
             for box in result.boxes:
-                if box.cls == 32:  # 공 (class_id 32)
-                    x1, y1, x2, y2 = map(int, box.xyxy[0])
-                    cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)  # 공은 초록색 박스
-
-                # 다른 공 (예: baseball, tennisball)은 제외하려면 다른 클래스 ID를 무시
-                if box.cls not in [32]:  # 다른 공들은 처리하지 않음
-                    continue
+                bx1, by1, bx2, by2 = map(int, box.xyxy[0])
 
                 if box.cls == 0:  # 선수 (class_id 0)
-                    x1, y1, x2, y2 = map(int, box.xyxy[0])
+                    player_crop = frame[by1:by2, bx1:bx2]
+                    avg_color = np.mean(cv2.cvtColor(player_crop, cv2.COLOR_BGR2HSV), axis=(0, 1))
+                    team = identify_team(avg_color)  # 팀 판별
 
-                    # 초록색 바닥 위에 있는 선수만 처리
-                    if is_on_green_field(frame, x1, y1, x2, y2):
-                        player_crop = frame[y1:y2, x1:x2]
-                        avg_color = np.mean(cv2.cvtColor(player_crop, cv2.COLOR_BGR2HSV), axis=(0, 1))
-                        team = identify_team(avg_color)  # 팀 판별
+                    # 플레이어 색상 및 팀 판별 로그 출력
+                    print(f"Detected player color (HSV): {avg_color}")
+                    rgb_color = cv2.cvtColor(np.uint8([[avg_color]]), cv2.COLOR_HSV2BGR)[0][0]
+                    print(f"Detected player color (RGB): {rgb_color}")
+                    print(f"Player assigned to {team}")
 
-                        # 팀에 따라 박스 색상 변경
-                        if team == 'team_1':
-                            cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 255), 2)  # 팀 1 (빨간색)
-                        else:
-                            cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), 2)  # 팀 2 (파란색)
+                    # 팀에 따라 박스 색상 변경
+                    if team == 'team_1':
+                        cv2.rectangle(frame, (bx1, by1), (bx2, by2), (0, 0, 255), 2)  # 팀 1 (빨간색)
+                    else:
+                        cv2.rectangle(frame, (bx1, by1), (bx2, by2), (255, 0, 0), 2)  # 팀 2 (파란색)
 
         # 처리된 프레임 저장
         out.write(frame)
@@ -194,7 +240,7 @@ def update_status(video_path):
         processed_frames += 1
         processing_status['progress'] = int((processed_frames / total_frames) * 100)
 
-    print("Video processing completed, now saving...")  # 로그 추가
+    print("Video processing completed, now saving...")
     cap.release()
     out.release()
 

@@ -1151,3 +1151,825 @@ INFO:werkzeug:127.0.0.1 - - [24/Oct/2024 16:46:11] "GET /video-status HTTP/1.1" 
 INFO:werkzeug:127.0.0.1 - - [24/Oct/2024 16:46:17] "GET /video-status HTTP/1.1" 200 -
 INFO:werkzeug:127.0.0.1 - - [24/Oct/2024 16:46:23] "GET /video-status HTTP/1.1" 200 -
 INFO:werkzeug:127.0.0.1 - - [24/Oct/2024 16:46:23] "GET /download_video HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:12:50] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:12:50] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:12:52] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:12:52] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:12:58] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:13:03] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:13:09] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:13:15] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:13:21] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:13:27] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:13:32] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:13:38] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:13:44] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:13:50] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:13:56] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:14:02] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:14:08] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:14:14] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:14:20] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:14:26] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:14:32] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:14:38] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:14:44] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:14:50] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:14:56] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:15:02] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:15:08] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:15:14] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:15:20] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:15:26] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:15:32] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:15:38] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:15:44] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:15:50] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:15:56] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:16:02] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:16:08] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:16:14] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:16:20] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:16:26] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:16:32] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:16:38] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:16:44] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:16:50] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:16:56] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:17:02] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:17:08] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:17:14] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:17:20] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:17:26] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:17:32] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:17:38] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:17:44] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:17:50] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:17:56] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:18:02] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:18:08] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:18:14] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:18:14] "GET /download_video HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:27:06] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:27:07] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:27:07] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:27:12] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:27:18] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:27:24] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:27:30] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:33:42] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:33:43] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:33:44] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:33:50] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:33:56] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:36:09] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:36:11] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:36:11] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:36:17] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:38:21] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:38:22] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:38:22] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:38:28] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:38:34] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:38:39] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:38:44] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:38:50] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:38:56] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:39:02] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:39:08] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:39:14] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:39:20] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:39:26] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:39:32] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:39:38] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:39:44] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:39:50] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:39:56] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:40:02] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:40:08] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:40:14] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:40:20] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:40:26] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:40:32] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:40:38] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:40:44] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:40:50] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:40:56] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:41:02] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:41:08] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:41:14] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:41:20] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:41:26] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:41:32] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:41:38] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:41:44] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:41:50] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:41:56] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:42:02] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:42:08] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:42:14] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:42:20] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:42:26] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:42:32] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:42:38] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:42:44] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:42:50] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:42:56] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:43:02] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:43:08] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:43:14] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:43:20] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:43:26] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:43:32] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:43:38] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:43:44] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:43:50] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:43:56] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 09:43:56] "GET /download_video HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:19:42] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:19:44] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:19:44] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:19:49] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:19:54] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:19:59] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:20:05] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:20:11] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:20:17] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:20:23] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:20:28] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:20:34] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:20:40] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:20:46] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:20:52] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:20:58] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:21:04] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:21:10] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:21:16] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:21:22] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:21:28] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:21:34] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:21:40] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:21:46] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:21:52] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:21:58] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:22:04] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:22:10] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:22:16] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:22:22] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:22:28] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:22:34] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:22:40] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:22:46] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:22:52] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:22:58] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:23:04] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:23:10] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:23:16] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:23:22] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:23:28] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:23:34] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:23:40] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:23:46] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:23:52] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:23:58] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:24:04] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:24:10] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:24:16] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:24:22] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:24:28] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:24:34] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:24:40] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:24:46] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:24:52] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:24:58] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:25:04] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:25:10] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:25:16] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:25:16] "GET /download_video HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:40:06] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:40:06] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:40:06] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:40:07] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:43:27] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 10:47:11] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:13:51] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:13:52] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:13:52] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:13:58] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:14:04] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:14:10] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:14:16] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:14:22] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:14:28] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:14:34] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:14:40] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:14:46] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:14:52] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:14:58] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:15:04] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:15:10] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:15:16] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:15:22] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:15:28] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:15:34] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:15:40] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:15:46] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:15:52] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:15:58] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:16:04] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:16:10] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:16:16] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:16:22] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:16:28] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:16:34] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:16:40] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:16:46] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:16:52] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:16:58] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:17:04] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:17:10] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:17:16] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:17:22] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:17:28] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:17:34] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:17:40] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:17:46] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:17:52] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:17:58] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:18:04] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:18:10] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:18:16] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:18:22] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:18:28] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:18:34] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:18:40] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:18:46] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:18:52] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:18:58] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:19:04] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:19:10] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:19:16] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:19:22] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:19:22] "GET /download_video HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:28:45] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:28:46] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:28:46] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:28:52] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:28:58] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:29:04] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:30:13] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:30:14] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:30:14] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:30:20] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:30:26] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:30:32] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:30:37] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:30:43] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:30:49] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:30:55] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:31:01] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:31:07] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:31:31] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:31:32] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:31:32] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:31:39] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:31:45] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:31:51] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:31:57] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:32:03] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:32:09] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:32:15] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:32:21] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:32:27] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:32:33] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:32:39] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:32:45] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:32:51] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:32:57] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:33:03] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:33:09] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:33:15] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:33:21] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:33:27] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:33:33] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:33:39] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:33:45] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:33:51] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:33:56] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:34:02] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:34:08] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:34:14] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:34:20] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:34:25] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:34:30] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:34:35] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:34:40] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:34:45] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:34:50] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:34:55] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:35:00] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:35:05] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:35:10] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:35:15] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:35:20] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:35:25] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:35:30] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:35:35] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:35:40] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:35:45] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:35:51] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:35:57] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:36:03] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:36:09] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:36:14] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:36:19] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:36:24] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:36:29] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:36:34] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:36:39] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:36:44] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:36:49] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:36:54] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:36:59] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:37:04] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:37:09] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:37:09] "GET /download_video HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:41:01] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:41:01] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:41:02] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:41:48] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:41:49] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 11:41:49] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:12:37] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:12:39] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:12:39] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:12:45] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:12:51] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:12:57] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:13:03] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:13:09] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:13:15] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:13:21] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:13:27] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:13:33] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:13:39] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:13:45] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:13:51] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:13:57] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:14:03] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:14:09] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:14:15] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:14:21] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:14:27] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:14:32] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:14:38] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:14:44] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:14:50] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:14:56] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:15:02] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:15:07] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:15:13] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:15:19] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:15:25] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:15:31] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:15:37] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:15:43] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:15:49] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:15:55] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:16:01] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:16:07] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:16:13] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:16:19] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:16:24] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:16:30] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:16:36] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:16:42] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:16:48] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:16:54] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:17:00] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:17:06] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:17:12] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:17:18] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:17:24] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:17:30] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:17:36] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:17:42] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:17:48] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:17:54] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:18:00] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:18:06] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:18:12] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:18:18] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:18:18] "GET /download_video HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:22:19] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:22:21] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:22:21] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:37:13] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:37:15] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:37:15] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:37:21] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:40:34] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:40:36] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:40:36] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:40:42] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:40:48] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:40:54] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:42:20] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:42:22] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:42:22] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:42:28] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:44:32] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:44:34] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:44:34] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:45:39] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:45:40] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:45:40] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:45:46] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:47:28] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:47:30] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:47:30] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:47:36] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:47:42] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:47:48] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:47:54] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:48:00] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:48:06] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:48:12] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:48:18] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:48:24] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:48:30] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:48:36] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:48:42] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:48:48] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:48:54] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:49:00] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:49:06] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:49:12] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:49:18] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:49:24] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:49:30] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:49:36] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:49:42] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:49:48] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:49:54] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:50:00] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:50:06] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:50:12] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:50:18] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:50:24] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:50:30] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:50:36] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:50:42] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:50:48] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:50:54] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:51:00] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:51:06] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:51:12] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:51:18] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:51:24] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:51:30] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:51:36] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:51:42] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:51:48] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:51:54] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:52:00] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:52:06] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:52:12] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:52:18] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:52:24] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:52:30] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:52:36] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:52:42] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:52:48] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:52:54] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:53:00] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:53:06] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:53:12] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:53:18] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:53:24] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:53:30] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:53:36] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:53:42] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:53:48] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:53:54] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:54:00] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:54:06] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:54:12] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:54:18] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:54:24] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:54:30] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:54:36] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:54:42] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:54:48] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:54:54] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:55:00] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:55:06] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:55:12] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:55:18] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:55:24] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:55:30] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:55:36] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:55:42] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:55:48] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:55:54] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:56:00] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:56:06] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:56:12] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:56:18] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:56:24] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:56:30] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:56:36] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:56:42] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:56:48] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:56:54] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:57:00] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:57:06] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:57:12] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:57:18] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:57:24] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:57:30] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:57:36] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:57:42] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:57:48] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:57:54] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:58:00] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:58:06] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:58:12] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:58:18] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:58:24] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:58:30] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 13:58:36] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:01:41] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:01:42] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:01:42] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:02:22] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:02:24] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:02:24] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:02:30] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:02:36] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:02:42] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:02:48] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:02:54] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:03:00] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:03:06] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:03:12] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:03:18] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:03:24] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:03:30] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:03:36] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:03:41] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:23:32] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:23:34] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:23:34] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:40:35] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:40:36] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 14:40:37] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 15:08:28] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 15:08:29] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 15:08:30] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 15:08:36] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 15:08:42] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 15:08:42] "[35m[1mGET /download_video HTTP/1.1[0m" 500 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 15:11:43] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 15:11:45] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 15:11:45] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 15:11:51] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 15:11:57] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 15:11:57] "[35m[1mGET /download_video HTTP/1.1[0m" 500 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 15:20:19] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 15:20:21] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 15:20:21] "POST /process_video HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 15:20:27] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 15:20:33] "GET /video-status HTTP/1.1" 200 -

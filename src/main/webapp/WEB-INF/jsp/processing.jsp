@@ -45,10 +45,13 @@
                         if (data.status === 'completed') {
                             console.log("동영상 처리가 완료되었습니다.");
                             window.location.href = 'openCV/result'; // 처리가 완료되면 결과 페이지로 이동
-                        } else {
+                        } else if (data.status === 'processing') {
                             retryCount = 0;  // 재시도 횟수 초기화 (정상 통신 시)
                             setTimeout(checkStatus, retryInterval); // 5초마다 상태 체크
                             console.log("아직 동영상이 처리 중입니다.");
+                        } else if (data.status === 'error') {
+                            console.log("Flask 측에서 동영상 처리에 실패하였습니다.")
+                            window.location.href = 'openCV/result';
                         }
                     })
                     .catch(error => {
