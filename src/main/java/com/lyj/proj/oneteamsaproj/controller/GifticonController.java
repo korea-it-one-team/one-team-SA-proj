@@ -51,7 +51,7 @@ public class GifticonController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "로그인이 필요합니다."));
         }
 
-        boolean application_Point = exchangeService.getGifticonPoint(id,rq.getLoginedMember().getPoints(), rq.getLoginedMemberId());
+        boolean application_Point = exchangeService.getGifticonPoint(id,rq.getLoginedMember().getPoints(), loginedMemberId);
 
         if (!application_Point) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "보유한 Point가 부족합니다."));

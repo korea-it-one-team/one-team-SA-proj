@@ -109,7 +109,7 @@ public interface MemberRepository {
     @Update("""
             UPDATE `member`
             SET updateDate = NOW(),
-            points = #{point}
+            points = points - ${point}
             WHERE id = #{loginedMemberId}
             """)
     void modifyPoint(int point, int loginedMemberId);
