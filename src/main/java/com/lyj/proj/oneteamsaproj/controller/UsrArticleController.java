@@ -5,7 +5,6 @@ import com.lyj.proj.oneteamsaproj.service.*;
 import com.lyj.proj.oneteamsaproj.util.Ut;
 import com.lyj.proj.oneteamsaproj.vo.*;
 import jakarta.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -194,8 +193,14 @@ public class UsrArticleController {
         if (Ut.isEmptyOrNull(body)) {
             return Ut.jsHistoryBack("F-2", "내용을 입력해주세요.");
         }
+//        if (Ut.isEmptyOrNull(boardId)) {
+//            return Ut.jsHistoryBack("F-3", "게시판을 선택해주세요");
+//        }
         if (Ut.isEmptyOrNull(boardId)) {
-            return Ut.jsHistoryBack("F-3", "게시판을 선택해주세요");
+            // 게시판 선택이 안 된 경우, 입력한 내용을 가지고 다시 글 작성 페이지로 이동
+            String alertMsg = "게시판을 선택해주세요.";
+            return Ut.jsReplace(alertMsg, "../article/write?title=%s&body=%s",
+                    Ut.getEncodedUriComponent(title), Ut.getEncodedUriComponent(body));
         }
 
         System.err.println(boardId);
