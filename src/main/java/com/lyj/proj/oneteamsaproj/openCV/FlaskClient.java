@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.*;
 import java.net.SocketException;
 import java.nio.file.*;
+import java.util.Scanner;
 
 public class FlaskClient {
 
@@ -127,8 +128,30 @@ public class FlaskClient {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
+        String homeTeam = "";
+        String awayTeam = "";
+
+        Scanner scanner = new Scanner(System.in);
+
+        while(homeTeam.isEmpty() || homeTeam.contains("Retry")) {
+            System.out.flush();
+            System.out.print("Enter the home team: ");
+            homeTeam = scanner.nextLine().trim();
+        }
+
+        while(awayTeam.isEmpty() || awayTeam.contains("Retry")) {
+            System.out.flush();
+            System.out.print("Enter the away team: ");
+            awayTeam = scanner.nextLine().trim();
+        }
+
+        System.out.println("home team: " + homeTeam);
+        System.out.println("away team: " + awayTeam);
+
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("video", videoFile);
+        body.add("home_team", homeTeam);
+        body.add("away_team", awayTeam);
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
@@ -139,19 +162,20 @@ public class FlaskClient {
             // 동영상 처리 요청을 비동기 스레드로 전송
             new Thread(() -> {
                 try {
-                    // Flask로 POST 요청 보내기 (여기서 실제 처리)
-                    restTemplate.postForEntity(flaskUrl, requestEntity, String.class);  // 결과는 받지 않고 요청만 보냄
-                    System.out.println("Flask로 동영상 처리를 시작하였습니다.");
+                    // Flask로 POST 요청 보내기
+                    ResponseEntity<String> response = restTemplate.postForEntity(flaskUrl, requestEntity, String.class);
+                    System.out.println("Flask로 동영상 처리를 시작하였습니다. 응답: " + response.getBody());
                 } catch (Exception e) {
                     System.out.println("동영상 처리 중 예외 발생: " + e.getMessage());
                     e.printStackTrace();
                 }
             }).start();
-            // 즉시 처리가 시작되었음을 알리고 true 반환
+            scanner.close();
             return true;
         } catch (Exception e) {
             System.out.println("동영상 처리 요청 중 예외 발생: " + e.getMessage());
             e.printStackTrace();
+            scanner.close();
             return false;
         }
     }

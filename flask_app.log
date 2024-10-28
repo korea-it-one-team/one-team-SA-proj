@@ -1973,3 +1973,121 @@ INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 15:20:21] "GET /video-status HTTP/1.1" 
 INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 15:20:21] "POST /process_video HTTP/1.1" 200 -
 INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 15:20:27] "GET /video-status HTTP/1.1" 200 -
 INFO:werkzeug:127.0.0.1 - - [25/Oct/2024 15:20:33] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [28/Oct/2024 16:24:37] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [28/Oct/2024 16:24:47] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [28/Oct/2024 16:25:48] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [28/Oct/2024 16:26:05] "[31m[1mPOST /process_video HTTP/1.1[0m" 400 -
+INFO:werkzeug:127.0.0.1 - - [28/Oct/2024 16:26:05] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [28/Oct/2024 16:36:39] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [28/Oct/2024 16:37:19] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [28/Oct/2024 16:37:19] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [28/Oct/2024 16:38:46] "[31m[1mPOST /process_video HTTP/1.1[0m" 400 -
+INFO:werkzeug:127.0.0.1 - - [28/Oct/2024 16:41:40] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+INFO:werkzeug:127.0.0.1 - - [28/Oct/2024 16:41:46] "GET /health HTTP/1.1" 200 -
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [28/Oct/2024 16:43:07] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [28/Oct/2024 16:43:10] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [28/Oct/2024 16:43:32] "[31m[1mPOST /process_video HTTP/1.1[0m" 400 -
+INFO:werkzeug:127.0.0.1 - - [28/Oct/2024 16:44:16] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [28/Oct/2024 16:44:16] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [28/Oct/2024 16:45:41] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [28/Oct/2024 16:45:53] "GET /video-status HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [28/Oct/2024 16:45:53] "[31m[1mPOST /process_video HTTP/1.1[0m" 400 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.2.17:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 682-389-538
+INFO:werkzeug:127.0.0.1 - - [28/Oct/2024 16:50:47] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [28/Oct/2024 16:50:58] "[31m[1mPOST /process_video HTTP/1.1[0m" 400 -
+INFO:werkzeug:127.0.0.1 - - [28/Oct/2024 16:50:59] "GET /video-status HTTP/1.1" 200 -

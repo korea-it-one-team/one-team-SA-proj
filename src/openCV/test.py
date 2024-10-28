@@ -10,6 +10,7 @@ from PIL import Image
 from ultralytics import YOLO
 from sklearn.cluster import KMeans
 import threading
+import json
 
 app = Flask(__name__)
 
@@ -42,84 +43,69 @@ processing_status = {
     "progress": 0      # 진행률: 0 ~ 100
 }
 
-team_colors = []  # 초기 팀 색상 저장
+# 전역 변수로 팀 색상 저장
+team_colors = {"home": None, "away": None}
 
 # YOLOv8 모델 로드
 model = YOLO('yolov8s.pt')
 
-# 팀 색상 감지 함수 (흰색 필터링 강화)
-def detect_team_colors(video_path, num_frames=10, min_people=6):
-    cap = cv2.VideoCapture(video_path)
-    color_samples = []
-    people_count = 0
+# JSON 파일에서 팀 색상 로드 함수
+def load_team_colors(home_team, away_team):
+    global team_colors
+    try:
+        # 현재 경로에 있는 team_colors.json 파일 읽기
+        with open("team_colors.json", "r") as file:
+            color_data = json.load(file)
 
-    for _ in range(num_frames):
-        ret, frame = cap.read()
-        if not ret:
-            break
+        # 홈팀 색상 정보 가져오기
+        if home_team in color_data:
+            home_colors = color_data[home_team].get("home", {})
+            team_colors["home"] = extract_colors(home_colors)
 
-        # YOLO로 person 클래스 탐지 (선수)
-        results = model(frame)
-        for result in results:
-            for box in result.boxes:
-                if box.cls == 0:  # 선수(class_id 0)
-                    x1, y1, x2, y2 = map(int, box.xyxy[0])
-                    player_crop = frame[y1:y2, x1:x2]  # 선수 부분만 크롭
-                    avg_color = identify_team_color(player_crop)  # 유니폼 색상 추출 (H, S만 사용)
-                    print(f"Detected player color (HSV): {avg_color}")  # 감지된 색상 출력
-                    color_samples.append(avg_color)  # 색상 정보 추가
-                    people_count += 1
+        # 원정팀 색상 정보 가져오기
+        if away_team in color_data:
+            away_colors = color_data[away_team].get("away", {})
+            team_colors["away"] = extract_colors(away_colors)
 
-    cap.release()
+        # 결과 출력 확인
+        print(f"Loaded colors - Home: {team_colors['home']}, Away: {team_colors['away']}")
+        return True if team_colors["home"] and team_colors["away"] else False
 
-    # 최소 인원 조건을 만족할 때만 팀 색상 결정
-    if people_count >= min_people and len(color_samples) > 0:
-        kmeans = KMeans(n_clusters=2)
-        kmeans.fit(color_samples)
-        global team_colors
-        team_colors = kmeans.cluster_centers_  # 두 팀의 색상 중심 (H, S)
+    except FileNotFoundError:
+        print("Error: team_colors.json file not found.")
+        return False
 
-        # KMeans 결과 검토: 너무 편향된 색상일 경우 평균값 사용
-        if np.linalg.norm(team_colors[0] - team_colors[1]) < 10:  # 두 팀의 색상이 너무 유사할 경우
-            print("Warning: KMeans cluster centers are too close. Using median color as fallback.")
-            team_colors = np.median(color_samples, axis=0).reshape(1, -1)  # 중간값 사용
-        else:
-            print(f"KMeans cluster centers detected (HSV): {team_colors}")
-
-        # HSV 값 그대로 로그에 출력 (H, S만 사용)
-        print(f"Detected team colors (HSV - H, S): {team_colors}")
-
-    elif people_count < min_people:
-        print(f"Not enough people detected: {people_count}. Extending frame analysis.")
-    else:
-        team_colors = []  # 색상 샘플이 없으면 빈 리스트로 초기화
+# 색상 추출 함수
+def extract_colors(color_dict):
+    # primary_color부터 fourth_color까지 가능한 모든 색상을 추출
+    colors = []
+    for i in range(1, 5):  # 최대 네 가지 색상 지원
+        color_key = f"primary_color" if i == 1 else f"secondary_color" if i == 2 else f"third_color" if i == 3 else f"fourth_color"
+        color = color_dict.get(color_key)
+        if color:
+            colors.append(color)
+    return colors if colors else None  # 색상이 없으면 None 반환
 
 # 각 프레임에서 팀 색상에 따라 선수 구분
 def identify_team(hsv_color):
     global team_colors
 
-    # 팀 색상 초기화 확인 (None인지 먼저 확인하고, 그다음 길이 확인)
-    if team_colors is None or len(team_colors) < 2:
-        print("Error: team_colors not initialized correctly.")
+    # 팀 색상 초기화 확인
+    if team_colors["home"] is None or team_colors["away"] is None:
+        print("Error: team colors not initialized correctly.")
         return 'unknown'
 
     hsv_color_hs = hsv_color[:2]  # H와 S 값만 사용
 
     # 팀 색상의 H, S 값만 비교
-    team_1_hs = team_colors[0][:2]  # 팀 1의 H, S 값
-    team_2_hs = team_colors[1][:2]  # 팀 2의 H, S 값
+    home_team_hs = team_colors["home"][0][:2]
+    away_team_hs = team_colors["away"][0][:2]
 
-    # 각 팀의 색상과 비교 (hsv_color_hs 사용)
-    diff_team_1 = np.linalg.norm(hsv_color_hs - team_1_hs)
-    diff_team_2 = np.linalg.norm(hsv_color_hs - team_2_hs)
+    # 각 팀의 색상과 비교
+    diff_home_team = np.linalg.norm(hsv_color_hs - home_team_hs)
+    diff_away_team = np.linalg.norm(hsv_color_hs - away_team_hs)
 
-    print(f"Comparing with team 1 (HSV): {team_1_hs}, diff: {diff_team_1}")  # 비교 로그 추가
-    print(f"Comparing with team 2 (HSV): {team_2_hs}, diff: {diff_team_2}")  # 비교 로그 추가
-
-    if diff_team_1 < diff_team_2:
-        return 'team_1'
-    else:
-        return 'team_2'
+    return 'home_team' if diff_home_team < diff_away_team else 'away_team'
 
 # 유니폼 색상 추출 함수 (흰색 필터링 강화)
 def identify_team_color(player_crop):
@@ -179,23 +165,15 @@ def update_status(video_path):
 
     cap = cv2.VideoCapture(video_path)
     if not cap.isOpened():
+        print("Error: Could not open video file.")
+        processing_status['status'] = "error"
         return
 
-    # 초기 프레임에서 팀 색상 감지 (최소 인원 기준을 만족할 때까지 시도)
-    frame_count = 10
-    print("Starting team color detection...")  # 색상 감지 시작 로그
-    while (team_colors is None or len(team_colors) < 2) and frame_count <= 50:  # 최대 50프레임까지 시도
-        print(f"Attempting to detect team colors with {frame_count} frames...")
-        detect_team_colors(video_path, num_frames=frame_count)  # 팀 색상 감지 시도
-        frame_count += 10
-
-    # 팀 색상 초기화 확인
-    if team_colors is None or len(team_colors) < 2:
-        print("Error: Could not detect team colors after multiple attempts.")
+    # 팀 색상이 올바르게 로드되었는지 확인
+    if team_colors["home"] is None or team_colors["away"] is None:
+        print("Error: Team colors not initialized correctly.")
         processing_status['status'] = "error"
-        return  # 팀 색상이 감지되지 않으면 종료
-
-    print(f"Detected team colors (HSV): {team_colors}")
+        return
 
     save_path = os.path.join("C:/work_oneteam/one-team-SA-proj/src/main/resources/static/video", "processed_video.mp4")
     fourcc = cv2.VideoWriter_fourcc(*'avc1')
@@ -228,10 +206,10 @@ def update_status(video_path):
                     print(f"Player assigned to {team}")
 
                     # 팀에 따라 박스 색상 변경
-                    if team == 'team_1':
-                        cv2.rectangle(frame, (bx1, by1), (bx2, by2), (0, 0, 255), 2)  # 팀 1 (빨간색)
+                    if team == 'home_team':
+                        cv2.rectangle(frame, (bx1, by1), (bx2, by2), (0, 0, 255), 2)  # 홈팀 (빨간색)
                     else:
-                        cv2.rectangle(frame, (bx1, by1), (bx2, by2), (255, 0, 0), 2)  # 팀 2 (파란색)
+                        cv2.rectangle(frame, (bx1, by1), (bx2, by2), (255, 0, 0), 2)  # 원정팀 (파란색)
 
         # 처리된 프레임 저장
         out.write(frame)
@@ -286,18 +264,27 @@ def download_video():
     # 동영상 파일을 다운로드하여 클라이언트로 전송
     return send_file(video_path, as_attachment=True)
 
+# 동영상 처리 시작 전 홈팀 및 원정팀 정보를 JSON에서 불러오기
 @app.route('/process_video', methods=['POST'])
 def process_video():
-    # 요청에서 동영상 파일을 받음
+    # 요청에서 동영상과 팀 정보 받음
     file = request.files['video']
+    home_team = request.form.get('home_team')
+    away_team = request.form.get('away_team')
+
+    print(f"요청 받은 팀 정보 == home_team : {home_team}, away_team : {away_team}")
+
+    # JSON에서 팀 색상 정보 불러오기
+    if not load_team_colors(home_team, away_team):
+        return jsonify({"error": "Failed to load team colors from JSON."}), 400
+
+    # 동영상 파일 저장
     video_bytes = np.frombuffer(file.read(), np.uint8)
     video_path = "temp_video.mp4"
-
-    # 동영상 파일을 저장
     with open(video_path, 'wb') as f:
         f.write(video_bytes)
 
-    # 동영상 처리 시작
+    # 동영상 처리 상태 초기화
     global processing_status
     processing_status['status'] = "processing"
     processing_status['progress'] = 0
