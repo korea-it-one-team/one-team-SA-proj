@@ -154,6 +154,7 @@ public class FlaskClient {
         body.add("away_team", awayTeam);
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        System.out.println("requestEntity: " + requestEntity);
 
         try {
             // 동영상 처리가 시작되었음을 로그로 기록
@@ -168,6 +169,8 @@ public class FlaskClient {
                 } catch (Exception e) {
                     System.out.println("동영상 처리 중 예외 발생: " + e.getMessage());
                     e.printStackTrace();
+                    scanner.close();
+                    stopFlaskServer();
                 }
             }).start();
             scanner.close();
@@ -176,6 +179,7 @@ public class FlaskClient {
             System.out.println("동영상 처리 요청 중 예외 발생: " + e.getMessage());
             e.printStackTrace();
             scanner.close();
+            stopFlaskServer();
             return false;
         }
     }

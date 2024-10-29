@@ -1,5 +1,6 @@
 import os
 import time
+from collections import Counter
 
 from flask import Flask, request, send_file, jsonify
 import logging
@@ -53,8 +54,9 @@ model = YOLO('yolov8s.pt')
 def load_team_colors(home_team, away_team):
     global team_colors
     try:
-        # 현재 경로에 있는 team_colors.json 파일 읽기
-        with open("team_colors.json", "r") as file:
+        # 절대 경로로 JSON 파일을 지정
+        json_path = os.path.join(os.path.dirname(__file__), "team_colors.json")
+        with open(json_path, "r") as file:
             color_data = json.load(file)
 
         # 홈팀 색상 정보 가져오기
@@ -68,71 +70,77 @@ def load_team_colors(home_team, away_team):
             team_colors["away"] = extract_colors(away_colors)
 
         # 결과 출력 확인
-        print(f"Loaded colors - Home: {team_colors['home']}, Away: {team_colors['away']}")
+        logging.info(f"Loaded colors - Home: {team_colors['home']}, Away: {team_colors['away']}")
         return True if team_colors["home"] and team_colors["away"] else False
 
     except FileNotFoundError:
-        print("Error: team_colors.json file not found.")
+        logging.info("Error: team_colors.json file not found.")
         return False
 
-# 색상 추출 함수
+# 색상 추출 함수 (RGB 값 그대로 사용)
 def extract_colors(color_dict):
-    # primary_color부터 fourth_color까지 가능한 모든 색상을 추출
     colors = []
-    for i in range(1, 5):  # 최대 네 가지 색상 지원
+    for i in range(1, 5):
         color_key = f"primary_color" if i == 1 else f"secondary_color" if i == 2 else f"third_color" if i == 3 else f"fourth_color"
-        color = color_dict.get(color_key)
-        if color:
-            colors.append(color)
-    return colors if colors else None  # 색상이 없으면 None 반환
+        rgb_color = color_dict.get(color_key)
+        if rgb_color:
+            colors.append(np.array(rgb_color))  # RGB 값 추가
+            logging.info(f"Extracted color for {color_key}: {rgb_color}")
+    return colors if colors else None
 
-# 각 프레임에서 팀 색상에 따라 선수 구분
-def identify_team(hsv_color):
-    global team_colors
+# 유니폼 색상 추출 및 팀 판별 함수
+def identify_uniform_color_per_person(player_crop, team_colors_home, team_colors_away, similarity_threshold=30, majority_threshold=20):
+    # 홈팀과 원정팀 색상 정보
+    home_primary, home_secondary = team_colors_home[0], team_colors_home[1]
+    away_primary, away_secondary = team_colors_away[0], team_colors_away[1]
 
-    # 팀 색상 초기화 확인
-    if team_colors["home"] is None or team_colors["away"] is None:
-        print("Error: team colors not initialized correctly.")
-        return 'unknown'
+    # 1. 피부색 필터링
+    skin_lower = np.array([45, 34, 30], dtype=np.uint8)
+    skin_upper = np.array([255, 224, 210], dtype=np.uint8)
+    mask_skin = cv2.inRange(player_crop, skin_lower, skin_upper)
+    body_filtered = cv2.bitwise_and(player_crop, player_crop, mask=cv2.bitwise_not(mask_skin))
 
-    hsv_color_hs = hsv_color[:2]  # H와 S 값만 사용
+    # 2. 유사한 색상 기준으로 팀 후보 수집
+    team_votes = []
+    # processed_pixel_count = 0  # 처리한 픽셀 수 제한
 
-    # 팀 색상의 H, S 값만 비교
-    home_team_hs = team_colors["home"][0][:2]
-    away_team_hs = team_colors["away"][0][:2]
+    for y in range(body_filtered.shape[0]):
+        for x in range(body_filtered.shape[1]):
+            # if processed_pixel_count >= max_pixels:
+            #     break
 
-    # 각 팀의 색상과 비교
-    diff_home_team = np.linalg.norm(hsv_color_hs - home_team_hs)
-    diff_away_team = np.linalg.norm(hsv_color_hs - away_team_hs)
+            pixel_color = body_filtered[y, x]
+            if np.any(pixel_color):
+                # 홈팀과 원정팀 색상과의 유사성 비교
+                if np.linalg.norm(pixel_color - home_primary) < similarity_threshold:
+                    team_votes.append("home_team")
+                elif np.linalg.norm(pixel_color - away_primary) < similarity_threshold:
+                    team_votes.append("away_team")
+                elif np.linalg.norm(pixel_color - home_secondary) < similarity_threshold:
+                    team_votes.append("home_team")
+                elif np.linalg.norm(pixel_color - away_secondary) < similarity_threshold:
+                    team_votes.append("away_team")
+                # else:
+                #     team_votes.append("cannot_detected")  # 유사한 색상이 없으면 추가
 
-    return 'home_team' if diff_home_team < diff_away_team else 'away_team'
+                # 3. 중간에 결과 반환 조건
+                count = Counter(team_votes)
+                if count["home_team"] >= majority_threshold:
+                    return "home_team"
+                elif count["away_team"] >= majority_threshold:
+                    return "away_team"
 
-# 유니폼 색상 추출 함수 (흰색 필터링 강화)
-def identify_team_color(player_crop):
-    hsv_img = cv2.cvtColor(player_crop, cv2.COLOR_BGR2HSV)
+                # processed_pixel_count += 1  # 처리한 픽셀 수 증가
 
-    # 흰색 필터링 (HSV 범위에서 흰색 제거, 매우 넓은 범위)
-    white_lower = np.array([0, 0, 200], dtype=np.uint8)  # 흰색 필터링 강화 (V 최소값 높임)
-    white_upper = np.array([180, 60, 255], dtype=np.uint8)  # S 값 하한 조정
-
-    # 흰색을 제외한 상체 부분 추출
-    mask_white = cv2.inRange(hsv_img, white_lower, white_upper)
-    body_filtered = cv2.bitwise_and(hsv_img, hsv_img, mask=cv2.bitwise_not(mask_white))
-
-    # 검정색을 제외하고 H, S 히스토그램 계산
-    mask_non_black = cv2.inRange(body_filtered[:, :, 2], 10, 255)  # V가 10 이상인 픽셀만 사용
-    body_filtered = cv2.bitwise_and(body_filtered, body_filtered, mask=mask_non_black)
-
-    # HSV 히스토그램 계산 (가장 눈에 띄는 색상 추출)
-    h_hist = cv2.calcHist([body_filtered], [0], None, [180], [0, 180])
-    s_hist = cv2.calcHist([body_filtered], [1], None, [256], [50, 256])  # S값이 낮은 색상 필터링
-
-    # 가장 빈도가 높은 H, S 값 추출
-    dominant_h = np.argmax(h_hist)  # Hue 값에서 가장 빈도가 높은 색상
-    dominant_s = np.argmax(s_hist)  # Saturation 값에서 가장 빈도가 높은 채도
-
-    # 일정한 크기의 배열 [H, S] 반환
-    return np.array([dominant_h, dominant_s])
+    # 4. 최종 투표 결과 확인
+    if team_votes:
+        team_count = Counter(team_votes)
+        most_common_team, count = team_count.most_common(1)[0]
+        logging.info(f"Team votes: {team_count}, Assigned to: {most_common_team}")
+        return most_common_team
+    else:
+        logging.warning("Uniform color could not be detected. Assigning as 'cannot_detected'")
+        return "cannot_detected"
 
 # 필드 영역을 저해상도로 감지하고, 객체는 원본 해상도에서 탐지
 def detect_green_field_low_res(frame):
@@ -165,13 +173,13 @@ def update_status(video_path):
 
     cap = cv2.VideoCapture(video_path)
     if not cap.isOpened():
-        print("Error: Could not open video file.")
+        logging.error("Error: Could not open video file.")
         processing_status['status'] = "error"
         return
 
-    # 팀 색상이 올바르게 로드되었는지 확인
+    # 팀 색상 초기화 확인
     if team_colors["home"] is None or team_colors["away"] is None:
-        print("Error: Team colors not initialized correctly.")
+        logging.error("Error: Team colors not initialized correctly.")
         processing_status['status'] = "error"
         return
 
@@ -187,38 +195,42 @@ def update_status(video_path):
         if not ret:
             break
 
-        # 객체 탐지는 원본 해상도에서 처리
-        results = model(frame)
+        # 필드 영역 감지
+        field_contour = detect_green_field_low_res(frame)
+        if field_contour is not None:
+            cv2.drawContours(frame, [field_contour], -1, (0, 255, 255), 2)  # 필드 영역을 노란색으로 표시
 
+        # 객체 탐지
+        results = model(frame)
         for result in results:
             for box in result.boxes:
                 bx1, by1, bx2, by2 = map(int, box.xyxy[0])
 
-                if box.cls == 0:  # 선수 (class_id 0)
+                # 공과 선수의 필드 내 포함 여부 확인
+                if box.cls == 32 and cv2.pointPolygonTest(field_contour, ((bx1 + bx2) // 2, (by1 + by2) // 2), False) >= 0:
+                    cv2.rectangle(frame, (bx1, by1), (bx2, by2), (0, 255, 0), 2)  # 공을 초록색 사각형으로 표시
+
+                elif box.cls == 0 and cv2.pointPolygonTest(field_contour, ((bx1 + bx2) // 2, (by1 + by2) // 2), False) >= 0:
                     player_crop = frame[by1:by2, bx1:bx2]
-                    avg_color = np.mean(cv2.cvtColor(player_crop, cv2.COLOR_BGR2HSV), axis=(0, 1))
-                    team = identify_team(avg_color)  # 팀 판별
+                    team = identify_uniform_color_per_person(player_crop, team_colors["home"], team_colors["away"])
 
-                    # 플레이어 색상 및 팀 판별 로그 출력
-                    print(f"Detected player color (HSV): {avg_color}")
-                    rgb_color = cv2.cvtColor(np.uint8([[avg_color]]), cv2.COLOR_HSV2BGR)[0][0]
-                    print(f"Detected player color (RGB): {rgb_color}")
-                    print(f"Player assigned to {team}")
-
-                    # 팀에 따라 박스 색상 변경
-                    if team == 'home_team':
-                        cv2.rectangle(frame, (bx1, by1), (bx2, by2), (0, 0, 255), 2)  # 홈팀 (빨간색)
+                    # 팀 판별 결과에 따른 박스 색상 결정
+                    if team == "home_team":
+                        cv2.rectangle(frame, (bx1, by1), (bx2, by2), (0, 0, 255), 2)  # 홈팀은 빨간색
+                    elif team == "away_team":
+                        cv2.rectangle(frame, (bx1, by1), (bx2, by2), (255, 0, 0), 2)  # 원정팀은 파란색
                     else:
-                        cv2.rectangle(frame, (bx1, by1), (bx2, by2), (255, 0, 0), 2)  # 원정팀 (파란색)
+                        cv2.rectangle(frame, (bx1, by1), (bx2, by2), (0, 0, 0), 2)  # 인식되지 않은 선수는 검은색
 
-        # 처리된 프레임 저장
+                    logging.info(f"Player color detected: {team}")
+
+        # 처리된 프레임 저장 및 진행률 업데이트
         out.write(frame)
-        print(f"Frame {processed_frames + 1} saved")  # 프레임 저장 로그 추가
-
+        logging.info(f"Frame {processed_frames + 1} saved")
         processed_frames += 1
         processing_status['progress'] = int((processed_frames / total_frames) * 100)
 
-    print("Video processing completed, now saving...")
+    logging.info("Video processing completed, now saving...")
     cap.release()
     out.release()
 
@@ -271,8 +283,7 @@ def process_video():
     file = request.files['video']
     home_team = request.form.get('home_team')
     away_team = request.form.get('away_team')
-
-    print(f"요청 받은 팀 정보 == home_team : {home_team}, away_team : {away_team}")
+    logging.info(f"Received home_team: {home_team}, away_team: {away_team}")
 
     # JSON에서 팀 색상 정보 불러오기
     if not load_team_colors(home_team, away_team):
