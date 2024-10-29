@@ -36,7 +36,7 @@
     border-bottom: 2px solid #000; /* 날짜 헤더에 밑줄 추가 */
     margin-bottom: 10px; /* 아래쪽 여백 추가 */
     padding-bottom: 5px; /* 패딩 추가 */
-    width:800px;
+    width:800px; /* 메인 컨텐츠 너비 만큼 */
 }
 
 /* 경기 항목에 margin-bottom 추가 */
@@ -49,7 +49,7 @@
 
 /* 경기 목록에 대한 스타일 */
 .match-container {
-    display: flex; /* flexbox로 경기 리스트 배치 */
+    display: flex; /* flexbox로 경기 일정 배치 */
     flex-wrap: wrap; /* 줄 바꿈 */
     justify-content: space-between; /* 간격을 균등하게 */
 }
@@ -58,7 +58,7 @@
     border-bottom: 1px solid #666; /* 리그 헤더에 밑줄 추가 */
     margin-bottom: 8px; /* 아래쪽 여백 추가 */
     padding-bottom: 4px; /* 패딩 추가 */
-    width:800px;
+    width:800px; /* 메인 컨텐츠 너비만큼 */
 }
 /* 경기 하나당 최소 너비 설정 */
 .match-item{
@@ -66,13 +66,13 @@
 }
 /* 경기시간 스타일 */
 .matchTime {
-    display: inline-block;
+    display: inline-block; /* 경기 시간, '홈', 팀명, 스코어를 가로로 배치하기 위해 */
     font-weight: bold;
     min-width: 40px; /* 최소 너비 */
 }
 /* 홈팀 명시 스타일 */
 .home-label {
-    display: inline-block;
+    display: inline-block; /* 경기 시간, '홈', 팀명, 스코어를 가로로 배치하기 위해 */
     background-color: #007BFF; /* 원하는 배경색 */
     color: #FFFFFF; /* 텍스트 색상 */
     height: 8px; /* 높이 16px */

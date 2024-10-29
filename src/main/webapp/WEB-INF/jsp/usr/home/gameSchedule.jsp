@@ -23,8 +23,6 @@
 
     <!-- 폰트어썸 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <!-- 폰트어썸 FREE 아이콘 리스트 : https://fontawesome.com/v5.15/icons?d=gallery&p=2&m=free -->
-
 </head>
 <body>
 <div class="main-content">
@@ -32,31 +30,25 @@
         <h1 class="main-title-content">경기 일정</h1>
     </div>
 
-    <!-- 경기 일정 노출 -->
     <div class="gameSchedule-list-container">
         <ul id="gameSchedule-list">
             <c:set var="currentDate" value=""/>
             <c:set var="currentLeague" value=""/>
 
             <c:forEach var="gameSchedule" items="${gameSchedules}">
-                <!-- 날짜가 바뀔 때마다 새로운 날짜 헤더 출력 -->
                 <c:if test="${currentDate != gameSchedule.startDate}">
                     <c:set var="currentDate" value="${gameSchedule.startDate}"/>
-                    <h3 class="date-header">${gameSchedule.startDate}</h3> <!-- 날짜 헤더 스타일 적용 -->
+                    <h3 class="date-header">${gameSchedule.startDate}</h3>
                 </c:if>
 
-                <!-- 리그가 바뀔 때마다 새로운 리그 헤더 출력 및 리그별 블록 시작 -->
                 <c:if test="${currentLeague != gameSchedule.leagueName}">
                     <c:set var="currentLeague" value="${gameSchedule.leagueName}"/>
-                    <h4 class="league-header">${gameSchedule.leagueName}</h4> <!-- 리그 헤더 스타일 적용 -->
-                    <!-- 리그별로 게임을 묶을 블록 시작 -->
+                    <h4 class="league-header">${gameSchedule.leagueName}</h4>
                     <div class="league-block">
-                    <div class="match-container"> <!-- 경기 항목을 담을 컨테이너 -->
+                    <div class="match-container">
                 </c:if>
 
-                <!-- 경기 항목 -->
                 <li class="match-item">
-                    <!-- 경기 시작 시간 -->
                     <span class="matchTime">${gameSchedule.matchTime}</span>
                     <div class="home-label">홈</div>
                     <span>${gameSchedule.homeTeam}</span>
@@ -72,18 +64,57 @@
                         vs
                     </c:if>
                     <span>${gameSchedule.awayTeam}</span>
+
+                    <!-- 예측 폼 추가 (로그인된 사용자만 예측 가능) -->
+                    <form action="/predict" method="post">
+                        <input type="hidden" name="gameId" value="${schedule.id}"/>
+                        <input type="hidden" name="memberId" value="${memberId}"/>
+                        <button type="submit" name="prediction" value="승"
+                                style="background-color: ${winDrawLose.prediction == '승' ? 'green' : 'white'};">승
+                        </button>
+                        <button type="submit" name="prediction" value="무"
+                                style="background-color: ${winDrawLose.prediction == '무' ? 'yellow' : 'white'};">무
+                        </button>
+                        <button type="submit" name="prediction" value="패"
+                                style="background-color: ${winDrawLose.prediction == '패' ? 'red' : 'white'};">패
+                        </button>
+                    </form>
                 </li>
 
-                <!-- 리그가 끝날 때 리그 블록 닫기 -->
                 <c:if test="${currentLeague != gameSchedule.leagueName || gameSchedule == gameSchedules[gameSchedules.size()-1]}">
-                    </div> <!-- 경기 항목 컨테이너 종료 -->
-                    </div> <!-- 리그 블록 종료 -->
+                    </div>
+                    </div>
                 </c:if>
             </c:forEach>
         </ul>
     </div>
-
 </div>
+
+<script>
+    $(function () {
+        $('.prediction-button').click(function (event) {
+            event.preventDefault();
+
+            var prediction = $(this).data('prediction');
+            var gameId = $(this).closest('.prediction-form').data('game-id');
+            var memberId = $(this).closest('.prediction-form').data('member-id');
+
+            $.post('/predict', {
+                gameId: gameId,
+                memberId: memberId,
+                prediction: prediction
+            })
+                .done(function (response) {
+                    alert("예측이 저장되었습니다!");
+                    location.reload();
+                })
+                .fail(function (error) {
+                    console.log("에러 발생:", error);
+                    alert("예측을 저장하는 중 문제가 발생했습니다.");
+                });
+        });
+    });
+</script>
 
 </body>
 </html>

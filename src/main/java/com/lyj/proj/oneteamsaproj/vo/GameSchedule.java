@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GameSchedule {
-
+    private int id;
     private String startDate;
     private String matchTime;
     private String leagueName;
@@ -16,4 +16,15 @@ public class GameSchedule {
     private String awayTeam;
     private String homeTeamScore;
     private String awayTeamScore;
+
+    // id를 제외한 다른 필드만 받는 생성자 추가
+    public GameSchedule(String startDate, String matchTime, String leagueName, String homeTeam, String awayTeam, String homeTeamScore, String awayTeamScore) {
+        this.startDate = startDate;
+        this.matchTime = matchTime;
+        this.leagueName = leagueName;
+        this.homeTeam = homeTeam;
+        this.awayTeam = awayTeam;
+        this.homeTeamScore = homeTeamScore;
+        this.awayTeamScore = awayTeamScore;
+    }
 }

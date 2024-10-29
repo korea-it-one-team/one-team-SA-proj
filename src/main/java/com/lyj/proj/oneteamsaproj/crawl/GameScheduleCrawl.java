@@ -20,7 +20,7 @@ public class GameScheduleCrawl {
         System.setProperty("webdriver.chrome.driver", "C:/work_oneteam/one-team-SA-proj/chromedriver-win64/chromedriver.exe");
 
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless"); // 필요 시 주석 해제
+//        options.addArguments("--headless"); // 필요 시 주석 해제
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
 
@@ -35,6 +35,7 @@ public class GameScheduleCrawl {
                 Date date = calendar.getTime();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 String formattedDate = sdf.format(date);
+                // GameSchedule 객체 만들때 알아보기 편하게 하려고 GameSchedule의 칼럼명과 동일하게 바꿈
                 String startDate = formattedDate;
                 String url = "https://m.sports.naver.com/wfootball/schedule/index?date=" + formattedDate;
 

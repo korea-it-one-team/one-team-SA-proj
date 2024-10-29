@@ -12,7 +12,7 @@ import java.util.Map;
 @Service
 public class GameScheduleService {
 
-    private final GameScheduleRepository gameScheduleRepository; // 경기를 저장하고 조회하는 레포지토리
+    private final GameScheduleRepository gameScheduleRepository; // 경기를 저장하고 조회하는 리포지토리
     private final GameScheduleCrawl gameScheduleCrawl; // 경기 일정을 크롤링하는 서비스
 
     @Autowired
@@ -48,11 +48,11 @@ public class GameScheduleService {
                         );
 
                         try {
-                            // 기존 경기가 없으면 새로운 경기를 삽입
+                            // DB에 기존 경기가 없으면 새로운 경기를 DB에 삽입
                             if (existingGame == null) {
                                 gameScheduleRepository.insert(matchSchedule);
                             } else {
-                                // 기존 경기가 있으면 점수를 업데이트
+                                // DB에 기존 경기가 있으면 점수를 업데이트
                                 existingGame.setHomeTeamScore(matchSchedule.getHomeTeamScore());
                                 existingGame.setAwayTeamScore(matchSchedule.getAwayTeamScore());
                                 gameScheduleRepository.update(existingGame); // 업데이트

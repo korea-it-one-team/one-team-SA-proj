@@ -15,6 +15,15 @@ CREATE TABLE gameSchedule (
                               awayTeamScore CHAR(5) NOT NULL
 );
 
+
+# 승무패 예측 테이블 생성
+CREATE TABLE winDrawLose (
+                             id INT AUTO_INCREMENT PRIMARY KEY,
+                             gameId INT NOT NULL,
+                             memberId INT NOT NULL,
+                             prediction CHAR(10) NOT NULL
+);
+
 # 기프티콘 테이블 생성
 CREATE TABLE gifticons (
                            id INT AUTO_INCREMENT PRIMARY KEY,
@@ -419,7 +428,7 @@ CREATE TABLE genFile (
         regDate DATETIME DEFAULT NULL, # 작성날짜
                              updateDate DATETIME DEFAULT NULL, # 갱신날짜
                              delDate DATETIME DEFAULT NULL, # 삭제날짜
-                             delStatus TINYINT(1) UNSIGNED NOT NULL DEFAULT 0, # 삭제상태(0:미삭제,1:삭제)
+                             delStatus TINYINT(1) UNSIGNED NOT NULL DEFAULT 0, # 삭제상태(0:미삭제, 1:삭제)
   relTypeCode CHAR(50) NOT NULL, # 관련 데이터 타입(article, member)
   relId INT(10) UNSIGNED NOT NULL, # 관련 데이터 번호
   originFileName VARCHAR(100) NOT NULL, # 업로드 당시의 파일이름
@@ -441,4 +450,4 @@ SET loginPw = SHA2(loginPw,256);
 
 #######(INIT 끝)
 
-SELECT * FROM gameSchedule;
+SELECT * FROM gameSchedule ORDER BY startdate ASC;

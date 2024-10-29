@@ -23,7 +23,7 @@ public interface GameScheduleRepository {
             @Param("awayTeam") String awayTeam       // 원정팀
     );
 
-    // 새로운 경기를 데이터베이스에 삽입하는 메서드
+    // 새로운 경기를 DB에 삽입하는 메서드
     @Insert("INSERT INTO gameSchedule (startDate, matchTime, leagueName, homeTeam, awayTeam, homeTeamScore, awayTeamScore) VALUES (#{startDate}, #{matchTime}, #{leagueName}, #{homeTeam}, #{awayTeam}, #{homeTeamScore}, #{awayTeamScore})")
     void insert(GameSchedule gameSchedule); // GameSchedule 객체를 파라미터로 받음
 
