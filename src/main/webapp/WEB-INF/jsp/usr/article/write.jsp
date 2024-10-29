@@ -59,7 +59,7 @@
 					<tr>
 						<th>첨부 이미지</th>
 						<td>
-							<input id="fileInput" placeholder="이미지를 선택해주세요" type="file" />
+							<input id="fileInput" placeholder="이미지를 선택해주세요" type="file" name="file" multiple />
 						</td>
 					</tr>
 					<tr>

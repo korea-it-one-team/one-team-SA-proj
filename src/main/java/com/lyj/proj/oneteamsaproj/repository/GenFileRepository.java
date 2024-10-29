@@ -31,4 +31,5 @@ public interface GenFileRepository {
     List<GenFile> getGenFilesRelTypeCodeAndRelIdsAndTypeCodeAndType2Code(@Param("relTypeCode") String relTypeCode,
                                                                          @Param("relIds") List<Integer> relIds, @Param("typeCode") String typeCode,
                                                                          @Param("type2Code") String type2Code);
+
 }

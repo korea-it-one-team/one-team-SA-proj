@@ -60,6 +60,9 @@ public class UsrArticleController {
 
         List<Reply> replies = replyService.getForPrintReplies(rq.getLoginedMemberId(), "article", id);
 
+        // 이미지 파일 여러개 첨부했을 때
+        List<GenFile> files = genFileService.getFilesByRelTypeCodeAndRelId("article", id);
+
         int repliesCount = replies.size();
 
         model.addAttribute("article", article);
@@ -68,6 +71,7 @@ public class UsrArticleController {
         model.addAttribute("replies", replies);
         model.addAttribute("repliesCount", repliesCount);
 
+        model.addAttribute("files", files);
 
         model.addAttribute("isAlreadyAddGoodRp",
 
@@ -187,6 +191,7 @@ public class UsrArticleController {
 
         Rq rq = (Rq) req.getAttribute("rq");
 
+
         if (Ut.isEmptyOrNull(title)) {
             return Ut.jsHistoryBack("F-1", "제목을 입력해주세요.");
         }
@@ -211,13 +216,16 @@ public class UsrArticleController {
 
         Article article = articleService.getArticleById(id);
 
-        Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
+        // 파일 처리
+        Map<String, List<MultipartFile>> fileMap = multipartRequest.getMultiFileMap();
 
         for (String fileInputName : fileMap.keySet()) {
-            MultipartFile multipartFile = fileMap.get(fileInputName);
+            List<MultipartFile> multipartFiles = fileMap.get(fileInputName);
 
-            if (multipartFile.isEmpty() == false) {
-                genFileService.save(multipartFile, id);
+            for (MultipartFile multipartFile : multipartFiles) {
+                if (!multipartFile.isEmpty()) {
+                    genFileService.save(multipartFile, id);
+                }
             }
         }
 

@@ -264,7 +264,7 @@ function doModifyReply(replyId) {
 					<td id="DislikeCount" style="text-align: center;">${article.badReactionPoint}</td>
 				</tr>
 				<tr>
-					<th style="text-align: center;">LIKE / Dislike / ${usersReaction }</th>
+					<th style="text-align: center;">LIKE / Dislike ${usersReaction }</th>
 					<td style="text-align: center;">
 						<button id="likeButton" class="btn btn-outline btn-success" onclick="doGoodReaction(${param.id})">
 							👍 LIKE
@@ -291,7 +291,10 @@ function doModifyReply(replyId) {
 					<th style="text-align: center;">Attached Image</th>
 					<td style="text-align: center;">
 						<div style="text-align: center;">
-							<img class="mx-auto rounded-xl" src="${rq.getImgUri(article.id)}" onerror="${rq.profileFallbackImgOnErrorHtml}" alt="" />
+							<c:forEach var="file" items="${attachedFiles}">
+                				<img class="mx-auto rounded-xl" src="${file.fileUri}" alt="첨부 이미지" style="max-width: 100%; margin-bottom: 10px;" />
+            				</c:forEach>
+<%--							<img class="mx-auto rounded-xl" src="${rq.getImgUri(article.id)}" onerror="${rq.profileFallbackImgOnErrorHtml}" alt="" />--%>
 						</div>
 							<%--이미지 경로 표시--%>
 <%--						<div>${rq.getImgUri(article.id)}</div>--%>
