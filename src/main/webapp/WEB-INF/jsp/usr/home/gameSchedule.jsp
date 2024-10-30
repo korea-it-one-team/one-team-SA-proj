@@ -67,6 +67,7 @@
                     <span>${gameSchedule.awayTeam}</span>
 
                     <!-- 예측 버튼 추가 -->
+                    <!-- 로그인 하지 않으면 보이지 않음 -->
                     <c:if test="${not empty sessionScope.loginedMember}">
                         <button class="prediction-button" data-prediction="승" data-game-id="${gameSchedule.id}"
                                 data-member-id="${sessionScope.loginedMember.id}"
