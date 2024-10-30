@@ -7,54 +7,61 @@ import com.lyj.proj.oneteamsaproj.vo.WinDrawLose;
 import com.lyj.proj.oneteamsaproj.vo.ResultData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 public class WinDrawLoseService {
 
-    private final WinDrawLoseRepository predictionRepository;
-    private final MemberService memberService; // 회원 서비스 추가
-    private final GameScheduleRepository gameScheduleRepository;
+    @Autowired
+    private WinDrawLoseRepository winDrawLoseRepository;
 
     @Autowired
-    public WinDrawLoseService(WinDrawLoseRepository predictionRepository, MemberService memberService, GameScheduleRepository gameScheduleRepository) {
-        this.predictionRepository = predictionRepository;
-        this.memberService = memberService;
-        this.gameScheduleRepository = gameScheduleRepository;
+    private MemberService memberService;
+
+    @Autowired
+    private GameScheduleService gameScheduleService;
+
+    @Transactional
+    public void savePrediction(WinDrawLose winDrawLose) {
+        winDrawLoseRepository.insertPrediction(winDrawLose);
+        updateMemberPoints(winDrawLose.getMemberId(), winDrawLose.getGameId());
     }
 
-    public ResultData savePrediction(int memberId, int gameId, String prediction) {
-        // 예측 저장
-        predictionRepository.save(new WinDrawLose(memberId, gameId, prediction));
+    public WinDrawLose getPrediction(int gameId, int memberId) {
+        return winDrawLoseRepository.findByGameIdAndMemberId(gameId, memberId);
+    }
 
-        // 경기 결과와 비교하여 포인트 추가
-        GameSchedule gameSchedule = predictionRepository.findGameById(gameId);
+    private void updateMemberPoints(int memberId, int gameId) {
+        GameSchedule gameSchedule = gameScheduleService.getGameScheduleById(gameId);
         if (gameSchedule != null) {
-            String actualResult = determineMatchResult(gameSchedule.getHomeTeamScore(), gameSchedule.getAwayTeamScore());
-            if (actualResult.equals(prediction)) {
+            String actualResult = getActualResult(gameSchedule.getHomeTeamScore(), gameSchedule.getAwayTeamScore());
+            WinDrawLose winDrawLose = winDrawLoseRepository.findByGameIdAndMemberId(gameId, memberId);
+
+            if (winDrawLose != null && winDrawLose.getPrediction().equals(actualResult)) {
                 memberService.addPoints(memberId, 5);
             }
         }
-        return ResultData.from("S-1", "예측이 저장되었습니다.");
     }
 
-    private String determineMatchResult(String homeScore, String awayScore) {
-        int home = Integer.parseInt(homeScore);
-        int away = Integer.parseInt(awayScore);
-        if (home > away) return "승"; // 홈팀 승리
-        else if (home < away) return "패"; // 원정팀 승리
-        else return "무"; // 무승부
-    }
+    private String getActualResult(String homeTeamScore, String awayTeamScore) {
+        // 스코어가 null이거나 빈 문자열인지 확인하여 빈 문자열 반환
+        if (homeTeamScore == null || homeTeamScore.isEmpty() || awayTeamScore == null || awayTeamScore.isEmpty()) {
+            return ""; // 빈 문자열 반환
 
-    public List<GameSchedule> getAllGameSchedulesWithPredictions(int memberId) {
-        List<GameSchedule> gameSchedules = gameScheduleRepository.findAll(); // 모든 경기 일정 조회
-        for (GameSchedule gameSchedule : gameSchedules) {
-            WinDrawLose prediction = predictionRepository.findPredictionByGameIdAndMemberId(gameSchedule.getId(), memberId);
-            if (prediction != null) {
-                gameSchedule.setUserPrediction(prediction.getPrediction()); // 예측 결과 설정
+        } else {
+            // 스코어가 문자열 타입이라 정수로 형변환
+            int homeTeamScoreInt = Integer.parseInt(homeTeamScore);
+            int awayTeamScoreInt = Integer.parseInt(awayTeamScore);
+
+            if (homeTeamScoreInt > awayTeamScoreInt) {
+                return "승";
+            } else if (homeTeamScoreInt < awayTeamScoreInt) {
+                return "패";
+            } else {
+                return "무";
             }
         }
-        return gameSchedules;
     }
 }

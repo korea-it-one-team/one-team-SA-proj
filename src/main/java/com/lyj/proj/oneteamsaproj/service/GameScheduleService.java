@@ -21,6 +21,10 @@ public class GameScheduleService {
         this.gameScheduleCrawl = gameScheduleCrawl;
     }
 
+    public GameSchedule getGameScheduleById(int gameId) {
+        return gameScheduleRepository.findById(gameId);
+    }
+
     // 모든 경기 일정을 조회하는 메서드
     public List<GameSchedule> getAllGameSchedules() {
         return gameScheduleRepository.findAll(); // 레포지토리에서 모든 경기 일정 반환

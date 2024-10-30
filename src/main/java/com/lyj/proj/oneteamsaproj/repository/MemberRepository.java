@@ -57,7 +57,7 @@ public interface MemberRepository {
             """)
     public Member getMemberByNameAndEmail(String name, String email);
 
-    // 승부 예측 포인트 추가 메서드
+    // 승부 예측 성공 시 포인트 + 5 추가 메서드
     @Update("UPDATE `member` SET points = points + #{points} WHERE id = #{memberId}")
     public void addPoints(int memberId, int points);
 

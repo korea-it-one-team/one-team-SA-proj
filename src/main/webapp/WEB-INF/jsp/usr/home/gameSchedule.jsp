@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
+
 <div class="main-content">
     <div class="main-title">
         <h1 class="main-title-content">경기 일정</h1>
@@ -65,21 +66,23 @@
                     </c:if>
                     <span>${gameSchedule.awayTeam}</span>
 
-                    <!-- 예측 폼 추가 (로그인된 사용자만 예측 가능) -->
-                    <form action="/predict" method="post">
-                        <input type="hidden" name="gameId" value="${schedule.id}"/>
-                        <input type="hidden" name="memberId" value="${memberId}"/>
-                        <button type="submit" name="prediction" value="승"
+                    <!-- 예측 버튼 추가 -->
+                    <c:if test="${not empty sessionScope.loginedMember}">
+                        <button class="prediction-button" data-prediction="승" data-game-id="${gameSchedule.id}"
+                                data-member-id="${sessionScope.loginedMember.id}"
                                 style="background-color: ${winDrawLose.prediction == '승' ? 'green' : 'white'};">승
                         </button>
-                        <button type="submit" name="prediction" value="무"
+                        <button class="prediction-button" data-prediction="무" data-game-id="${gameSchedule.id}"
+                                data-member-id="${sessionScope.loginedMember.id}"
                                 style="background-color: ${winDrawLose.prediction == '무' ? 'yellow' : 'white'};">무
                         </button>
-                        <button type="submit" name="prediction" value="패"
+                        <button class="prediction-button" data-prediction="패" data-game-id="${gameSchedule.id}"
+                                data-member-id="${sessionScope.loginedMember.id}"
                                 style="background-color: ${winDrawLose.prediction == '패' ? 'red' : 'white'};">패
                         </button>
-                    </form>
+                    </c:if>
                 </li>
+
 
                 <c:if test="${currentLeague != gameSchedule.leagueName || gameSchedule == gameSchedules[gameSchedules.size()-1]}">
                     </div>
@@ -94,24 +97,41 @@
     $(function () {
         $('.prediction-button').click(function (event) {
             event.preventDefault();
-
+            // 예측 값, 게임 ID, 회원 ID를 변수로 저장
             var prediction = $(this).data('prediction');
-            var gameId = $(this).closest('.prediction-form').data('game-id');
-            var memberId = $(this).closest('.prediction-form').data('member-id');
-
-            $.post('/predict', {
-                gameId: gameId,
-                memberId: memberId,
-                prediction: prediction
-            })
-                .done(function (response) {
-                    alert("예측이 저장되었습니다!");
-                    location.reload();
-                })
-                .fail(function (error) {
+            var gameId = $(this).data('game-id');
+            var memberId = $(this).data('member-id');
+            // 각 값이 올바르게 설정되었는지 확인하기 위해 콘솔 로그 추가
+            console.log("prediction:", prediction);
+            console.log("gameId:", gameId);
+            console.log("memberId:", memberId);
+            // 빈 값이거나 설정되지 않은 값이 있을 경우 경고창 표시
+            if (!gameId || !memberId) {
+                alert("게임 ID와 회원 ID는 필수입니다.");
+                return;
+            }
+            // 예측 값을 서버로 전송
+            $.ajax({
+                type: "POST",
+                url: "/predict",
+                data: {
+                    gameId: gameId,
+                    memberId: memberId,
+                    prediction: prediction
+                },
+                success: function (response) {
+                    console.log("응답:", response);  // 응답 객체 확인
+                    if (response.redirectUrl) {
+                        window.location.href = response.redirectUrl;
+                    } else {
+                        alert("리다이렉트할 URL이 없습니다.");
+                    }
+                },
+                error: function (xhr, status, error) {
                     console.log("에러 발생:", error);
-                    alert("예측을 저장하는 중 문제가 발생했습니다.");
-                });
+                    alert("예측을 저장하는 중 문제가 발생했습니다. 오류: " + xhr.responseText);
+                }
+            });
         });
     });
 </script>

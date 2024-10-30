@@ -8,6 +8,10 @@ import java.util.List;
 @Mapper
 public interface GameScheduleRepository {
 
+
+    @Select("SELECT * FROM gameSchedule WHERE id = #{gameId}")
+    GameSchedule findById(int gameId);
+
     // 모든 경기 일정을 조회하는 메서드
     @Select("SELECT * FROM gameSchedule ORDER BY startDate ASC")
     List<GameSchedule> findAll();
