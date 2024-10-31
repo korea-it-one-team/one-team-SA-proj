@@ -53,6 +53,7 @@
                     <span class="matchTime">${gameSchedule.matchTime}</span>
                     <div class="home-label">홈</div>
                     <span>${gameSchedule.homeTeam}</span>
+
                     <c:if test="${gameSchedule.homeTeamScore != '' && gameSchedule.awayTeamScore != ''}">
                         <c:set var="homeScoreClass"
                                value="${gameSchedule.homeTeamScore > gameSchedule.awayTeamScore ? 'high-score' : 'low-score'}"/>
@@ -61,29 +62,30 @@
                         <span class="score ${homeScoreClass}">${gameSchedule.homeTeamScore}</span> :
                         <span class="score ${awayScoreClass}">${gameSchedule.awayTeamScore}</span>
                     </c:if>
+
                     <c:if test="${gameSchedule.homeTeamScore == '' || gameSchedule.awayTeamScore == ''}">
                         vs
                     </c:if>
+
                     <span>${gameSchedule.awayTeam}</span>
 
                     <!-- 예측 버튼 추가 -->
                     <!-- 로그인 하지 않으면 보이지 않음 -->
                     <c:if test="${not empty sessionScope.loginedMember}">
-                        <button class="prediction-button" data-prediction="승" data-game-id="${gameSchedule.id}"
-                                data-member-id="${sessionScope.loginedMember.id}"
-                                style="background-color: ${winDrawLose.prediction == '승' ? 'green' : 'white'};">승
-                        </button>
-                        <button class="prediction-button" data-prediction="무" data-game-id="${gameSchedule.id}"
-                                data-member-id="${sessionScope.loginedMember.id}"
-                                style="background-color: ${winDrawLose.prediction == '무' ? 'yellow' : 'white'};">무
-                        </button>
-                        <button class="prediction-button" data-prediction="패" data-game-id="${gameSchedule.id}"
-                                data-member-id="${sessionScope.loginedMember.id}"
-                                style="background-color: ${winDrawLose.prediction == '패' ? 'red' : 'white'};">패
-                        </button>
+                            <button class="prediction-button" data-prediction="승" data-game-id="${gameSchedule.id}"
+                                    data-member-id="${sessionScope.loginedMember.id}"
+                                    style="background-color: ${winDrawLose.prediction == '승' ? 'green' : 'white'};">승
+                            </button>
+                            <button class="prediction-button" data-prediction="무" data-game-id="${gameSchedule.id}"
+                                    data-member-id="${sessionScope.loginedMember.id}"
+                                    style="background-color: ${winDrawLose.prediction == '무' ? 'yellow' : 'white'};">무
+                            </button>
+                            <button class="prediction-button" data-prediction="패" data-game-id="${gameSchedule.id}"
+                                    data-member-id="${sessionScope.loginedMember.id}"
+                                    style="background-color: ${winDrawLose.prediction == '패' ? 'red' : 'white'};">패
+                            </button>
                     </c:if>
                 </li>
-
 
                 <c:if test="${currentLeague != gameSchedule.leagueName || gameSchedule == gameSchedules[gameSchedules.size()-1]}">
                     </div>
@@ -92,6 +94,7 @@
             </c:forEach>
         </ul>
     </div>
+
 </div>
 
 <script>
@@ -102,15 +105,18 @@
             var prediction = $(this).data('prediction');
             var gameId = $(this).data('game-id');
             var memberId = $(this).data('member-id');
+
             // 각 값이 올바르게 설정되었는지 확인하기 위해 콘솔 로그 추가
             console.log("prediction:", prediction);
             console.log("gameId:", gameId);
             console.log("memberId:", memberId);
+
             // 빈 값이거나 설정되지 않은 값이 있을 경우 경고창 표시
             if (!gameId || !memberId) {
                 alert("게임 ID와 회원 ID는 필수입니다.");
                 return;
             }
+
             // 예측 값을 서버로 전송
             $.ajax({
                 type: "POST",
@@ -139,3 +145,4 @@
 
 </body>
 </html>
+

@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,16 +33,19 @@ public class UsrGameScheduleController {
     @GetMapping("usr/home/gameSchedule")
     public String getGameSchedulePage(Model model) {
         List<GameSchedule> gameSchedules = gameScheduleService.getAllGameSchedules();
+
         model.addAttribute("gameSchedules", gameSchedules);
         return "usr/home/gameSchedule"; // JSP 파일 경로
     }
 
     // DB에 저장할 메서드
     @GetMapping("/getGameSchedule")
+    @ResponseBody
     public Map<String, List<Map<String, Object>>> getGameSchedule() {
         return gameScheduleService.crawlAndSaveGameSchedules();
     }
 
+    // 승/무/패 예측 AJAX POST 요청 메서드
     @PostMapping("/predict")
     public ResponseEntity<Map<String, String>> savePrediction(@RequestParam int gameId,
                                                               @RequestParam int memberId,
