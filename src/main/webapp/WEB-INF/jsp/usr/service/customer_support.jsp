@@ -11,7 +11,7 @@
             $('.content-section').hide(); // 모든 섹션 숨기기
             $('#' + section).show(); // 선택한 섹션 보이기
             $('.faq-list').slideUp();
-
+            $('.content_answer').slideUp();
         }
 
         // 페이지 로드 시 초기 설정
