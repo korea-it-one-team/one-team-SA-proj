@@ -1,12 +1,6 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: admin
-  Date: 2024-10-10
-  Time: 오후 2:40
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -16,12 +10,9 @@
     <link rel="stylesheet" href="/resource/common.css"/>
     <link rel="stylesheet" href="/resource/gameSchedule.css"/>
     <script src="/resource/common.js" defer="defer"></script>
-    <!-- 제이쿼리, UI 추가 -->
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-    <!-- 폰트어썸 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
@@ -37,6 +28,13 @@
             <c:set var="currentLeague" value=""/>
 
             <c:forEach var="gameSchedule" items="${gameSchedules}">
+                <c:set var="gameStartLocalDate" value="${gameSchedule.startDate}"/>
+                <c:set var="gameStartLocalTime" value="${gameSchedule.matchTime}"/>
+                <c:set var="gameStartLocalDateTime" value="${gameStartLocalDate}T${gameStartLocalTime}"/>
+
+                <!-- 게임 시작 시간을 비교하기 위한 형식 지정 -->
+                <c:set var="isFutureGame" value="${currentDateTime.compareTo(gameStartLocalDateTime) < 0}" />
+
                 <c:if test="${currentDate != gameSchedule.startDate}">
                     <c:set var="currentDate" value="${gameSchedule.startDate}"/>
                     <h3 class="date-header">${gameSchedule.startDate}</h3>
@@ -69,21 +67,33 @@
 
                     <span>${gameSchedule.awayTeam}</span>
 
-                    <!-- 예측 버튼 추가 -->
-                    <!-- 로그인 하지 않으면 보이지 않음 -->
                     <c:if test="${not empty sessionScope.loginedMember}">
+                        <c:if test="${isFutureGame}">
+                            <!-- userPredictionsMap에서 현재 gameSchedule.id에 맞는 예측 정보 가져오기 -->
+                            <c:set var="userPrediction" value="${userPredictionsMap[gameSchedule.id]}"/>
+
                             <button class="prediction-button" data-prediction="승" data-game-id="${gameSchedule.id}"
                                     data-member-id="${sessionScope.loginedMember.id}"
-                                    style="background-color: ${winDrawLose.prediction == '승' ? 'green' : 'white'};">승
+                                    style="background-color: ${userPrediction == '승' ? 'green' : 'white'};">승
                             </button>
                             <button class="prediction-button" data-prediction="무" data-game-id="${gameSchedule.id}"
                                     data-member-id="${sessionScope.loginedMember.id}"
-                                    style="background-color: ${winDrawLose.prediction == '무' ? 'yellow' : 'white'};">무
+                                    style="background-color: ${userPrediction == '무' ? 'yellow' : 'white'};">무
                             </button>
                             <button class="prediction-button" data-prediction="패" data-game-id="${gameSchedule.id}"
                                     data-member-id="${sessionScope.loginedMember.id}"
-                                    style="background-color: ${winDrawLose.prediction == '패' ? 'red' : 'white'};">패
+                                    style="background-color: ${userPrediction == '패' ? 'red' : 'white'};">패
                             </button>
+                        </c:if>
+                        <c:if test="${!isFutureGame}">
+
+                            <!-- userPredictionsMap에서 현재 gameSchedule.id에 맞는 예측 정보 가져오기 -->
+                            <c:set var="userPrediction" value="${userPredictionsMap[gameSchedule.id]}"/>
+
+                            <button class="prediction-button" style="background-color: ${userPrediction == '승' ? 'green' : 'white'}; cursor: not-allowed;" disabled>승</button>
+                            <button class="prediction-button" style="background-color: ${userPrediction == '무' ? 'yellow' : 'white'}; cursor: not-allowed;" disabled>무</button>
+                            <button class="prediction-button" style="background-color: ${userPrediction == '패' ? 'red' : 'white'}; cursor: not-allowed;" disabled>패</button>
+                        </c:if>
                     </c:if>
                 </li>
 
@@ -92,8 +102,10 @@
                     </div>
                 </c:if>
             </c:forEach>
+
         </ul>
     </div>
+
 
 </div>
 
@@ -129,14 +141,19 @@
                 success: function (response) {
                     console.log("응답:", response);  // 응답 객체 확인
                     if (response.redirectUrl) {
-                        window.location.href = response.redirectUrl;
+                        window.location.href = response.redirectUrl; // 리다이렉트
+                    } else if (response.error) {
+                        // 서버에서 오류 메시지를 받은 경우
+                        alert(response.error);
                     } else {
-                        alert("리다이렉트할 URL이 없습니다.");
+                        alert("예상치 못한 응답이 왔습니다.");
                     }
                 },
-                error: function (xhr, status, error) {
-                    console.log("에러 발생:", error);
-                    alert("예측을 저장하는 중 문제가 발생했습니다. 오류: " + xhr.responseText);
+                error: function (xhr) {
+                    // 오류 발생 시 서버에서 반환한 메시지를 표시
+                    var errorMessage = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : "예측을 저장하는 중 문제가 발생했습니다.";
+                    console.log("에러 발생:", errorMessage);
+                    alert(errorMessage);
                 }
             });
         });
@@ -145,4 +162,3 @@
 
 </body>
 </html>
-

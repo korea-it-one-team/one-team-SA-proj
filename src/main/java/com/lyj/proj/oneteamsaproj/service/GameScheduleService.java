@@ -14,11 +14,13 @@ public class GameScheduleService {
 
     private final GameScheduleRepository gameScheduleRepository; // 경기를 저장하고 조회하는 리포지토리
     private final GameScheduleCrawl gameScheduleCrawl; // 경기 일정을 크롤링하는 서비스
+    private final GameResultService gameResultService;
 
     @Autowired
-    public GameScheduleService(GameScheduleRepository gameScheduleRepository, GameScheduleCrawl gameScheduleCrawl) {
+    public GameScheduleService(GameScheduleRepository gameScheduleRepository, GameScheduleCrawl gameScheduleCrawl, GameResultService gameResultService) {
         this.gameScheduleRepository = gameScheduleRepository;
         this.gameScheduleCrawl = gameScheduleCrawl;
+        this.gameResultService = gameResultService;
     }
 
     public GameSchedule getGameScheduleById(int gameId) {
@@ -60,6 +62,10 @@ public class GameScheduleService {
                                 existingGame.setHomeTeamScore(matchSchedule.getHomeTeamScore());
                                 existingGame.setAwayTeamScore(matchSchedule.getAwayTeamScore());
                                 gameScheduleRepository.update(existingGame); // 업데이트
+
+                                gameResultService.processGameResult(existingGame.getId(),
+                                        existingGame.getHomeTeamScore(), existingGame.getAwayTeamScore());
+
                             }
                         } catch (Exception e) {
                             // 삽입 또는 업데이트 중 오류가 발생한 경우

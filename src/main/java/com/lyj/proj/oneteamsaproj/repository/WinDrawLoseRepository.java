@@ -16,11 +16,16 @@ public interface WinDrawLoseRepository {
             "VALUES (#{gameId}, #{memberId}, #{prediction})")
     void insertPrediction(WinDrawLose winDrawLose);
 
-    // 회원의 해당게임에 대한 승/무/패 예측정보 가져오기
+    // 회원의 해당 게임에 대한 승/무/패 예측 정보 가져오기
     @Select("SELECT * FROM winDrawLose WHERE gameId = #{gameId} AND memberId = #{memberId}")
     WinDrawLose findByGameIdAndMemberId(@Param("gameId") int gameId, @Param("memberId") int memberId);
 
-    // 회원의 모든 승/무/패 예측정보 가져오기
+    // 회원의 모든 승/무/패 예측 정보 가져오기
     @Select("SELECT * FROM winDrawLose WHERE memberId = #{memberId}")
     List<WinDrawLose> findAllByMemberId(@Param("memberId") int memberId);
+
+    // 특정 경기의 모든 예측 정보 가져오기
+    @Select("SELECT * FROM winDrawLose WHERE gameId = #{gameId}")
+    List<WinDrawLose> findByGameId(@Param("gameId") int gameId);
 }
+
