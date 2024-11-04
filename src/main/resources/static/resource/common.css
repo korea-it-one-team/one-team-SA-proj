@@ -13,46 +13,46 @@ a {
 }
 
 /* 노멀라이즈 끝 */
-@font-face {
-	font-family: 'LotteMartDream';
-	font-style: normal;
-	font-weight: 400;
-	src:
-		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamMedium.woff2')
-		format('woff2'),
-		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamMedium.woff')
-		format('woff');
-}
+/*@font-face {*/
+/*	font-family: 'LotteMartDream';*/
+/*	font-style: normal;*/
+/*	font-weight: 400;*/
+/*	src:*/
+/*		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamMedium.woff2')*/
+/*		format('woff2'),*/
+/*		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamMedium.woff')*/
+/*		format('woff');*/
+/*}*/
 
-@font-face {
-	font-family: 'LotteMartDream';
-	font-style: normal;
-	font-weight: 700;
-	src:
-		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamBold.woff2')
-		format('woff2'),
-		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamBold.woff')
-		format('woff');
-}
+/*@font-face {*/
+/*	font-family: 'LotteMartDream';*/
+/*	font-style: normal;*/
+/*	font-weight: 700;*/
+/*	src:*/
+/*		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamBold.woff2')*/
+/*		format('woff2'),*/
+/*		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamBold.woff')*/
+/*		format('woff');*/
+/*}*/
 
-@font-face {
-	font-family: 'LotteMartDream';
-	font-style: normal;
-	font-weight: 300;
-	src:
-		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamLight.woff2')
-		format('woff2'),
-		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamLight.woff')
-		format('woff');
-}
+/*@font-face {*/
+/*	font-family: 'LotteMartDream';*/
+/*	font-style: normal;*/
+/*	font-weight: 300;*/
+/*	src:*/
+/*		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamLight.woff2')*/
+/*		format('woff2'),*/
+/*		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamLight.woff')*/
+/*		format('woff');*/
+/*}*/
 
-.lottemartdream * {
-	font-family: 'LotteMartDream', sans-serif;
-}
+/*.lottemartdream * {*/
+/*	font-family: 'LotteMartDream', sans-serif;*/
+/*}*/
 
-html>body {
-	font-family: 'LotteMartDream', sans-serif;
-}
+/*html>body {*/
+/*	font-family: 'LotteMartDream', sans-serif;*/
+/*}*/
 
 header>div>ul>li {
 	margin-right: 30px;

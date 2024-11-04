@@ -1,7 +1,7 @@
 package com.lyj.proj.oneteamsaproj.controller;
 
 import com.lyj.proj.oneteamsaproj.service.MemberService;
-import com.lyj.proj.oneteamsaproj.util.Ut;
+import com.lyj.proj.oneteamsaproj.utils.Ut;
 import com.lyj.proj.oneteamsaproj.vo.Member;
 import com.lyj.proj.oneteamsaproj.vo.ResultData;
 import com.lyj.proj.oneteamsaproj.vo.Rq;
@@ -32,7 +32,7 @@ public class UsrMemberController {
 
     @RequestMapping("/usr/member/login")
     public String showLogin(HttpServletRequest req) {
-        return "/usr/member/login";
+        return "usr/member/login";
     }
 
 
@@ -77,7 +77,7 @@ public class UsrMemberController {
     @RequestMapping("/usr/member/join")
     public String showJoin(HttpServletRequest req) {
 
-        return "/usr/member/join";
+        return "usr/member/join";
     }
 
     @RequestMapping("/usr/member/doJoin")

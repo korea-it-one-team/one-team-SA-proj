@@ -73,7 +73,7 @@ public class AdminGifticonController {
         List<Exchange_History> exchangeList = exchangeService.getExchangeList(search, status);
 
         model.addAttribute("exchangeList", exchangeList);
-        return "/adm/exchange/exchangeList";
+        return "adm/exchange/exchangeList";
     }
 
     @GetMapping("/exchange/detatil")
@@ -120,7 +120,7 @@ public class AdminGifticonController {
         model.addAttribute("pagesCount", pagesCount);
         model.addAttribute("page", page);
         model.addAttribute("gifticons", gifticons);
-        return "/adm/article/admGifticonList"; // JSP 파일 이름
+        return "adm/article/admGifticonList"; // JSP 파일 이름
     }
 
 }

@@ -1,8 +1,8 @@
 package com.lyj.proj.oneteamsaproj.controller;
 
-import com.lyj.proj.oneteamsaproj.util.Ut;
 import com.lyj.proj.oneteamsaproj.service.ExchangeService;
 import com.lyj.proj.oneteamsaproj.service.GifticonService;
+import com.lyj.proj.oneteamsaproj.utils.Ut;
 import com.lyj.proj.oneteamsaproj.vo.Gifticon;
 import com.lyj.proj.oneteamsaproj.vo.Rq;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,7 +39,7 @@ public class GifticonController {
         model.addAttribute("pagesCount", pagesCount);
         model.addAttribute("page", page);
         model.addAttribute("gifticons", gifticons);
-        return "/usr/article/gifticonList"; // JSP 파일 이름
+        return "usr/article/gifticonList"; // 타임리프 파일 이름
     }
 
     @RequestMapping("/doGifticon")

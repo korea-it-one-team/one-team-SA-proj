@@ -1,0 +1,50 @@
+<header>
+    <div class="flex h-20 mx-auto items-center text-3xl">
+        <a href="/usr/home/main">LOGO</a>
+        <div class="flex-grow"></div>
+        <ul class="flex">
+            <li>
+                <a class="h-full px-3 flex items-center btn-theme-toggle" href="javascript:Theme__toggle();">
+                    <span>🌞</span>
+                    <span>🌚</span>
+                </a>
+            </li>
+            <li>
+                <a class="hover:underline" href="/usr/home/main">HOME</a>
+            </li>
+            <li>
+                <div class="dropdown dropdown-hover">
+                    <div tabindex="0" role="button">
+                        <a th:href="@{/usr/article/list(boardId=1, page=1)}">LIST</a>
+                    </div>
+                    <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                        <li>
+                            <a th:href="@{/usr/article/list(boardId=1, page=1)}">NOTICE</a>
+                        </li>
+                        <li>
+                            <a th:href="@{/usr/article/list(boardId=2, page=1)}">FREE</a>
+                        </li>
+                        <li>
+                            <a th:href="@{/usr/article/list(boardId=3, page=1)}">QnA</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li th:if="${!rq.isLogined()}">
+                <a class="hover:underline" th:href="@{/usr/member/login}">LOGIN</a>
+            </li>
+            <li th:if="${!rq.isLogined()}">
+                <a class="hover:underline" th:href="@{/usr/member/join}">JOIN</a>
+            </li>
+            <li th:if="${rq.isLogined()}">
+                <a class="hover:underline" th:href="@{/usr/article/write}">WRITE</a>
+            </li>
+            <li th:if="${rq.isLogined()}">
+                <a class="hover:underline" th:href="@{/usr/member/myPage}">MYPAGE</a>
+            </li>
+            <li th:if="${rq.isLogined()}">
+                <a onclick="return confirm('로그아웃 하시겠습니까?')" class="hover:underline" th:href="@{/usr/member/doLogout}">LOGOUT</a>
+            </li>
+        </ul>
+    </div>
+</header>

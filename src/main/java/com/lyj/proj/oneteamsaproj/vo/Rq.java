@@ -3,7 +3,7 @@ package com.lyj.proj.oneteamsaproj.vo;
 import java.io.IOException;
 import java.util.Map;
 
-import com.lyj.proj.oneteamsaproj.util.Ut;
+import com.lyj.proj.oneteamsaproj.utils.Ut;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;

@@ -30,10 +30,9 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
-  mvc:
-    view:
-      prefix: /WEB-INF/jsp/
-      suffix: .jsp
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/one-team-SA-proj?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useSSL=false

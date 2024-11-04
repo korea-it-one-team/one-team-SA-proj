@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html data-theme="light" xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${pageTitle}">페이지 제목</title>
+    <link rel="stylesheet" href="/resource/common.css" />
+    <script src="/resource/common.js" defer></script>
+
+    <!-- 제이쿼리 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- 폰트어썸 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- 테일윈드 및 daisyUI -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/daisyui/4.12.10/full.css" />
+
+    <script>
+        function Theme__toggle() {
+            const theme = localStorage.getItem('theme') ?? 'light';
+
+            if (theme == 'light') {
+                localStorage.setItem('theme', 'dark');
+                Theme__applyTo('dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+                Theme__applyTo('light');
+            }
+        }
+
+        function Theme__applyTo(themeName) {
+            $('html').attr('data-theme', themeName);
+        }
+
+        function Theme__init() {
+            const theme = localStorage.getItem('theme') ?? 'light';
+            Theme__applyTo(theme);
+        }
+
+        $(document).ready(function () {
+            Theme__init();
+        });
+    </script>
+
+    <!-- 토스트 UI -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.0/purify.min.js"></script>
+
+    <!-- 토스트 UI 에디터 코어 -->
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+    <link rel="stylesheet" href="https://nhn.github.io/tui.editor/latest/dist/cdn/theme/toastui-editor-dark.css">
+
+    <!-- 토스트 UI 에디터 플러그인, 컬러피커 -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui-color-picker/latest/tui-color-picker.css" />
+    <script src="https://uicdn.toast.com/tui-color-picker/latest/tui-color-picker.min.js"></script>
+
+    <link rel="stylesheet"
+          href="https://uicdn.toast.com/editor-plugin-color-syntax/latest/toastui-editor-plugin-color-syntax.min.css" />
+    <script src="https://uicdn.toast.com/editor-plugin-color-syntax/latest/toastui-editor-plugin-color-syntax.min.js"></script>
+
+    <!-- 토스트 UI 차트 -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/chart/latest/toastui-chart.css">
+    <script src="https://uicdn.toast.com/chart/latest/toastui-chart.js"></script>
+    <!-- 토스트 UI 차트와 토스트 UI 에디터를 연결 -->
+    <script src="https://uicdn.toast.com/editor-plugin-chart/latest/toastui-editor-plugin-chart.min.js"></script>
+
+    <!-- 토스트 UI 에디터 플러그인, 코드 신텍스 하이라이터 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css">
+    <link rel="stylesheet"
+          href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css">
+    <script
+            src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight-all.min.js"></script>
+
+    <!-- 토스트 UI 에디터 플러그인, 테이블 셀 병합 -->
+    <script
+            src="https://uicdn.toast.com/editor-plugin-table-merged-cell/latest/toastui-editor-plugin-table-merged-cell.min.js"></script>
+
+    <!-- 토스트 UI 에디터 플러그인, katex -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.13/katex.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.13/katex.min.css">
+
+    <!-- 토스트 UI 에디터 플러그인, UML -->
+    <script src="https://uicdn.toast.com/editor-plugin-uml/latest/toastui-editor-plugin-uml.min.js"></script>
+
+    <style>
+        /* 토스트 UI 관련 스타일 */
+        .absolute { position: absolute; }
+        .relative { position: relative; }
+        .top-0 { top: 0; }
+        .left-0 { left: 0; }
+        .w-full { width: 100%; }
+        .ratio-16\/9::after { content: ""; display: block; padding-top: calc(100% / 16 * 9); }
+        .ratio-9\/16::after { content: ""; display: block; padding-top: calc(100% / 9 * 16); }
+        .ratio-1\/1::after { content: ""; display: block; padding-top: calc(100% / 1 * 1); }
+        .ratio-1\/2::after { content: ""; display: block; padding-top: calc(100% / 1 * 2); }
+    </style>
+
+    <script>
+        function getUriParams(uri) {
+            uri = uri.trim().replaceAll("&amp;", "&");
+            if (uri.indexOf("#") !== -1) {
+                uri = uri.split("#")[0];
+            }
+
+            const params = {};
+            uri.replace(/[?&]+([^=&]+)=([^&]*)/gi, (str, key, value) => { params[key] = value; });
+            return params;
+        }
+
+        function youtubePlugin() {
+            const toHTMLRenderers = {
+                youtube(node) {
+                    const html = renderYoutube(node.literal);
+                    return [{ type: "openTag", tagName: "div", outerNewLine: true }, { type: "html", content: html }, { type: "closeTag", tagName: "div", outerNewLine: true }];
+                }
+            };
+
+            function renderYoutube(uri) {
+                uri = uri.replace("https://www.youtube.com/watch?v=", "").replace("youtu.be/", "");
+                const youtubeId = uri.split("?")[0];
+                return `<div class="relative w-full ratio-16/9"><iframe class="absolute top-0 left-0 w-full" src="https://www.youtube.com/embed/${youtubeId}" frameborder="0" allowfullscreen></iframe></div>`;
+            }
+
+            return { toHTMLRenderers };
+        }
+
+        const ToastEditor__chartOptions = { minWidth: 100, maxWidth: 600, minHeight: 100, maxHeight: 300 };
+
+        function ToastEditor__init() {
+            $(".toast-ui-editor").each(function (index, node) {
+                const initialValue = $(node).find(" > script").html()?.trim() || "";
+                const theme = localStorage.getItem('theme') ?? "light";
+                new toastui.Editor({
+                    el: node,
+                    previewStyle: "vertical",
+                    initialValue,
+                    height: "600px",
+                    theme,
+                    plugins: [
+                        [toastui.Editor.plugin.chart, ToastEditor__chartOptions],
+                        [toastui.Editor.plugin.codeSyntaxHighlight, { highlighter: Prism }],
+                        toastui.Editor.plugin.colorSyntax,
+                        toastui.Editor.plugin.tableMergedCell,
+                        toastui.Editor.plugin.uml,
+                        youtubePlugin
+                    ],
+                    customHTMLSanitizer: (html) => DOMPurify.sanitize(html, { ADD_TAGS: ["iframe"], ADD_ATTR: ["width", "height", "allow", "frameborder", "scrolling"] }) || ""
+                });
+            });
+        }
+
+        $(document).ready(() => {
+            ToastEditor__init();
+        });
+    </script>
+</head>
+

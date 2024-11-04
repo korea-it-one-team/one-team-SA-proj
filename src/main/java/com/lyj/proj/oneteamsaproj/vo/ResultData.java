@@ -1,7 +1,7 @@
 package com.lyj.proj.oneteamsaproj.vo;
 
 import java.util.Map;
-import com.lyj.proj.oneteamsaproj.util.Ut;
+import com.lyj.proj.oneteamsaproj.utils.Ut;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -11,7 +11,7 @@ public class UsrHomeController {
 //    @ResponseBody
     @RequestMapping("/usr/home/main")
     public String showMain() {
-        return "/usr/home/main";
+        return "usr/home/main";
     }
 
 

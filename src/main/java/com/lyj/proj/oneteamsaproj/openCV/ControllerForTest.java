@@ -33,7 +33,7 @@ public class ControllerForTest {
     // 처리 중 JSP
     @GetMapping("processing")
     public String processingPage() {
-        return "processing";
+        return "usr/openCV/processing";
     }
 
     @GetMapping("video-status")
@@ -85,7 +85,7 @@ public class ControllerForTest {
             System.out.println("동영상 다운로드 중 예외 발생: " + e.getMessage());
             e.printStackTrace();
             flaskClient.stopFlaskServer();
-            return "error";
+            return "usr/openCV/error";
         }
 
         // 동영상 파일이 저장되었는지 확인
@@ -96,14 +96,14 @@ public class ControllerForTest {
             model.addAttribute("videoSrc", "/video/processed_video.mp4");
             // Flask 서버 종료
             flaskClient.stopFlaskServer();
-            return "result";  // 결과 페이지로 리다이렉트
+            return "usr/openCV/result";  // 결과 페이지로 리다이렉트
         } else {
             System.out.println("동영상 파일 생성 실패.");
             // 파일이 없으면 에러 페이지로 리다이렉트하거나 에러 메시지를 표시
             model.addAttribute("errorMessage", "동영상 처리가 실패했습니다.");
             // Flask 서버 종료
             flaskClient.stopFlaskServer();
-            return "error";  // 오류 페이지로 리다이렉트
+            return "usr/openCV/error";  // 오류 페이지로 리다이렉트
         }
     }
 
@@ -145,10 +145,10 @@ public class ControllerForTest {
         if (fileGenerated) {
             System.out.println("파일이 성공적으로 생성되었으므로 요청을 보냅니다. 파일 크기: " + fileSize);
             model.addAttribute("imageSrc", "/images/gray_image.jpg");
-            return "result";  // JSP 페이지 반환
+            return "usr/openCV/result";  // JSP 페이지 반환
         } else {
             model.addAttribute("error", "이미지 처리에 실패하였습니다.");
-            return "error"; // 에러 페이지 경로
+            return "usr/openCV/error"; // 에러 페이지 경로
         }
     }
 }

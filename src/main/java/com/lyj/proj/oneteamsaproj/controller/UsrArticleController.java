@@ -2,7 +2,7 @@ package com.lyj.proj.oneteamsaproj.controller;
 
 
 import com.lyj.proj.oneteamsaproj.service.*;
-import com.lyj.proj.oneteamsaproj.util.Ut;
+import com.lyj.proj.oneteamsaproj.utils.Ut;
 import com.lyj.proj.oneteamsaproj.vo.*;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -78,6 +78,8 @@ public class UsrArticleController {
 
                 reactionPointService.isAlreadyAddBadRp(rq.getLoginedMemberId(), id, "article"));
 
+        model.addAttribute("loginedMemberId", rq.getLoginedMemberId());
+
         return "usr/article/detail";
     }
 
@@ -111,7 +113,7 @@ public class UsrArticleController {
 
         model.addAttribute("article", article);
 
-        return "/usr/article/modify";
+        return "usr/article/modify";
     }
 
     // 로그인 체크 -> 유무 체크 -> 권한 체크 -> 수정

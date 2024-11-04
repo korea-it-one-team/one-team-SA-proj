@@ -44,11 +44,8 @@ dependencies {
     
     // SQL 로거
     implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4:1.16'
-    // JSP 엔진
-    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
-    // JSTL
-    implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api'
-    implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:2.0.0'
+    //thymeleaf
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     // Selenium Java
     implementation 'org.seleniumhq.selenium:selenium-java:4.1.2'
     // Spring Boot Starter Mail 추가 (kgb, yml - email 추가.)
@@ -82,7 +79,14 @@ dependencyManagement {
     }
 }
 
-
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+    }
 }
