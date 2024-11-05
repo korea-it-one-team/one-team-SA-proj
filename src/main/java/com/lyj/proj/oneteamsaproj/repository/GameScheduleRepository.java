@@ -8,6 +8,9 @@ import java.util.List;
 @Mapper
 public interface GameScheduleRepository {
 
+    // 특정 날짜의 경기 일정을 조회하는 메서드 추가
+    @Select("SELECT * FROM gameSchedule WHERE startDate = #{selectedDate} ORDER BY id ASC")
+    List<GameSchedule> findByMatchDate(@Param("selectedDate") String selectedDate);
 
     @Select("SELECT * FROM gameSchedule WHERE id = #{gameId}")
     GameSchedule findById(int gameId);
@@ -35,5 +38,3 @@ public interface GameScheduleRepository {
     @Update("UPDATE gameSchedule SET homeTeamScore = #{homeTeamScore}, awayTeamScore = #{awayTeamScore} WHERE startDate = #{startDate} AND leagueName = #{leagueName} AND homeTeam = #{homeTeam} AND awayTeam = #{awayTeam}")
     void update(GameSchedule gameSchedule); // GameSchedule 객체를 파라미터로 받음
 }
-
-

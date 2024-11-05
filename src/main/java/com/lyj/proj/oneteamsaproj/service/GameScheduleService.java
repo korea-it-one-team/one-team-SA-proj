@@ -6,6 +6,8 @@ import com.lyj.proj.oneteamsaproj.vo.GameSchedule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -23,8 +25,14 @@ public class GameScheduleService {
         this.gameResultService = gameResultService;
     }
 
-    public GameSchedule getGameScheduleById(int gameId) {
+    public GameSchedule findById(int gameId) {
         return gameScheduleRepository.findById(gameId);
+    }
+
+    // 특정 날짜의 경기 일정을 조회하는 메서드 (LocalDate를 String으로 변환)
+    public List<GameSchedule> getGameSchedulesByDate(LocalDate selectedDate) {
+        String formattedDate = selectedDate.format(DateTimeFormatter.ISO_LOCAL_DATE); // "yyyy-MM-dd" 형식으로 변환
+        return gameScheduleRepository.findByMatchDate(formattedDate);
     }
 
     // 모든 경기 일정을 조회하는 메서드
@@ -81,5 +89,6 @@ public class GameScheduleService {
         System.out.println("scheduleData : " + scheduleData); // 크롤링한 데이터 출력
         return scheduleData; // 크롤링한 데이터 반환
     }
+
 }
 

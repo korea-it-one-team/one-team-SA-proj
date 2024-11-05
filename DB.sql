@@ -467,4 +467,6 @@ SELECT * FROM `member`;
 
 SELECT * FROM winDrawLose;
 
+SELECT * FROM gameSchedule WHERE startDate = '2024-10-19' ORDER BY id ASC;
+
 ################################### (승/무/패 예측 결과에 따른 포인트 증가 확인 끝)

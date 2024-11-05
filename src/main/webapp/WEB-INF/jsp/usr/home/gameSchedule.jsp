@@ -22,98 +22,142 @@
         <h1 class="main-title-content">경기 일정</h1>
     </div>
 
-    <div class="gameSchedule-list-container">
-        <ul id="gameSchedule-list">
-            <c:set var="currentDate" value=""/>
-            <c:set var="currentLeague" value=""/>
-
-            <c:forEach var="gameSchedule" items="${gameSchedules}">
-                <c:set var="gameStartLocalDate" value="${gameSchedule.startDate}"/>
-                <c:set var="gameStartLocalTime" value="${gameSchedule.matchTime}"/>
-                <c:set var="gameStartLocalDateTime" value="${gameStartLocalDate}T${gameStartLocalTime}"/>
-
-                <!-- 게임 시작 시간을 비교하기 위한 형식 지정 -->
-                <c:set var="isFutureGame" value="${currentDateTime.compareTo(gameStartLocalDateTime) < 0}" />
-
-                <c:if test="${currentDate != gameSchedule.startDate}">
-                    <c:set var="currentDate" value="${gameSchedule.startDate}"/>
-                    <h3 class="date-header">${gameSchedule.startDate}</h3>
-                </c:if>
-
-                <c:if test="${currentLeague != gameSchedule.leagueName}">
-                    <c:set var="currentLeague" value="${gameSchedule.leagueName}"/>
-                    <h4 class="league-header">${gameSchedule.leagueName}</h4>
-                    <div class="league-block">
-                    <div class="match-container">
-                </c:if>
-
-                <li class="match-item">
-                    <span class="matchTime">${gameSchedule.matchTime}</span>
-                    <div class="home-label">홈</div>
-                    <span>${gameSchedule.homeTeam}</span>
-
-                    <c:if test="${gameSchedule.homeTeamScore != '' && gameSchedule.awayTeamScore != ''}">
-                        <c:set var="homeScoreClass"
-                               value="${gameSchedule.homeTeamScore > gameSchedule.awayTeamScore ? 'high-score' : 'low-score'}"/>
-                        <c:set var="awayScoreClass"
-                               value="${gameSchedule.awayTeamScore > gameSchedule.homeTeamScore ? 'high-score' : 'low-score'}"/>
-                        <span class="score ${homeScoreClass}">${gameSchedule.homeTeamScore}</span> :
-                        <span class="score ${awayScoreClass}">${gameSchedule.awayTeamScore}</span>
-                    </c:if>
-
-                    <c:if test="${gameSchedule.homeTeamScore == '' || gameSchedule.awayTeamScore == ''}">
-                        vs
-                    </c:if>
-
-                    <span>${gameSchedule.awayTeam}</span>
-
-                    <c:if test="${not empty sessionScope.loginedMember}">
-                        <c:if test="${isFutureGame}">
-                            <!-- userPredictionsMap에서 현재 gameSchedule.id에 맞는 예측 정보 가져오기 -->
-                            <c:set var="userPrediction" value="${userPredictionsMap[gameSchedule.id]}"/>
-
-                            <button class="prediction-button" data-prediction="승" data-game-id="${gameSchedule.id}"
-                                    data-member-id="${sessionScope.loginedMember.id}"
-                                    style="background-color: ${userPrediction == '승' ? 'green' : 'white'};">승
-                            </button>
-                            <button class="prediction-button" data-prediction="무" data-game-id="${gameSchedule.id}"
-                                    data-member-id="${sessionScope.loginedMember.id}"
-                                    style="background-color: ${userPrediction == '무' ? 'yellow' : 'white'};">무
-                            </button>
-                            <button class="prediction-button" data-prediction="패" data-game-id="${gameSchedule.id}"
-                                    data-member-id="${sessionScope.loginedMember.id}"
-                                    style="background-color: ${userPrediction == '패' ? 'red' : 'white'};">패
-                            </button>
-                        </c:if>
-                        <c:if test="${!isFutureGame}">
-
-                            <!-- userPredictionsMap에서 현재 gameSchedule.id에 맞는 예측 정보 가져오기 -->
-                            <c:set var="userPrediction" value="${userPredictionsMap[gameSchedule.id]}"/>
-
-                            <button class="prediction-button" style="background-color: ${userPrediction == '승' ? 'green' : 'white'}; cursor: not-allowed;" disabled>승</button>
-                            <button class="prediction-button" style="background-color: ${userPrediction == '무' ? 'yellow' : 'white'}; cursor: not-allowed;" disabled>무</button>
-                            <button class="prediction-button" style="background-color: ${userPrediction == '패' ? 'red' : 'white'}; cursor: not-allowed;" disabled>패</button>
-                        </c:if>
-                    </c:if>
-                </li>
-
-                <c:if test="${currentLeague != gameSchedule.leagueName || gameSchedule == gameSchedules[gameSchedules.size()-1]}">
-                    </div>
-                    </div>
-                </c:if>
-            </c:forEach>
-
-        </ul>
+    <!-- 날짜 선택 추가 -->
+    <div class="date-picker-container">
+        <label for="datepicker">날짜 선택:</label>
+        <input type="text" id="datepicker" readonly>
     </div>
 
-
+    <div class="gameSchedule-list-container">
+        <ul id="gameSchedule-list">
+        </ul>
+    </div>
 </div>
 
 <script>
     $(function () {
-        $('.prediction-button').click(function (event) {
+        // 현재 날짜 가져오기
+        const today = new Date();
+        const formattedDate = today.toISOString().split('T')[0]; // 'YYYY-MM-DD' 형식으로 변환
+        $("#datepicker").val(formattedDate); // 기본값으로 설정
+
+        // Datepicker 초기화
+        $("#datepicker").datepicker({
+            dateFormat: "yy-mm-dd",
+            defaultDate: today, // 기본 날짜 설정
+            onSelect: function (selectedDate) {
+                loadGameSchedules(selectedDate); // 선택한 날짜의 경기 일정 로드
+            }
+        });
+
+        // 기본 로드 시 현재 날짜의 경기 일정 로드
+        loadGameSchedules(formattedDate);
+
+        // AJAX 요청 함수
+        function loadGameSchedules(selectedDate) {
+            $.ajax({
+                type: "GET",
+                url: "/usr/home/gameSchedule/date",
+                data: { date: selectedDate },
+                success: function (response) {
+                    // 응답이 map인지 확인
+                    if (response) {
+                        $("#gameSchedule-list").empty(); // 기존 경기 일정 초기화
+
+                        let currentDate = ""; // 현재 날짜 초기화
+                        let currentLeague = ""; // 현재 리그 초기화
+
+                        // 각 경기 일정 처리
+                        response.schedules.forEach(function (gameSchedule) {
+                            const loginedMember = response.loginedMember;
+                            const userPredictionsMap = response.userPredictionsMap;
+
+                            // 경기 시작일과 시간
+                            const gameStartLocalDateTime = gameSchedule.startDate + "T" + gameSchedule.matchTime;
+                            const isFutureGame = new Date() < new Date(gameStartLocalDateTime);
+
+                            // 선택한 날짜와 같은 경기만 표시
+                            if (selectedDate === gameSchedule.startDate) {
+                                // 날짜 표시
+                                if (currentDate !== gameSchedule.startDate) {
+                                    currentDate = gameSchedule.startDate;
+                                    $("#gameSchedule-list").append(`<h3 class="date-header">` + currentDate + `</h3>`);
+                                }
+
+                                // 리그 이름 표시
+                                if (currentLeague !== gameSchedule.leagueName) {
+                                    currentLeague = gameSchedule.leagueName;
+                                    $("#gameSchedule-list").append(`<h4 class="league-header">` + currentLeague + `</h4><div class="league-block"><div class="match-container">`);
+                                }
+
+                                // 경기 정보 추가
+                                let listItem = createMatchItem(gameSchedule, isFutureGame, loginedMember, userPredictionsMap);
+                                $("#gameSchedule-list").append(listItem);
+                            }
+                        });
+
+                        // 경기 끝나고 league-block 닫기
+                        $("#gameSchedule-list").append("</div></div>");
+                    } else {
+                        alert("잘못된 응답 형식입니다."); // 배열이 아닌 경우 경고
+                    }
+                },
+                error: function (xhr) {
+                    alert("경기 일정을 불러오는 중 문제가 발생했습니다.");
+                }
+            });
+        }
+
+        // 경기 정보를 리스트 아이템으로 생성하는 함수
+        function createMatchItem(gameSchedule, isFutureGame, loginedMember, userPredictionsMap) {
+            let listItem = $(`<li class="match-item"></li>`)
+                .append(`<span class="matchTime">` + gameSchedule.matchTime + `</span>`)
+                .append(`<div class="home-label" style="margin: 0 5px;">홈</div>`) // 홈 라벨
+                .append(`<span style="margin-right: 5px;">` + gameSchedule.homeTeam + `</span>`);
+
+            // 점수 표시
+            if (gameSchedule.homeTeamScore !== '' && gameSchedule.awayTeamScore !== '') {
+                let homeScoreClass = gameSchedule.homeTeamScore > gameSchedule.awayTeamScore ? 'high-score' : 'low-score';
+                let awayScoreClass = gameSchedule.awayTeamScore > gameSchedule.homeTeamScore ? 'high-score' : 'low-score';
+
+                listItem.append(`<span class="score ` + homeScoreClass + `">` + gameSchedule.homeTeamScore + `</span> : <span class="score ` + awayScoreClass + `">` + gameSchedule.awayTeamScore + `</span>`);
+            } else {
+                // 점수가 없을 경우 'vs' 추가
+                listItem.append(`<span> vs </span>`);
+            }
+
+            // awayTeam을 추가
+            listItem.append(`<span style="margin: 0 5px;">` + gameSchedule.awayTeam + `</span>`);
+
+            // 예측 버튼 처리
+            if (loginedMember) {
+                let userPrediction = userPredictionsMap ? userPredictionsMap[gameSchedule.id] : null;
+
+                // 예측 버튼을 inline-block으로 설정
+                let predictionButtons = $('<div style="display: inline-block;"></div>');
+                ['승', '무', '패'].forEach(function (prediction) {
+                    let button = $(`<button class="prediction-button" style="margin: 0 2px;" data-prediction="` + prediction + `" data-game-id="` + gameSchedule.id + `" data-member-id="` + loginedMember.id + `"></button>`)
+                        .text(prediction)
+                        .css("background-color", userPrediction === prediction ? (prediction === '승' ? 'green' : (prediction === '무' ? 'yellow' : 'red')) : 'white');
+
+                    // 미래 경기일 경우 버튼 활성화, 과거 경기일 경우 비활성화
+                    if (!isFutureGame) {
+                        button.prop('disabled', true);
+                    }
+
+                    predictionButtons.append(button);
+                });
+
+                listItem.append(predictionButtons);
+            }
+
+            return listItem;
+        }
+
+        // 예측 버튼 클릭 AJAX 요청
+        $('#gameSchedule-list').on('click', '.prediction-button', function (event) {
             event.preventDefault();
-            // 예측 값, 게임 ID, 회원 ID를 변수로 저장
+
             var prediction = $(this).data('prediction');
             var gameId = $(this).data('game-id');
             var memberId = $(this).data('member-id');
@@ -140,19 +184,23 @@
                 },
                 success: function (response) {
                     console.log("응답:", response);  // 응답 객체 확인
-                    if (response.redirectUrl) {
-                        window.location.href = response.redirectUrl; // 리다이렉트
-                    } else if (response.error) {
+                    if (response.error) {
                         // 서버에서 오류 메시지를 받은 경우
                         alert(response.error);
                     } else {
-                        alert("예상치 못한 응답이 왔습니다.");
+                        alert("예측이 성공적으로 저장되었습니다."); // 성공 메시지 추가
+
+                        // 예측한 경기의 날짜를 가져오기 위해 gameSchedule에서 날짜를 찾는 로직 추가
+                        const selectedGameSchedule = response.gameSchedule; // 예측된 경기 정보
+                        const selectedDate = selectedGameSchedule.startDate; // 예측된 경기의 날짜
+
+                        // 현재 보고 있는 날짜로 경기 일정 다시 로드
+                        loadGameSchedules(selectedDate);
                     }
                 },
                 error: function (xhr) {
                     // 오류 발생 시 서버에서 반환한 메시지를 표시
                     var errorMessage = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : "예측을 저장하는 중 문제가 발생했습니다.";
-                    console.log("에러 발생:", errorMessage);
                     alert(errorMessage);
                 }
             });
