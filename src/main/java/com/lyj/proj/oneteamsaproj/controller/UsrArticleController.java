@@ -49,8 +49,9 @@ public class UsrArticleController {
 
         Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
 
-        // -1 싫어요, 0 표현 x, 1 좋아요
-//		int usersReaction = reactionPointService.usersReaction(rq.getLoginedMemberId(), "article", id);
+//        // -1 싫어요, 0 표현 x, 1 좋아요
+//		int usersReaction = (int) reactionPointService.usersReaction(rq.getLoginedMemberId(), "article", id).getData1();
+//        model.addAttribute("usersReaction", usersReaction);
 
         ResultData usersReactionRd = reactionPointService.usersReaction(rq.getLoginedMemberId(), "article", id);
 
