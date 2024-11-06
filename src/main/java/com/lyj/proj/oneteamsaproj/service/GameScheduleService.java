@@ -15,9 +15,9 @@ import java.util.Map;
 @Service
 public class GameScheduleService {
 
-    private final GameScheduleRepository gameScheduleRepository; // 경기를 저장하고 조회하는 리포지토리
-    private final GameScheduleCrawl gameScheduleCrawl; // 경기 일정을 크롤링하는 서비스
-    private final GameScheduleDeleteAndCrawl gameScheduleDeleteAndCrawl;
+    private final GameScheduleRepository gameScheduleRepository; // 경기를 저장하고 조회
+    private final GameScheduleCrawl gameScheduleCrawl; // 경기 일정을 크롤링
+    private final GameScheduleDeleteAndCrawl gameScheduleDeleteAndCrawl; // DB의 경기 일정을 날리고 새로 크롤링
     private final GameResultService gameResultService;
 
     @Autowired
