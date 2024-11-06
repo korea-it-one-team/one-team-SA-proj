@@ -82,7 +82,6 @@ public class UsrGameScheduleController {
 
             // 예측한 경기 정보 가져오기
             GameSchedule gameSchedule = gameScheduleService.findById(gameId);
-            System.out.println("gameSchedule : " + gameSchedule);
 
             response.put("redirectUrl", "/usr/home/gameSchedule"); // 리다이렉트할 URL 설정
             response.put("gameSchedule", gameSchedule); // 예측한 경기 정보를 응답에 추가
@@ -131,5 +130,12 @@ public class UsrGameScheduleController {
     @ResponseBody
     public Map<String, List<Map<String, Object>>> getGameSchedule() {
         return gameScheduleService.crawlAndSaveGameSchedules();
+    }
+
+    // 팀명이 달라서 경기정보가 오류가 났을 때 스케줄 DB 날리고 경기일정 id 맞춰서 DB에 저장할 메서드
+    @GetMapping("/insertGameSchedule")
+    @ResponseBody
+    public Map<String, List<Map<String, Object>>> insertGameSchedule() {
+        return gameScheduleService.deleteAndCrawlGameSchedules();
     }
 }
