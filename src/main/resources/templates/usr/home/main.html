@@ -20,6 +20,20 @@
         outline: 0;
     }
 
+    body {
+        background: url('/assets/home-main-bg.png') no-repeat center;
+        background-size: cover;
+    }
+
+    .transparent-black {
+        background: rgba(0, 0, 0, 0.4);
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
     .main-container {
         display: flex;
         flex-direction: column;
@@ -27,182 +41,15 @@
         justify-content: space-between;
         flex-wrap: nowrap;
         position: relative;
-        width: calc(1440 * var(--rpx)); /* 가로 기준 비율 */
-        height: calc(1024 * var(--rpx)); /* 세로 기준 비율 */
+        width: calc(1440 * var(--rpx-vw)); /* 가로 기준 비율 */
+        height: calc(1024 * var(--rpx-vh)); /* 세로 기준 비율 */
         margin: 0 auto;
-        background: url('/assets/home-main-bg.png') no-repeat center;
-        background-size: cover;
         overflow: hidden;
     }
-    .header {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        align-self: stretch;
-        flex-wrap: nowrap;
-        flex-shrink: 0;
-        gap: calc(10 * var(--rpx));
-        position: fixed;
-        left: 0;
-        top: 0;
-        min-width: 0;
-        padding: calc(25 * var(--rpx)) calc(50 * var(--rpx)) calc(25 * var(--rpx))
-        calc(50 * var(--rpx));
-        background: #1e1e1e;
-        border-top: calc(1 * var(--rpx)) solid #ffffff;
-        border-bottom: 1px solid white;
-        width: 100vw;
-        z-index: 1000;
-    }
-    .header-items {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        align-self: stretch;
-        flex-wrap: nowrap;
-        flex-shrink: 0;
-        gap: calc(135 * var(--rpx));
-        position: relative;
-        z-index: 1;
-    }
-    .logo {
-        display: flex;
-        align-items: center;
-        flex-wrap: nowrap;
-        flex-shrink: 0;
-        gap: calc(12 * var(--rpx));
-        position: relative;
-        width: calc(271 * var(--rpx));
-        z-index: 2;
-    }
-    .header-icon {
-        flex-shrink: 0;
-        position: relative;
-        width: calc(45 * var(--rpx));
-        height: calc(45 * var(--rpx));
-        background: url('/assets/header-icon.svg') no-repeat center;
-        background-size: cover;
-        z-index: 3;
-        overflow: hidden;
-    }
-    .kick-analysis {
-        flex-shrink: 0;
-        flex-basis: auto;
-        position: relative;
-        height: calc(36 * var(--rpx));
-        color: #ffffff;
-        font-family: Audiowide, var(--default-font-family);
-        font-size: calc(28 * var(--rpx));
-        font-weight: 400;
-        line-height: calc(36 * var(--rpx));
-        text-align: left;
-        white-space: nowrap;
-        z-index: 4;
-    }
-    .menu {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        flex-wrap: nowrap;
-        flex-shrink: 0;
-        gap: calc(80 * var(--rpx));
-        position: relative;
-        width: calc(695 * var(--rpx));
-        z-index: 5;
-    }
-    .game-schedule-prediction {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 1;
-        flex-basis: auto;
-        position: relative;
-        width: calc(152 * var(--rpx));
-        height: calc(27 * var(--rpx));
-        color: #ffffff;
-        font-family: NEXON Football Gothic B, var(--default-font-family);
-        font-size: calc(24 * var(--rpx));
-        font-weight: 700;
-        line-height: calc(27 * var(--rpx));
-        text-align: center;
-        white-space: nowrap;
-        z-index: 6;
-    }
-    .analysis-community {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 1;
-        flex-basis: auto;
-        position: relative;
-        width: calc(125 * var(--rpx));
-        height: calc(27 * var(--rpx));
-        color: #ffffff;
-        font-family: NEXON Football Gothic B, var(--default-font-family);
-        font-size: calc(24 * var(--rpx));
-        font-weight: 700;
-        line-height: calc(27 * var(--rpx));
-        text-align: center;
-        white-space: nowrap;
-        z-index: 7;
-    }
-    .product-exchange {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 1;
-        flex-basis: auto;
-        position: relative;
-        width: calc(82 * var(--rpx));
-        height: calc(27 * var(--rpx));
-        color: #ffffff;
-        font-family: NEXON Football Gothic B, var(--default-font-family);
-        font-size: calc(24 * var(--rpx));
-        font-weight: 700;
-        line-height: calc(27 * var(--rpx));
-        text-align: center;
-        white-space: nowrap;
-        z-index: 8;
-    }
-    .customer-center {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 1;
-        flex-basis: auto;
-        position: relative;
-        width: calc(81 * var(--rpx));
-        height: calc(27 * var(--rpx));
-        color: #ffffff;
-        font-family: NEXON Football Gothic B, var(--default-font-family);
-        font-size: calc(24 * var(--rpx));
-        font-weight: 700;
-        line-height: calc(27 * var(--rpx));
-        text-align: center;
-        white-space: nowrap;
-        z-index: 9;
-    }
-    .login-button {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        flex-shrink: 0;
-        flex-basis: auto;
-        position: relative;
-        width: calc(99 * var(--rpx));
-        height: calc(36 * var(--rpx));
-        color: #ffffff;
-        font-family: Audiowide, var(--default-font-family);
-        font-size: calc(28 * var(--rpx));
-        font-weight: 400;
-        line-height: calc(36 * var(--rpx));
-        text-align: right;
-        white-space: nowrap;
-        z-index: 10;
-    }
-    .transparent-black {
+
+
+
+    .transparent-flex-container {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -210,33 +57,34 @@
         align-self: stretch;
         flex-wrap: nowrap;
         flex-grow: 1;
-        flex-shrink: 0;
+        flex-shrink: 1;
         flex-basis: 0;
-        gap: calc(10 * var(--rpx));
+        gap: calc(10 * var(--rpx-vw));
         position: relative;
         min-width: 0;
         min-height: 0;
-        padding: calc(10 * var(--rpx)) calc(10 * var(--rpx)) calc(10 * var(--rpx))
-        calc(10 * var(--rpx));
-        background: rgba(0, 0, 0, 0.4);
+        padding: calc(10 * var(--rpx-vh)) calc(10 * var(--rpx-vw));
+        background: rgba(0, 0, 0, 0);
         z-index: 11;
     }
+
     .banners {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         flex-wrap: nowrap;
-        flex-shrink: 0;
-        gap: calc(10 * var(--rpx));
+        flex-shrink: 1;
+        gap: calc(10 * var(--rpx-vw));
         position: absolute;
-        width: calc(1440 * var(--rpx));
-        top: calc(95 * var(--rpx));
+        width: calc(1440 * var(--rpx-vw));
+        top: 0;
         bottom: 0;
         left: 50%;
         transform: translate(-50%, 0);
         z-index: 12;
     }
+
     .banner-container {
         display: flex;
         align-items: center;
@@ -244,14 +92,15 @@
         align-self: stretch;
         flex-wrap: nowrap;
         flex-grow: 1;
-        flex-shrink: 0;
+        flex-shrink: 1;
         flex-basis: 0;
-        gap: calc(53 * var(--rpx));
+        gap: calc(53 * var(--rpx-vw));
         position: relative;
         min-width: 0;
         min-height: 0;
         z-index: 13;
     }
+
     .left-rectangle {
         align-self: stretch;
         flex-grow: 1;
@@ -260,63 +109,41 @@
         position: relative;
         background: #cdf256;
         z-index: 14;
-        max-width: calc(72 * var(--rpx));
-        box-shadow: calc(8 * var(--rpx)) 0 0 0 #7a9d0b;
+        max-width: calc(72 * var(--rpx-vw));
+        box-shadow: calc(8 * var(--rpx-vw)) 0 0 0 #7a9d0b;
     }
+
     .banner-text {
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        flex-shrink: 0;
+        flex-shrink: 1;
         position: relative;
-        width: calc(987 * var(--rpx));
-        height: calc(280 * var(--rpx));
+        width: calc(987 * var(--rpx-vw));
         color: #cdf256;
         font-family: Audiowide, var(--default-font-family);
-        font-size: calc(86 * var(--rpx));
+        font-size: calc(86 * var(--rpx-vw));
         font-weight: 400;
-        line-height: calc(109.6416015625 * var(--rpx));
         text-align: left;
         text-overflow: ellipsis;
         z-index: 15;
         overflow: hidden;
-        text-shadow: calc(4 * var(--rpx)) calc(4 * var(--rpx)) 0 #7a9d0b;
+        text-shadow: calc(4 * var(--rpx-vw)) calc(4 * var(--rpx-vw)) 0 #7a9d0b;
+        top: calc(70 * var(--rpx-vh));
     }
 </style>
 
 <body>
-<div id="fullpage">
-    <div class="section">
-        <div class="main-container">
-            <div class="header">
-                <div class="header-items">
-                    <div class="logo">
-                        <div class="header-icon"></div>
-                        <span class="kick-analysis">KICKNALYSIS</span>
-                    </div>
-                    <div class="menu">
-            <span class="game-schedule-prediction">경기일정 및 예측</span
-            ><span class="analysis-community">분석 커뮤니티</span
-                    ><span class="product-exchange">상품교환</span
-                    ><span class="customer-center">고객센터</span>
-                    </div>
-                    <span class="login-button">LOGIN</span>
-                </div>
-            </div>
-            <div class="transparent-black"></div>
-            <div class="banners">
-                <div class="banner-container">
-                    <div class="left-rectangle"></div>
-                    <span class="banner-text"
-                    >MAKE YOUR<br />ANALYSIS PERFECT<br />WITH KICKNALYSIS</span
-                    >
-                </div>
-            </div>
+<div class="transparent-black"></div>
+<div class="main-container">
+    <header th:replace="~{common/header-2 :: header-2}"></header>
+    <div class="transparent-flex-container"></div>
+    <div class="banners">
+        <div class="banner-container">
+            <div class="left-rectangle"></div>
+            <span class="banner-text">MAKE YOUR<br/>ANALYSIS PERFECT<br/>WITH KICKNALYSIS</span>
         </div>
     </div>
-    <div class="section"></div>
-    <div class="section"></div>
 </div>
-
 </body>
 </html>

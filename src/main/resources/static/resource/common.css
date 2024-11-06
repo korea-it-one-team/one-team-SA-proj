@@ -5,7 +5,12 @@
 	Ubuntu, "Helvetica Neue", Helvetica, Arial, "PingFang SC",
 	"Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei",
 	"Source Han Sans CN", sans-serif;
-	--rpx: 100vh / 1024;
+	--rpx-vw: 100vw / 1440;
+	--rpx-vh: 100vh / 1024;
+}
+
+body {
+	background-color: #1e1e1e;
 }
 
 /* 노멀라이즈 시작 */
@@ -37,28 +42,207 @@ header>div>ul>li {
 
 /*테마*/
 /* 테마 */
-.btn-theme-toggle>span:first-child {
-	display: none;
+/*.btn-theme-toggle>span:first-child {*/
+/*	display: none;*/
+/*}*/
+
+/*html[data-theme="dark"] .btn-theme-toggle>span:first-child {*/
+/*	display: inline;*/
+/*}*/
+
+/*html[data-theme="dark"] * {*/
+/*	color: white;*/
+/*}*/
+
+/*!* 에디터 미리보기 부분 적용. *!*/
+/*html[data-theme="dark"] .toastui-editor-md-preview {*/
+/*	color: white;*/
+/*}*/
+
+/*!* important 강제성 부여.(우선순위 높게) *!*/
+/*html[data-theme="dark"] .toastui-editor-contents * {*/
+/*	color: white !important;*/
+/*}*/
+
+/*html[data-theme="dark"] .btn-theme-toggle>span:last-child {*/
+/*	display: none;*/
+/*}*/
+
+/* header */
+.header {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	align-self: stretch;
+	flex-wrap: nowrap;
+	flex-shrink: 1;
+	gap: calc(10 * var(--rpx-vw));
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	min-width: 0;
+	padding: calc(20 * var(--rpx-vw)) calc(15 * var(--rpx-vw));;
+	background: #1e1e1e;
+	border-bottom: 1px solid white;
+	z-index: 1000;
 }
 
-html[data-theme="dark"] .btn-theme-toggle>span:first-child {
-	display: inline;
+.header-items {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	align-self: stretch;
+	flex-wrap: nowrap;
+	flex-shrink: 1;
+	gap: calc(135 * var(--rpx-vw));
+	position: relative;
+	z-index: 1;
 }
 
-html[data-theme="dark"] * {
-	color: white;
+.logo {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: nowrap;
+	flex-shrink: 1;
+	gap: calc(12 * var(--rpx-vw));
+	position: relative;
+	width: calc(271 * var(--rpx-vw));
+	z-index: 2;
 }
 
-/* 에디터 미리보기 부분 적용. */
-html[data-theme="dark"] .toastui-editor-md-preview {
-	color: white;
+.icon-box {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: calc(45 * var(--rpx-vw));
+	height: calc(45 * var(--rpx-vw));
 }
 
-/* important 강제성 부여.(우선순위 높게) */
-html[data-theme="dark"] .toastui-editor-contents * {
-	color: white !important;
+.header-icon {
+	/* align-self: center; */
+	width: 100%;
+	height: 100%;
+	object-fit: cover; /* 이미지가 컨테이너에 맞게 조절됩니다 */
+	z-index: 3;
+	display: block;
 }
 
-html[data-theme="dark"] .btn-theme-toggle>span:last-child {
-	display: none;
+.kick-analysis {
+	flex-shrink: 1;
+	flex-basis: auto;
+	position: relative;
+	color: #ffffff;
+	font-family: Audiowide, var(--default-font-family);
+	font-size: calc(28 * var(--rpx-vw));
+	font-weight: 400;
+	text-align: left;
+	white-space: nowrap;
+	z-index: 4;
+}
+
+.header-menu {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: nowrap;
+	flex-shrink: 1;
+	gap: calc(80 * var(--rpx-vw));
+	position: relative;
+	width: calc(695 * var(--rpx-vw));
+	z-index: 5;
+}
+
+.game-schedule-prediction {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 1;
+	flex-basis: auto;
+	position: relative;
+	width: calc(152 * var(--rpx-vw));
+	height: calc(27 * var(--rpx-vh));
+	color: #ffffff;
+	font-family: NEXON Football Gothic B, var(--default-font-family);
+	font-size: calc(24 * var(--rpx-vw));
+	font-weight: 700;
+	text-align: center;
+	white-space: nowrap;
+	z-index: 6;
+}
+
+.analysis-community {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 1;
+	flex-basis: auto;
+	position: relative;
+	width: calc(125 * var(--rpx-vw));
+	height: calc(27 * var(--rpx-vh));
+	color: #ffffff;
+	font-family: NEXON Football Gothic B, var(--default-font-family);
+	font-size: calc(24 * var(--rpx-vw));
+	font-weight: 700;
+	text-align: center;
+	white-space: nowrap;
+	z-index: 7;
+}
+
+.product-exchange {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 1;
+	flex-basis: auto;
+	position: relative;
+	width: calc(82 * var(--rpx-vw));
+	height: calc(27 * var(--rpx-vh));
+	color: #ffffff;
+	font-family: NEXON Football Gothic B, var(--default-font-family);
+	font-size: calc(24 * var(--rpx-vw));
+	font-weight: 700;
+	text-align: center;
+	white-space: nowrap;
+	z-index: 8;
+}
+
+.customer-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 1;
+	flex-basis: auto;
+	position: relative;
+	width: calc(81 * var(--rpx-vw));
+	height: calc(27 * var(--rpx-vh));
+	color: #ffffff;
+	font-family: NEXON Football Gothic B, var(--default-font-family);
+	font-size: calc(24 * var(--rpx-vw));
+	font-weight: 700;
+	text-align: center;
+	white-space: nowrap;
+	z-index: 9;
+}
+
+.login-button {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	flex-shrink: 1;
+	flex-basis: auto;
+	position: relative;
+	width: calc(99 * var(--rpx-vw));
+	height: calc(36 * var(--rpx-vh));
+	color: #ffffff;
+	font-family: Audiowide, var(--default-font-family);
+	font-size: calc(28 * var(--rpx-vw));
+	font-weight: 400;
+	text-align: right;
+	white-space: nowrap;
+	z-index: 10;
 }
