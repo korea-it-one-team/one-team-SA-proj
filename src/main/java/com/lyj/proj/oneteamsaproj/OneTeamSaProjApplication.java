@@ -11,6 +11,5 @@ public class OneTeamSaProjApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(OneTeamSaProjApplication.class, args);
-        System.out.println("feature-lyj");
     }
 }
