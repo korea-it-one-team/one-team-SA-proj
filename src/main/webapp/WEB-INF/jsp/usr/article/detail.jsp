@@ -296,8 +296,7 @@ function doModifyReply(replyId) {
             				</c:forEach>
 <%--							<img class="mx-auto rounded-xl" src="${rq.getImgUri(article.id)}" onerror="${rq.profileFallbackImgOnErrorHtml}" alt="" />--%>
 						</div>
-							<%--이미지 경로 표시--%>
-<%--						<div>${rq.getImgUri(article.id)}</div>--%>
+						<div>${rq.getImgUri(article.id)}</div>
 					</td>
 				</tr>
 				<tr>
