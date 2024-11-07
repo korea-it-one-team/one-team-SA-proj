@@ -65,29 +65,29 @@ public class Ut {
 				""", resultMsg, replaceUri);
 	}
 
-    public static String jsReplace(String msg, String replaceUri, Object... args) {
-        if (msg == null) {
-            msg = "";
-        }
-        if (replaceUri == null) {
-            replaceUri = "/";
-        }
+	public static String jsReplace(String msg, String replaceUri, Object... args) {
+		if (msg == null) {
+			msg = "";
+		}
+		if (replaceUri == null) {
+			replaceUri = "/";
+		}
 
-        // args가 포함된 replaceUri 구성
-        String formattedUri = String.format(replaceUri, args);
+		// args가 포함된 replaceUri 구성
+		String formattedUri = String.format(replaceUri, args);
 
-        return Ut.f("""
-            <script>
-                let msg = '%s';
-                if (msg.length > 0) {
-                    alert(msg);
-                }
-                location.replace('%s');
-            </script>
-        """, msg, formattedUri);
-    }
+		return Ut.f("""
+				    <script>
+				        let msg = '%s';
+				        if (msg.length > 0) {
+				            alert(msg);
+				        }
+				        location.replace('%s');
+				    </script>
+				""", msg, formattedUri);
+	}
 
-    public static String jsHistoryBack(String resultCode, String msg) {
+	public static String jsHistoryBack(String resultCode, String msg) {
 
 		String resultMsg = resultCode + "/" + msg;
 
@@ -190,17 +190,17 @@ public class Ut {
 		String ext = getFileExtFromFileName(fileName).toLowerCase();
 
 		switch (ext) {
-		case "jpeg":
-		case "jpg":
-		case "gif":
-		case "png":
-			return "img";
-		case "mp4":
-		case "avi":
-		case "mov":
-			return "video";
-		case "mp3":
-			return "audio";
+			case "jpeg":
+			case "jpg":
+			case "gif":
+			case "png":
+				return "img";
+			case "mp4":
+			case "avi":
+			case "mov":
+				return "video";
+			case "mp3":
+				return "audio";
 		}
 
 		return "etc";
@@ -210,21 +210,21 @@ public class Ut {
 		String ext = getFileExtFromFileName(fileName).toLowerCase();
 
 		switch (ext) {
-		case "jpeg":
-		case "jpg":
-			return "jpg";
-		case "gif":
-			return ext;
-		case "png":
-			return ext;
-		case "mp4":
-			return ext;
-		case "mov":
-			return ext;
-		case "avi":
-			return ext;
-		case "mp3":
-			return ext;
+			case "jpeg":
+			case "jpg":
+				return "jpg";
+			case "gif":
+				return ext;
+			case "png":
+				return ext;
+			case "mp4":
+				return ext;
+			case "mov":
+				return ext;
+			case "avi":
+				return ext;
+			case "mp3":
+				return ext;
 		}
 
 		return "etc";
@@ -315,63 +315,64 @@ public class Ut {
 		return (T) ifNull(req.getAttribute(attrName), defaultValue);
 	}
 
-public static Map<String, String> getParamMap(HttpServletRequest req) {
-    Map<String, String> param = new HashMap<>();
+	public static Map<String, String> getParamMap(HttpServletRequest req) {
+		Map<String, String> param = new HashMap<>();
 
-    Enumeration<String> parameterNames = req.getParameterNames();
+		Enumeration<String> parameterNames = req.getParameterNames();
 
-    while (parameterNames.hasMoreElements()) {
-        String paramName = parameterNames.nextElement();
-        String paramValue = req.getParameter(paramName);
+		while (parameterNames.hasMoreElements()) {
+			String paramName = parameterNames.nextElement();
+			String paramValue = req.getParameter(paramName);
 
-        param.put(paramName, paramValue);
-    }
+			param.put(paramName, paramValue);
+		}
 
-    return param;
-}
+		return param;
+	}
 
-public static String getEncodedUriComponent(String str) {
-    if (str == null) {
-        return "";
-    }
-    try {
-        return URLEncoder.encode(str, "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-        return str;
-    }
-}
+	public static String getEncodedUriComponent(String str) {
+		if (str == null) {
+			return "";
+		}
+		try {
+			return URLEncoder.encode(str, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			return str;
+		}
+	}
 
-public static String sha256(String input) {
-    try {
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
-        byte[] hash = md.digest(input.getBytes("UTF-8"));
-        StringBuffer hexString = new StringBuffer();
+	public static String sha256(String input) {
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+			byte[] hash = md.digest(input.getBytes("UTF-8"));
+			StringBuffer hexString = new StringBuffer();
 
-        for (int i = 0; i < hash.length; i++) {
-            String hex = Integer.toHexString(0xff & hash[i]);
-            if (hex.length() == 1)
-                hexString.append('0');
-            hexString.append(hex);
-        }
+			for (int i = 0; i < hash.length; i++) {
+				String hex = Integer.toHexString(0xff & hash[i]);
+				if (hex.length() == 1)
+					hexString.append('0');
+				hexString.append(hex);
+			}
 
-        return hexString.toString();
-    } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-        e.printStackTrace();
-        return null;
-    }
-}
+			return hexString.toString();
+		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
-public static String getTempPassword(int length) {
-    int index = 0;
-    char[] charArr = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
-            'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
+	public static String getTempPassword(int length) {
+		int index = 0;
+		char[] charArr = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
+				'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
-    StringBuffer sb = new StringBuffer();
+		StringBuffer sb = new StringBuffer();
 
-    for (int i = 0; i < length; i++) {
-        index = (int) (charArr.length * Math.random());
-        sb.append(charArr[index]);
-    }
+		for (int i = 0; i < length; i++) {
+			index = (int) (charArr.length * Math.random());
+			sb.append(charArr[index]);
+		}
 
-    return sb.toString();
+		return sb.toString();
+	}
 }
