@@ -5,6 +5,7 @@
     <title th:text="${pageTitle}">경기일정</title>
     <link rel="stylesheet" href="/resource/common.css"/>
     <link rel="stylesheet" href="/resource/gameSchedule.css"/>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');</style>
     <script src="/resource/common.js" defer="defer"></script>
     <!-- 제이쿼리, UI 추가 -->
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -16,6 +17,9 @@
 </head>
 
 <body>
+<header th:replace="~{common/header-2 :: header-2}"></header>
+<div class="make-header-margin"></div>
+
 <div class="main-content">
     <div class="main-title">
         <h1 class="main-title-content">경기일정</h1>

@@ -11,6 +11,7 @@
 
 body {
 	background-color: #1e1e1e;
+	color: white;
 }
 
 /* 노멀라이즈 시작 */
@@ -41,34 +42,38 @@ header>div>ul>li {
 }
 
 /*테마*/
-/* 테마 */
-/*.btn-theme-toggle>span:first-child {*/
-/*	display: none;*/
-/*}*/
+.btn-theme-toggle>span:first-child {
+	display: none;
+}
 
-/*html[data-theme="dark"] .btn-theme-toggle>span:first-child {*/
-/*	display: inline;*/
-/*}*/
+html[data-theme="dark"] .btn-theme-toggle>span:first-child {
+	display: inline;
+}
 
-/*html[data-theme="dark"] * {*/
-/*	color: white;*/
-/*}*/
+html[data-theme="dark"] * {
+	color: white;
+}
 
-/*!* 에디터 미리보기 부분 적용. *!*/
-/*html[data-theme="dark"] .toastui-editor-md-preview {*/
-/*	color: white;*/
-/*}*/
+/* 에디터 미리보기 부분 적용. */
+html[data-theme="dark"] .toastui-editor-md-preview {
+	color: white;
+}
 
-/*!* important 강제성 부여.(우선순위 높게) *!*/
-/*html[data-theme="dark"] .toastui-editor-contents * {*/
-/*	color: white !important;*/
-/*}*/
+/* important 강제성 부여.(우선순위 높게) */
+html[data-theme="dark"] .toastui-editor-contents * {
+	color: white !important;
+}
 
-/*html[data-theme="dark"] .btn-theme-toggle>span:last-child {*/
-/*	display: none;*/
-/*}*/
+html[data-theme="dark"] .btn-theme-toggle>span:last-child {
+	display: none;
+}
 
 /* header */
+.make-header-margin {
+	height: calc(86 * var(--rpx-vw));
+	background-color: #1e1e1e;
+}
+
 .header {
 	display: flex;
 	flex-direction: column;
@@ -83,7 +88,7 @@ header>div>ul>li {
 	right: 0;
 	top: 0;
 	min-width: 0;
-	padding: calc(20 * var(--rpx-vw)) calc(15 * var(--rpx-vw));;
+	padding: calc(20 * var(--rpx-vw)) calc(15 * var(--rpx-vw));
 	background: #1e1e1e;
 	border-bottom: 1px solid white;
 	z-index: 1000;
@@ -142,6 +147,7 @@ header>div>ul>li {
 	text-align: left;
 	white-space: nowrap;
 	z-index: 4;
+	cursor: pointer;
 }
 
 .header-menu {
@@ -173,6 +179,7 @@ header>div>ul>li {
 	text-align: center;
 	white-space: nowrap;
 	z-index: 6;
+	cursor: pointer;
 }
 
 .analysis-community {
@@ -191,6 +198,7 @@ header>div>ul>li {
 	text-align: center;
 	white-space: nowrap;
 	z-index: 7;
+	cursor: pointer;
 }
 
 .product-exchange {
@@ -209,6 +217,7 @@ header>div>ul>li {
 	text-align: center;
 	white-space: nowrap;
 	z-index: 8;
+	cursor: pointer;
 }
 
 .customer-center {
@@ -227,6 +236,7 @@ header>div>ul>li {
 	text-align: center;
 	white-space: nowrap;
 	z-index: 9;
+	cursor: pointer;
 }
 
 .login-button {
@@ -245,4 +255,5 @@ header>div>ul>li {
 	text-align: right;
 	white-space: nowrap;
 	z-index: 10;
+	cursor: pointer;
 }

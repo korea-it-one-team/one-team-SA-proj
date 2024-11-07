@@ -28,10 +28,10 @@
     margin-right: auto;
     margin-left: auto;
     margin-top: 50px;
+    color: inherit;
 }
 
 .main-title-content {
-    color: #000000;
     text-align: center;
     line-height: 18px;
     font-weight: 700;
@@ -40,6 +40,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    color: inherit;
 }
 
 .gameSchedule-list-container {
@@ -55,7 +56,7 @@
 }
 
 .date-header {
-    border-bottom: 2px solid #000; /* 날짜 헤더에 밑줄 추가 */
+    border-bottom: 2px solid white; /* 날짜 헤더에 밑줄 추가 */
     margin-bottom: 10px; /* 아래쪽 여백 추가 */
     padding-bottom: 5px; /* 패딩 추가 */
 }
@@ -101,9 +102,9 @@
 }
 
 .low-score {
-    color: gray; /* 낮은 점수 색상 */
+    color: #ffffff; /* 낮은 점수 색상 */
 }
 
 .high-score {
-    color: black; /* 높은 점수 색상 */
+    color: #cdf256; /* 높은 점수 색상 */
 }

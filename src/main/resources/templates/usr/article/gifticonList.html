@@ -8,6 +8,7 @@
     <!-- 테일윈드 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.1.4/tailwind.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');</style>
     <style>
         body {
             display: flex;
@@ -55,7 +56,7 @@
         .gifticon-name{
             font-size: 1rem;
         }
-        .header{
+        .gifticon-list-title{
             margin: 10px;
             font-size: 4rem;
             font-weight: bold;
@@ -63,7 +64,8 @@
     </style>
 </head>
 <body>
-<div class="header">Gifticon List</div>
+<header th:replace="~{common/header-2 :: header-2}"></header>
+<div class="gifticon-list-title">Gifticon List</div>
 
 <div class="gifticon-list">
     <div th:each="gifticon : ${gifticons}" class="card card-compact bg-base-100 w-96 shadow-xl gifticon-item">

@@ -4,12 +4,12 @@
     <title>MAIN</title>
 </head>
 <style>
-    .main-container {
+    .main-container-section-1 {
         overflow: hidden;
     }
 
-    .main-container,
-    .main-container * {
+    .main-container-section-1,
+    .main-container-section-1 * {
         box-sizing: border-box;
     }
 
@@ -135,8 +135,8 @@
 
 <body>
 <div class="transparent-black"></div>
-<div class="main-container">
-    <header th:replace="~{common/header-2 :: header-2}"></header>
+<header th:replace="~{common/header-2 :: header-2}"></header>
+<div class="main-container-section-1">
     <div class="transparent-flex-container"></div>
     <div class="banners">
         <div class="banner-container">
