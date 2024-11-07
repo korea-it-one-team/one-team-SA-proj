@@ -25,7 +25,7 @@ public class GifticonController {
     @Autowired
     private ExchangeService exchangeService;
 
-    @RequestMapping("/gifticons")
+    @RequestMapping("usr/gifticons/List")
     public String getGifticonList(Model model, @RequestParam(defaultValue = "1") int page,
                                   @RequestParam(defaultValue = "") String searchKeyword) {
 
@@ -42,14 +42,7 @@ public class GifticonController {
         return "/usr/article/gifticonList"; // JSP 파일 이름
     }
 
-    @RequestMapping("/doGifticon")
-    @ResponseBody
-    public String doGifticon(HttpServletRequest req){
-        Rq rq = (Rq) req.getAttribute("rq");
-        return Ut.jsReplace("", "", "../exchange/gifticons");
-    }
-
-    @PostMapping("/gifticons/{id}/application")
+    @PostMapping("usr/gifticons/{id}/application")
     public ResponseEntity<Map<String, Object>> getGifticonApplication(HttpServletRequest req, @PathVariable int id) {
         Rq rq = (Rq) req.getAttribute("rq");
         int loginedMemberId = rq.getLoginedMemberId();
@@ -58,7 +51,7 @@ public class GifticonController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "로그인이 필요합니다."));
         }
 
-        boolean application_Point = exchangeService.getGifticonPoint(id,rq.getLoginedMember().getPoints(), rq.getLoginedMemberId());
+        boolean application_Point = exchangeService.getGifticonPoint(id,rq.getLoginedMember().getPoints(), loginedMemberId);
 
         if (!application_Point) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "보유한 Point가 부족합니다."));

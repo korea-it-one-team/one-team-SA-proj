@@ -7,6 +7,7 @@ from PIL import Image
 from ultralytics import YOLO
 import threading
 
+
 app = Flask(__name__)
 
 #이미지 테스트

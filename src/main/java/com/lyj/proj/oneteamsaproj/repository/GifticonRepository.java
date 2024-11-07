@@ -38,7 +38,7 @@ public interface GifticonRepository {
 
 	@Update("""
            		UPDATE gifticons
-				set stock = #{gifticonStock}
+				set stock = stock + #{gifticonStock}
            		WHERE id = #{gifticonId}
            """)
 	void stockAdd(int gifticonId, int gifticonStock);
