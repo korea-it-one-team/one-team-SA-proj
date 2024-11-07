@@ -137,7 +137,7 @@
         const formData = new FormData(this);
 
         $.ajax({
-            url: '/gifticon/' + getGifticonId + '/upload',
+            url: 'gifticon/' + getGifticonId + '/upload',
             type: 'POST',
             data: formData,
             processData: false,

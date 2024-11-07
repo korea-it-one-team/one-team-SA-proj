@@ -25,33 +25,25 @@ configurations {
 }
 
 repositories {
-    mavenCentral()
-}
-
-repositories {
     mavenCentral() // Maven Central Repository 추가
 }
 
 dependencies {
-
     // HttpHeaders
-    implementation('org.apache.tomcat.embed:tomcat-embed-jasper')
-    implementation group: 'org.glassfish.web', name: 'jakarta.servlet.jsp.jstl', version: '2.0.0'
-    
+    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+    implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api'
+
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
     implementation 'com.google.cloud:spring-cloud-gcp-starter-storage'
-    
+
     // SQL 로거
     implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4:1.16'
-    // JSP 엔진
-    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
     // JSTL
-    implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api'
     implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:2.0.0'
     // Selenium Java
     implementation 'org.seleniumhq.selenium:selenium-java:4.1.2'
-    // Spring Boot Starter Mail 추가 (kgb, yml - email 추가.)
+    // Spring Boot Starter Mail 추가
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     // 매일 보내기 위한 의존성 추가
     implementation 'org.springframework:spring-context-support'
@@ -82,7 +74,10 @@ dependencyManagement {
     }
 }
 
-
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs += '-parameters'
 }

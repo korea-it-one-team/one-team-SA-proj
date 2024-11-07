@@ -5,7 +5,6 @@
 <head>
 <meta charset="UTF-8">
 <title>${pageTitle }</title>
-<link rel="stylesheet" href="/resource/common.css" />
 <script src="/resource/common.js" defer="defer"></script>
 
 <!-- 제이쿼리 -->
@@ -13,19 +12,15 @@
 
 <!-- 폰트어썸 -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-<!-- 폰트어썸 FREE 아이콘 리스트 : https://fontawesome.com/v5.15/icons?d=gallery&p=2&m=free -->
 
-<!-- 테일윈드 -->
-<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.1.4/tailwind.min.css"> -->
-<!-- 테일윈드 치트시트 : https://nerdcave.com/tailwind-cheat-sheet -->
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css" rel="stylesheet" type="text/css" />
+	<!-- 테일윈드 치트시트 : https://nerdcave.com/tailwind-cheat-sheet -->
+	<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css" rel="stylesheet" type="text/css" />
 
-<!-- daisy ui -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/daisyui/4.12.10/full.css" />
-<!-- daisyui : https://daisyui.com/ -->
+	<!-- daisy ui -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/daisyui/4.12.10/full.css" />
 
 <!-- <link rel="stylesheet" type="text/css" href="slick/slick.css"/> -->
-<!-- <!-- // Add the new slick-theme.css if you want the default styling -->
+<!-- // Add the new slick-theme.css if you want the default styling -->
 <!-- <link rel="stylesheet" type="text/css" href="slick/slick-theme.css"/> -->
 
 <script>
