@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <c:set var="pageTitle" value="WRITE"></c:set>
 <%@ include file="../common/head.jspf"%>
 <%@ include file="../common/toastUiEditorLib.jspf"%>
@@ -32,9 +34,8 @@
 <section class="mt-24 text-xl px-4">
 	<div class="mx-auto">
 		<form onsubmit="ArticleWrite__submit(this); return false;" action="../article/doWrite" method="POST"
-			enctype="multipart/form-data">
-			<input type="hidden" name="body" />
-			<input type="hidden" name=">${currentId }">
+			  enctype="multipart/form-data">
+    		<input type="hidden" name="body" />
 			<table class="table" border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
 				<tbody>
 					<tr>
@@ -42,46 +43,38 @@
 						<td style="text-align: center;">
 							<select name="boardId">
 								<option value="" selected disabled>게시판을 선택해주세요.</option>
-								<option value="1">공지사항</option>
-								<option value="2">자유</option>
-								<option value="3">질의응답</option>
+								<option value="1" <c:if test="${param.boardId == '1'}">selected</c:if>>공지사항</option>
+								<option value="2" <c:if test="${param.boardId == '2'}">selected</c:if>>자유</option>
+								<option value="3" <c:if test="${param.boardId == '3'}">selected</c:if>>질의응답</option>
 							</select>
 						</td>
-
 					</tr>
 					<tr>
 						<th>제목</th>
 						<td style="text-align: center;">
 							<input class="input input-bordered input-primary input-sm w-full max-w-xs" name="title" autocomplete="off"
-								type="text" placeholder="제목을 입력해" />
+								type="text" placeholder="제목을 입력해" value="${fn:escapeXml(param.title)}"/>
 						</td>
-
 					</tr>
 					<tr>
 						<th>첨부 이미지</th>
 						<td>
-							<input id="fileInput" placeholder="이미지를 선택해주세요" type="file" />
+							<input id="fileInput" placeholder="이미지를 선택해주세요" type="file" name="file" multiple />
 						</td>
 					</tr>
 					<tr>
 						<th>내용</th>
 						<td style="text-align: center;">
-							<!-- 							<input class="input input-bordered input-primary input-sm w-full max-w-xs" name="body" autocomplete="off" -->
-							<!-- 								type="text" placeholder="내용을 입력해" /> -->
 							<div class="toast-ui-editor">
-								<script type="text/x-template"></script>
+								<script type="text/x-template">${fn:escapeXml(param.body)}</script>
 							</div>
 						</td>
-
 					</tr>
 					<tr>
 						<th></th>
 						<td style="text-align: center;">
 							<button class="btn btn-primary">작성</button>
-							<!-- 						<input class="btn btn-primary" -->
-							<!-- 							type="submit" value="작성" />  -->
 						</td>
-
 					</tr>
 				</tbody>
 			</table>

@@ -8,7 +8,7 @@
 	<div class="mx-auto">
 		<table class="table" border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
 			<tbody>
-				${rq.loginedMember }
+<%--				${rq.loginedMember }--%>
 				<tr>
 					<th>가입일</th>
 					<td style="text-align: center;">${rq.loginedMember.regDate }</td>

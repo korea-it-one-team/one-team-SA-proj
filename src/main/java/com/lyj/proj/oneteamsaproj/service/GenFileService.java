@@ -237,4 +237,9 @@ public class GenFileService {
             }
         }
     }
+
+    public List<GenFile> getFilesByRelTypeCodeAndRelId(String relTypeCode, int relId) {
+        // relTypeCode와 relId에 해당하는 파일 목록을 반환하도록 repository 메서드 호출
+        return genFileRepository.getGenFilesByRelTypeCodeAndRelId(relTypeCode, relId);
+    }
 }

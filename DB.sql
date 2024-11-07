@@ -54,7 +54,7 @@ CREATE TABLE `member`(
                          nickname CHAR(20) NOT NULL,
                          cellphoneNum CHAR(20) NOT NULL,
                          email CHAR(50) NOT NULL,
-                         points INT NOT NULL,
+                         points INT NOT NULL DEFAULT 0,
                          delStatus TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴 여부 (0=탈퇴 전, 1=탈퇴 후)',
                          delDate DATETIME COMMENT '탈퇴 날짜'
 );
@@ -295,7 +295,6 @@ relId = 1,
 `point` = 1;
 
 # article 테이블에 reactionPoint(좋아요) 관련 컬럼 추가
-
 ALTER TABLE article ADD COLUMN goodReactionPoint INT(10) UNSIGNED NOT NULL DEFAULT 0;
 ALTER TABLE article ADD COLUMN badReactionPoint INT(10) UNSIGNED NOT NULL DEFAULT 0;
 
@@ -423,17 +422,18 @@ ON R.id = RP_SUM.relId
         R.badReactionPoint = RP_SUM.badReactionPoint;
 
 # 파일 테이블 추가
+/*
 CREATE TABLE genFile (
-                         id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT, # 번호
-        regDate DATETIME DEFAULT NULL, # 작성날짜
-                             updateDate DATETIME DEFAULT NULL, # 갱신날짜
-                             delDate DATETIME DEFAULT NULL, # 삭제날짜
-                             delStatus TINYINT(1) UNSIGNED NOT NULL DEFAULT 0, # 삭제상태(0:미삭제, 1:삭제)
+  id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT, # 번호
+  regDate DATETIME DEFAULT NULL, # 작성날짜
+  updateDate DATETIME DEFAULT NULL, # 갱신날짜
+  delDate DATETIME DEFAULT NULL, # 삭제날짜
+  delStatus TINYINT(1) UNSIGNED NOT NULL DEFAULT 0, # 삭제상태(0:미삭제,1:삭제)
   relTypeCode CHAR(50) NOT NULL, # 관련 데이터 타입(article, member)
   relId INT(10) UNSIGNED NOT NULL, # 관련 데이터 번호
   originFileName VARCHAR(100) NOT NULL, # 업로드 당시의 파일이름
   fileExt CHAR(10) NOT NULL, # 확장자
-                             typeCode CHAR(20) NOT NULL, # 종류코드 (common)
+  typeCode CHAR(20) NOT NULL, # 종류코드 (common)
   type2Code CHAR(20) NOT NULL, # 종류2코드 (attatchment)
   fileSize INT(10) UNSIGNED NOT NULL, # 파일의 사이즈
   fileExtTypeCode CHAR(10) NOT NULL, # 파일규격코드(img, video)
@@ -441,8 +441,34 @@ CREATE TABLE genFile (
   fileNo SMALLINT(2) UNSIGNED NOT NULL, # 파일번호 (1)
   fileDir CHAR(20) NOT NULL, # 파일이 저장되는 폴더명
   PRIMARY KEY (id),
-                         KEY relId (relTypeCode,relId,typeCode,type2Code,fileNo)
+  KEY relId (relTypeCode,relId,typeCode,type2Code,fileNo)
 );
+*/
+CREATE TABLE genFile (
+                         id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT, -- 번호
+                         regDate DATETIME DEFAULT NOW(), -- 작성날짜
+                         updateDate DATETIME DEFAULT NOW() ON UPDATE NOW(), -- 갱신날짜
+                         delDate DATETIME DEFAULT NULL, -- 삭제날짜
+                         delStatus TINYINT(1) UNSIGNED NOT NULL DEFAULT 0, -- 삭제상태(0:미삭제,1:삭제)
+                         relTypeCode CHAR(50) NOT NULL, -- 관련 데이터 타입(article, member)
+                         relId INT(10) UNSIGNED NOT NULL, -- 관련 데이터 번호
+                         originFileName VARCHAR(100) NOT NULL, -- 업로드 당시의 파일이름
+                         fileExt CHAR(10) NOT NULL, -- 확장자
+                         typeCode CHAR(20) NOT NULL, -- 종류코드 (common)
+                         type2Code CHAR(20) NOT NULL, -- 종류2코드 (attachment)
+                         fileSize INT(10) UNSIGNED NOT NULL, -- 파일의 사이즈
+                         fileExtTypeCode CHAR(10) NOT NULL, -- 파일규격코드(img, video)
+                         fileExtType2Code CHAR(10) NOT NULL, -- 파일규격2코드(jpg, mp4)
+                         fileNo SMALLINT(2) UNSIGNED NOT NULL, -- 파일번호 (1)
+                         fileDir CHAR(20) NOT NULL, -- 파일이 저장되는 폴더명
+                         PRIMARY KEY (id),
+                         KEY relId (relTypeCode, relId, typeCode, type2Code, fileNo),
+                         UNIQUE KEY unique_rel_file (relTypeCode, relId, fileNo) -- relTypeCode, relId, fileNo 조합의 유니크 제약
+);
+
+SELECT *
+FROM `genFile`;
+
 
 # 기존의 회원 비번을 암호화
 UPDATE `member`

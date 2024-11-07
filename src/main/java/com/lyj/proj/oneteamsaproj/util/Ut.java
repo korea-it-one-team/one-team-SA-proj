@@ -1,6 +1,10 @@
 package com.lyj.proj.oneteamsaproj.util;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.math.BigInteger;
@@ -62,13 +66,29 @@ public class Ut {
 				""", resultMsg, replaceUri);
 	}
 
-	public static String jsHistoryBack(String resultCode, String msg) {
-		if (resultCode == null) {
-			resultCode = "";
-		}
-		if (msg == null) {
-			msg = "";
-		}
+    public static String jsReplace(String msg, String replaceUri, Object... args) {
+        if (msg == null) {
+            msg = "";
+        }
+        if (replaceUri == null) {
+            replaceUri = "/";
+        }
+
+        // args가 포함된 replaceUri 구성
+        String formattedUri = String.format(replaceUri, args);
+
+        return Ut.f("""
+            <script>
+                let msg = '%s';
+                if (msg.length > 0) {
+                    alert(msg);
+                }
+                location.replace('%s');
+            </script>
+        """, msg, formattedUri);
+    }
+
+    public static String jsHistoryBack(String resultCode, String msg) {
 
 		String resultMsg = resultCode + "/" + msg;
 
@@ -296,54 +316,63 @@ public class Ut {
 		return (T) ifNull(req.getAttribute(attrName), defaultValue);
 	}
 
-	public static Map<String, String> getParamMap(HttpServletRequest req) {
-		Map<String, String> param = new HashMap<>();
+public static Map<String, String> getParamMap(HttpServletRequest req) {
+    Map<String, String> param = new HashMap<>();
 
-		Enumeration<String> parameterNames = req.getParameterNames();
+    Enumeration<String> parameterNames = req.getParameterNames();
 
-		while (parameterNames.hasMoreElements()) {
-			String paramName = parameterNames.nextElement();
-			String paramValue = req.getParameter(paramName);
+    while (parameterNames.hasMoreElements()) {
+        String paramName = parameterNames.nextElement();
+        String paramValue = req.getParameter(paramName);
 
-			param.put(paramName, paramValue);
-		}
+        param.put(paramName, paramValue);
+    }
 
-		return param;
-	}
+    return param;
+}
 
-	// sha256
-	public static String sha256(String input) {
-		try {
-			MessageDigest md = MessageDigest.getInstance("SHA-256");
-			byte[] hash = md.digest(input.getBytes("UTF-8"));
-			StringBuffer hexString = new StringBuffer();
+public static String getEncodedUriComponent(String str) {
+    if (str == null) {
+        return "";
+    }
+    try {
+        return URLEncoder.encode(str, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+        return str;
+    }
+}
 
-			for (int i = 0; i < hash.length; i++) {
-				String hex = Integer.toHexString(0xff & hash[i]);
-				if (hex.length() == 1)
-					hexString.append('0');
-				hexString.append(hex);
-			}
+public static String sha256(String input) {
+    try {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        byte[] hash = md.digest(input.getBytes("UTF-8"));
+        StringBuffer hexString = new StringBuffer();
 
-			return hexString.toString();
-		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+        for (int i = 0; i < hash.length; i++) {
+            String hex = Integer.toHexString(0xff & hash[i]);
+            if (hex.length() == 1)
+                hexString.append('0');
+            hexString.append(hex);
+        }
 
-	public static String getTempPassword(int length) {
-		int index = 0;
-		char[] charArr = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
-				'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
+        return hexString.toString();
+    } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+        e.printStackTrace();
+        return null;
+    }
+}
 
-		StringBuffer sb = new StringBuffer();
+public static String getTempPassword(int length) {
+    int index = 0;
+    char[] charArr = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
+            'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
 
-		for (int i = 0; i < length; i++) {
-			index = (int) (charArr.length * Math.random());
-			sb.append(charArr[index]);
-		}
+    StringBuffer sb = new StringBuffer();
 
-		return sb.toString();
-	}
+    for (int i = 0; i < length; i++) {
+        index = (int) (charArr.length * Math.random());
+        sb.append(charArr[index]);
+    }
+
+    return sb.toString();
 }

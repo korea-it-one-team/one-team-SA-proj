@@ -7,40 +7,52 @@
 
 <!-- <iframe src="http://localhost:8080/usr/article/doIncreaseHitCount?id=757" frameborder="0"></iframe> -->
 <!-- 변수 -->
+<!-- JSTL 변수를 JavaScript에서 사용할 때, 문자열로 변환 -->
 <script>
-	const params = {};
-	params.id = parseInt('${param.id}');
-	params.memberId = parseInt('${loginedMemberId}')
+    const params = {};
+    params.id = parseInt('${param.id}');
+    params.memberId = parseInt('${loginedMemberId}');
+    var isAlreadyAddGoodRp = ${isAlreadyAddGoodRp ? 'true' : 'false'};
+    var isAlreadyAddBadRp = ${isAlreadyAddBadRp ? 'true' : 'false'};
 
-	console.log(params);
-	console.log(params.id);
-	console.log(params.memberId);
-
-	var isAlreadyAddGoodRp = ${isAlreadyAddGoodRp};
-	var isAlreadyAddBadRp = ${isAlreadyAddBadRp};
+    console.log(params);
+    console.log(params.id);
+    console.log(params.memberId);
 </script>
 
 <!-- 조회수 -->
 <script>
-	function ArticleDetail__doIncreaseHitCount() {
+function ArticleDetail__doIncreaseHitCount() {
+		// 게시글의 ID를 기반으로 localStorage에 키 설정
 		const localStorageKey = 'article__' + params.id + '__alreadyOnView';
-		if (localStorage.getItem(localStorageKey)) {
-			return;
-		}
-		localStorage.setItem(localStorageKey, true);
 
+		// 이미 조회한 경우 바로 리턴하지 않고 현재 조회수 표시
+        if (localStorage.getItem(localStorageKey)) {
+            // 이미 조회한 경우 조회수 표시만 갱신하고 조회수 증가 요청은 하지 않음
+            // $.get('../article/getHitCount', {
+            //     id: params.id,
+            //     ajaxMode: 'Y'
+            // }, function(data) {
+            //     $('.article-detail__hit-count').empty().html(data.data1);
+            // }, 'json');
+            return; // 이미 조회한 경우 더 이상 진행하지 않음
+        }
+
+		// 처음 조회하는 경우, 조회수 증가 요청을 보내고 localStorage에 기록
 		$.get('../article/doIncreaseHitCountRd', {
-			id : params.id,
-			ajaxMode : 'Y'
-		}, function(data) {
-			console.log(data);
-			console.log(data.data1);
-			$('.article-detail__hit-count').empty().html(data.data1);
-		}, 'json')
+            id: params.id,
+            ajaxMode: 'Y'
+        }, function(data) {
+            if(data.resultCode.startsWith('S-')) {
+                $('.article-detail__hit-count').empty().html(data.data1);
+				// 조회 완료 후 해당 게시글 ID로 localStorage에 기록
+				localStorage.setItem(localStorageKey, true);
+            }
+        }, 'json');
 	}
 	$(function() {
-		// 		ArticleDetail__doIncreaseHitCount();
-		setTimeout(ArticleDetail__doIncreaseHitCount, 2000);
+		// 페이지 로드 즉시 조회수 증가 처리
+		ArticleDetail__doIncreaseHitCount();
 	})
 </script>
 
@@ -57,15 +69,13 @@
 		}
 	}
 function doGoodReaction(articleId) {
-		if(isNaN(params.memberId) == true) {
-			if(confirm('로그인 페이지로 이동하겠습니까?')) {
-// 				console.log(window.location.href);
-// 				console.log(encodeURIComponent(window.location.href));
-				var currentUri = encodeURIComponent(window.location.href);
-				window.location.href = '../member/login?afterLoginUri=' + currentUri;
-				// 로그인 페이지에서 원래 페이지의 정보를 포함시켜서 보냄.
-			}
-			return;
+			if(isNaN(params.memberId)) {
+            	if(confirm('로그인 페이지로 이동하겠습니까?')) {
+                	var currentUri = encodeURIComponent(window.location.href);
+                	window.location.href = '../member/login?afterLoginUri=' + currentUri;
+            	}
+            return;
+
 		}
 
 		$.ajax({
@@ -82,26 +92,29 @@ function doGoodReaction(articleId) {
 				if(data.resultCode.startsWith('S-')){
 					var likeButton = $('#likeButton');
 					var likeCount = $('#likeCount');
-					var likeCountC = $('.likeCount');
+					// var likeCountC = $('.likeCount');
+					var likeCountBtn = likeButton.find('.likeCount');
 					var DislikeButton = $('#DislikeButton');
 					var DislikeCount = $('#DislikeCount');
-					var DislikeCountC = $('.DislikeCount');
+					// var DislikeCountC = $('.DislikeCount');
+					var DislikeCountBtn = DislikeButton.find('.DislikeCount');
 
-					if(data.resultCode == 'S-1'){
-						likeButton.toggleClass('btn-outline');
-						likeCount.text(data.data1);
-						likeCountC.text(data.data1);
-					}else if(data.resultCode == 'S-2'){
-						DislikeButton.toggleClass('btn-outline');
-						DislikeCount.text(data.data2);
-						DislikeCountC.text(data.data2);
-						likeButton.toggleClass('btn-outline');
-						likeCount.text(data.data1);
-					}else {
-						likeButton.toggleClass('btn-outline');
-						likeCount.text(data.data1);
-						likeCountC.text(data.data1);
-					}
+					// 모든 좋아요 카운트 업데이트
+                    likeCount.text(data.data1);
+                    likeCountBtn.text(data.data1);
+
+                    // 모든 싫어요 카운트 업데이트
+                    DislikeCount.text(data.data2);
+                    DislikeCountBtn.text(data.data2);
+
+					if(data.resultCode == 'S-1') {
+                        likeButton.toggleClass('btn-outline');
+                    } else if(data.resultCode == 'S-2') {
+                        DislikeButton.removeClass('btn-outline');
+                        likeButton.toggleClass('btn-outline');
+                    } else {
+                        likeButton.toggleClass('btn-outline');
+                    }
 
 				}else {
 					alert(data.msg);
@@ -115,10 +128,9 @@ function doGoodReaction(articleId) {
 		});
 	}
 function doBadReaction(articleId) {
-	if(isNaN(params.memberId) == true) {
+	// if(isNaN(params.memberId) == true) {
+	if(isNaN(params.memberId)) {
 		if(confirm('로그인 페이지로 이동하겠습니까?')) {
-//				console.log(window.location.href);
-//				console.log(encodeURIComponent(window.location.href));
 			var currentUri = encodeURIComponent(window.location.href);
 			window.location.href = '../member/login?afterLoginUri=' + currentUri;
 		}
@@ -138,28 +150,29 @@ function doBadReaction(articleId) {
 				if(data.resultCode.startsWith('S-')){
 					var likeButton = $('#likeButton');
 					var likeCount = $('#likeCount');
-					var likeCountC = $('.likeCount');
+					// var likeCountC = $('.likeCount');
+					var likeCountBtn = likeButton.find('.likeCount');
 					var DislikeButton = $('#DislikeButton');
 					var DislikeCount = $('#DislikeCount');
-					var DislikeCountC = $('.DislikeCount');
+					// var DislikeCountC = $('.DislikeCount');
+					var DislikeCountBtn = DislikeButton.find('.DislikeCount');
 
-					if(data.resultCode == 'S-1'){
-						DislikeButton.toggleClass('btn-outline');
-						DislikeCount.text(data.data2);
-						DislikeCountC.text(data.data2);
-					}else if(data.resultCode == 'S-2'){
-						likeButton.toggleClass('btn-outline');
-						likeCount.text(data.data1);
-						likeCountC.text(data.data1);
-						DislikeButton.toggleClass('btn-outline');
-						DislikeCount.text(data.data2);
-						DislikeCountC.text(data.data2);
+					// 모든 좋아요 카운트 업데이트
+                    likeCount.text(data.data1);
+                    likeCountBtn.text(data.data1);
 
-					}else {
-						DislikeButton.toggleClass('btn-outline');
-						DislikeCount.text(data.data2);
-						DislikeCountC.text(data.data2);
-					}
+                    // 모든 싫어요 카운트 업데이트
+                    DislikeCount.text(data.data2);
+                    DislikeCountBtn.text(data.data2);
+
+					if(data.resultCode == 'S-1') {
+                        DislikeButton.toggleClass('btn-outline');
+                    } else if(data.resultCode == 'S-2') {
+                        likeButton.removeClass('btn-outline');
+                        DislikeButton.toggleClass('btn-outline');
+                    } else {
+                        DislikeButton.toggleClass('btn-outline');
+                    }
 
 				}else {
 					alert(data.msg);
@@ -251,7 +264,7 @@ function doModifyReply(replyId) {
 					<td id="DislikeCount" style="text-align: center;">${article.badReactionPoint}</td>
 				</tr>
 				<tr>
-					<th style="text-align: center;">LIKE / Dislike / ${usersReaction }</th>
+					<th style="text-align: center;">LIKE / Dislike ${usersReaction }</th>
 					<td style="text-align: center;">
 						<button id="likeButton" class="btn btn-outline btn-success" onclick="doGoodReaction(${param.id})">
 							👍 LIKE
@@ -261,10 +274,6 @@ function doModifyReply(replyId) {
 							👎 DISLIKE
 							<span class="DislikeCount">${article.badReactionPoint}</span>
 						</button>
-						<%-- 						<a href="/usr/reactionPoint/doGoodReaction?relTypeCode=article&relId=${param.id }&replaceUri=${rq.currentUri}" --%>
-						<%-- 							class="btn btn-outline btn-success">👍 LIKE ${article.goodReactionPoint}</a>  --%>
-						<%-- 						<a href="/usr/reactionPoint/doBadReaction?relTypeCode=article&relId=${param.id }&replaceUri=${rq.currentUri}"  --%>
-						<%-- 							class="btn btn-outline btn-error">👎 DISLIKE ${article.badReactionPoint}</a> --%>
 					</td>
 				</tr>
 				<tr>
@@ -282,7 +291,10 @@ function doModifyReply(replyId) {
 					<th style="text-align: center;">Attached Image</th>
 					<td style="text-align: center;">
 						<div style="text-align: center;">
-							<img class="mx-auto rounded-xl" src="${rq.getImgUri(article.id)}" onerror="${rq.profileFallbackImgOnErrorHtml}" alt="" />
+							<c:forEach var="file" items="${attachedFiles}">
+                				<img class="mx-auto rounded-xl" src="${file.fileUri}" alt="첨부 이미지" style="max-width: 100%; margin-bottom: 10px;" />
+            				</c:forEach>
+<%--							<img class="mx-auto rounded-xl" src="${rq.getImgUri(article.id)}" onerror="${rq.profileFallbackImgOnErrorHtml}" alt="" />--%>
 						</div>
 						<div>${rq.getImgUri(article.id)}</div>
 					</td>
