@@ -132,7 +132,7 @@ public class ExampleController {
      * MMS 발송 예제
      * 단일 발송, 여러 건 발송 상관없이 이용 가능
      */
-    @PostMapping("/exchange/{id}/application1")
+    @PostMapping("adm/exchange/{id}/application")
     public SingleMessageSentResponse sendMmsByResourcePath(HttpServletRequest req, @PathVariable int id) throws IOException {
         Rq rq = (Rq) req.getAttribute("rq");
 
@@ -150,6 +150,19 @@ public class ExampleController {
         connection.setDoInput(true);
 
         try (InputStream inputStream = connection.getInputStream()) {
+
+            // URL에서 파일 이름과 확장자 추출
+            String fileName = new File(url.getPath()).getName();
+            String fileExtension = "";
+
+            // 파일 이름에서 확장자 추출
+            int dotIndex = fileName.lastIndexOf('.');
+            if (dotIndex > 0 && dotIndex < fileName.length() - 1) {
+                fileExtension = fileName.substring(dotIndex); // 확장자 추출
+            } else {
+                fileExtension = ".jpg"; // 기본 확장자 설정
+            }
+
             File tempFile = File.createTempFile("downloaded-", ".jpg");
 
             try (OutputStream outputStream = new FileOutputStream(tempFile)) {

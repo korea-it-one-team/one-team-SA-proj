@@ -13,6 +13,7 @@ from sklearn.cluster import KMeans
 import threading
 import json
 
+
 app = Flask(__name__)
 
 # DLL 파일 경로 설정

@@ -38,3 +38,4 @@ out/
 /venv/
 *.json
 src/main/resources/static/video/*.mp4
+/SoccerNet/

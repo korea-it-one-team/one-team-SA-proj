@@ -54,10 +54,11 @@ public interface ExchangeRepository {
 	@Insert("""
 				insert into exchange_history
 				set member_id = ${member_Id},
-	    		gifticon_id = ${gifticon_Id},
+	    		gifticon_id = ${id},
+	    		points = (Select points from gifticons where id = ${id}),
 	    		exchange_status = 'REQUESTED',
-	    		exchange_date = now(),
-	    		points = Select points from gifticons where id = ${id}
+	    		exchange_date = now()
+	    		
 			""")
 	void gifticon_Application(int id, int memberId);
 
