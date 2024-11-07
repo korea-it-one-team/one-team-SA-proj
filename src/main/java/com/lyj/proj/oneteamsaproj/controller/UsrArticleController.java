@@ -138,10 +138,6 @@ public class UsrArticleController {
 
         }
 
-        // getter, setter 잘 알아보자... ㅠㅠ
-//		article.setTitle(title);
-//		article.setBody(body);
-
         article = articleService.getArticleById(id);
 
         return Ut.jsReplace(userCanModifyRd.getResultCode(), userCanModifyRd.getMsg(), "../article/detail?id=" + id);
@@ -157,7 +153,6 @@ public class UsrArticleController {
         Article article = articleService.getArticleById(id);
 
         if (article == null) {
-//			return ResultData.from("F-11", Ut.f("%d번 게시글은 없습니다.", id),"입력한 id", id);
             return Ut.jsHistoryBack("F-1", Ut.f("%d번 게시글은 없습니다", id));
         }
 

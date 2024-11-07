@@ -19,6 +19,9 @@
 	<!-- daisy ui -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/daisyui/4.12.10/full.css" />
 
+<!-- <link rel="stylesheet" type="text/css" href="slick/slick.css"/> -->
+<!-- // Add the new slick-theme.css if you want the default styling -->
+<!-- <link rel="stylesheet" type="text/css" href="slick/slick-theme.css"/> -->
 
 <script>
   // 테마를 전환하는 함수

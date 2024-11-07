@@ -3,6 +3,27 @@ DROP DATABASE IF EXISTS `one-team-SA-proj`;
 CREATE DATABASE `one-team-SA-proj`;
 USE `one-team-SA-proj`;
 
+# 경기일정 테이블 생성
+CREATE TABLE gameSchedule (
+                              id INT AUTO_INCREMENT PRIMARY KEY,
+                              startDate CHAR(100) NOT NULL,
+                              matchTime CHAR(100) NOT NULL,
+                              leagueName CHAR(100) NOT NULL DEFAULT '기본값',
+                              homeTeam CHAR(100) NOT NULL,
+                              awayTeam CHAR(100) NOT NULL,
+                              homeTeamScore CHAR(5) NOT NULL,
+                              awayTeamScore CHAR(5) NOT NULL
+);
+
+
+# 승무패 예측 테이블 생성
+CREATE TABLE winDrawLose (
+                             id INT AUTO_INCREMENT PRIMARY KEY,
+                             gameId INT NOT NULL,
+                             memberId INT NOT NULL,
+                             prediction CHAR(10) NOT NULL
+);
+
 # 기프티콘 테이블 생성
 CREATE TABLE gifticons (
                            id INT AUTO_INCREMENT PRIMARY KEY,
@@ -160,16 +181,15 @@ updateDate = NOW(),
 title = '제목4',
 `body` = '내용4';
 
-alter table article add column memberId int(10) unsigned not null after updateDate;
+ALTER TABLE article ADD COLUMN memberId INT(10) UNSIGNED NOT NULL AFTER updateDate;
 
-update article
-set memberId = 2
-where id in (1,2);
+UPDATE article
+SET memberId = 2
+WHERE id IN (1,2);
 
-update article
-set memberId = 3
-where id in (3,4);
-
+UPDATE article
+SET memberId = 3
+WHERE id IN (3,4);
 
 # 게시판(board) 테이블 생성
 CREATE TABLE board (
@@ -201,7 +221,7 @@ updateDate = NOW(),
 `code` = 'QnA',
 `name` = '질의응답';
 
-alter table article add column boardId int(10) unsigned not null after `memberId`;
+ALTER TABLE article ADD COLUMN boardId INT(10) UNSIGNED NOT NULL AFTER `memberId`;
 
 UPDATE article
 SET boardId = 1
@@ -215,7 +235,7 @@ UPDATE article
 SET boardId = 3
 WHERE id = 4;
 
-alter table article add column hitCount int(10) unsigned not null default 0 after `body`;
+ALTER TABLE article ADD COLUMN hitCount INT(10) UNSIGNED NOT NULL DEFAULT 0 AFTER `body`;
 
 # reactionPoint 테이블 생성
 CREATE TABLE reactionPoint(
@@ -275,20 +295,21 @@ relId = 1,
 `point` = 1;
 
 # article 테이블에 reactionPoint(좋아요) 관련 컬럼 추가
-alter table article add column goodReactionPoint int(10) unsigned not null default 0;
+
+ALTER TABLE article ADD COLUMN goodReactionPoint INT(10) UNSIGNED NOT NULL DEFAULT 0;
 ALTER TABLE article ADD COLUMN badReactionPoint INT(10) UNSIGNED NOT NULL DEFAULT 0;
 
 # update join -> 기존 게시글의 good bad RP 값을 RP 테이블에서 추출해서 article table에 채운다
-update article as A
-    inner join (
-    select RP.relTypeCode, Rp.relId,
+UPDATE article AS A
+    INNER JOIN (
+    SELECT RP.relTypeCode, Rp.relId,
     SUM(IF(RP.point > 0,RP.point,0)) AS goodReactionPoint,
     SUM(IF(RP.point < 0,RP.point * -1,0)) AS badReactionPoint
-    from reactionPoint As RP
-    group by RP.relTypeCode,Rp.relId
-    ) as RP_SUM
-on A.id = RP_SUM.relId
-    set A.goodReactionPoint = RP_SUM.goodReactionPoint,
+    FROM reactionPoint AS RP
+    GROUP BY RP.relTypeCode,Rp.relId
+    ) AS RP_SUM
+ON A.id = RP_SUM.relId
+    SET A.goodReactionPoint = RP_SUM.goodReactionPoint,
         A.badReactionPoint = RP_SUM.badReactionPoint;
 
 # reply 테이블 생성
@@ -407,7 +428,7 @@ CREATE TABLE genFile (
         regDate DATETIME DEFAULT NULL, # 작성날짜
                              updateDate DATETIME DEFAULT NULL, # 갱신날짜
                              delDate DATETIME DEFAULT NULL, # 삭제날짜
-                             delStatus TINYINT(1) UNSIGNED NOT NULL DEFAULT 0, # 삭제상태(0:미삭제,1:삭제)
+                             delStatus TINYINT(1) UNSIGNED NOT NULL DEFAULT 0, # 삭제상태(0:미삭제, 1:삭제)
   relTypeCode CHAR(50) NOT NULL, # 관련 데이터 타입(article, member)
   relId INT(10) UNSIGNED NOT NULL, # 관련 데이터 번호
   originFileName VARCHAR(100) NOT NULL, # 업로드 당시의 파일이름
@@ -426,7 +447,6 @@ CREATE TABLE genFile (
 # 기존의 회원 비번을 암호화
 UPDATE `member`
 SET loginPw = SHA2(loginPw,256);
-
 
 #자주묻는질문 테이블
 CREATE TABLE faq (
@@ -491,4 +511,24 @@ INSERT INTO faq (category_id, question, answer) VALUES
 (5, '게시글 신고는 어떻게 하나요?', '문제가 있는 게시글의 "신고" 버튼을 클릭하여 신고할 수 있습니다.');
 
 
-#######(INIT 끝)
+################(INIT 끝)
+
+SELECT * FROM gameSchedule ORDER BY startdate ASC;
+SHOW TABLES;
+
+# 승/무/패 예측 결과에 따른 포인트 증가 확인
+
+# 회원의 points를 테스트 초기설정인 100으로 재설정
+UPDATE `member`
+SET points = 100;
+
+# 승무패 예측결과에 따라 points가 올라가는지 테스트 하기 위해 승무패 테이블을 삭제했다 다시 만들어야한다.
+DROP TABLE winDrawLose;
+
+SELECT * FROM `member`;
+
+SELECT * FROM winDrawLose;
+
+SELECT * FROM gameSchedule WHERE startDate = '2024-10-19' ORDER BY id ASC;
+
+################################### (승/무/패 예측 결과에 따른 포인트 증가 확인 끝)

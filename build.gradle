@@ -50,6 +50,9 @@ dependencies {
     // 파일 업로드를 위한
     implementation 'com.google.guava:guava:31.1-jre'
 
+//    //Web Driver Manager
+//    implementation 'io.github.bonigarcia:webdrivermanager:4.4.3'
+
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
@@ -73,4 +76,8 @@ dependencyManagement {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs += '-parameters'
 }

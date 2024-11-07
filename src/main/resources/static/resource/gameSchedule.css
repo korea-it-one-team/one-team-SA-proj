@@ -1,26 +1,4 @@
 @charset "UTF-8";
-/* 스피너 CSS */
-.spinner {
-    border: 8px solid #f3f3f3;
-    border-top: 8px solid #3498db;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    animation: spin 1s linear infinite;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 50px;
-}
-
-/* 스피너 애니메이션 */
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
 
 .main-title {
     width: 280px;
@@ -42,6 +20,14 @@
     justify-content: center;
 }
 
+.date-picker-container {
+    display: flex; /* 플렉스 박스를 사용하여 정렬 */
+    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    margin-top: 20px; /* 위쪽 여백 추가 */
+    flex-direction: column; /* 세로 방향으로 정렬 */
+}
+
 .gameSchedule-list-container {
     display: flex;
     flex-direction: column;
@@ -58,6 +44,7 @@
     border-bottom: 2px solid #000; /* 날짜 헤더에 밑줄 추가 */
     margin-bottom: 10px; /* 아래쪽 여백 추가 */
     padding-bottom: 5px; /* 패딩 추가 */
+    width:800px; /* 메인 컨텐츠 너비 만큼 */
 }
 
 /* 경기 항목에 margin-bottom 추가 */
@@ -70,7 +57,7 @@
 
 /* 경기 목록에 대한 스타일 */
 .match-container {
-    display: flex; /* flexbox로 경기 리스트 배치 */
+    display: flex; /* flexbox로 경기 일정 배치 */
     flex-wrap: wrap; /* 줄 바꿈 */
     justify-content: space-between; /* 간격을 균등하게 */
 }
@@ -79,21 +66,30 @@
     border-bottom: 1px solid #666; /* 리그 헤더에 밑줄 추가 */
     margin-bottom: 8px; /* 아래쪽 여백 추가 */
     padding-bottom: 4px; /* 패딩 추가 */
+    width:800px; /* 메인 컨텐츠 너비만큼 */
+}
+/* 경기 하나당 최소 너비 설정 */
+.match-item{
+    min-width: 400px;
 }
 /* 경기시간 스타일 */
 .matchTime {
+    display: inline-block; /* 경기 시간, '홈', 팀명, 스코어를 가로로 배치하기 위해 */
     font-weight: bold;
+    min-width: 40px; /* 최소 너비 */
 }
 /* 홈팀 명시 스타일 */
 .home-label {
-    display: inline-block;
+    display: inline-block; /* 경기 시간, '홈', 팀명, 스코어를 가로로 배치하기 위해 */
     background-color: #007BFF; /* 원하는 배경색 */
     color: #FFFFFF; /* 텍스트 색상 */
-    padding: 2px 2px; /* 상하 여백, 좌우 여백 */
-    border-radius: 2px;
+    height: 8px; /* 높이 16px */
+    width: 12px; /* 너비 20px */
+    text-align: center;
+    padding: 4px 4px; /* 상하 여백, 좌우 여백 */
+    border-radius: 3px;
     font-weight: bold;
-    margin: 0 5px; /* '홈'과 팀 이름 사이의 간격 : 좌우 5px */
-    font-size: 0.8rem;
+    font-size: 0.7rem;
 }
 /* 스코어 스타일 */
 .score {
