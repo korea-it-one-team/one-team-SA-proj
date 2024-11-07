@@ -25,7 +25,7 @@ public class GifticonController {
     @Autowired
     private ExchangeService exchangeService;
 
-    @RequestMapping("usr/gifticonsList")
+    @RequestMapping("usr/gifticons/List")
     public String getGifticonList(Model model, @RequestParam(defaultValue = "1") int page,
                                   @RequestParam(defaultValue = "") String searchKeyword) {
 

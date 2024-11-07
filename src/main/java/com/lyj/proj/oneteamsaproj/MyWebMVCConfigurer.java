@@ -80,7 +80,6 @@ public class MyWebMVCConfigurer implements WebMvcConfigurer {
         ir.addPathPatterns("/adm/member/doFindLoginId");
         ir.addPathPatterns("/adm/member/findLoginPw");
         ir.addPathPatterns("/adm/member/doFindLoginPw");
-        ir.addPathPatterns("/adm/exchange/**");
 
         // 댓글 관련
         ir.addPathPatterns("/usr/reply/doWrite");

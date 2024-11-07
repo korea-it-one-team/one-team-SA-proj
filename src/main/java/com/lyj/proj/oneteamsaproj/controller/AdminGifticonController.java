@@ -65,7 +65,7 @@ public class AdminGifticonController {
     }
 
     // 교환 신청 목록 조회
-    @RequestMapping("adm/exchange/list")
+    @RequestMapping("/adm/exchange/list")
     public String list(@RequestParam(required = false) String search,
                        @RequestParam(required = false) String status,
                        Model model) {
@@ -106,7 +106,7 @@ public class AdminGifticonController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    @RequestMapping("adm/exchange/gifticonList")
+    @RequestMapping("/adm/exchange/gifticonList")
     public String admGifticonList(Model model, @RequestParam(defaultValue = "1") int page,
                                   @RequestParam(defaultValue = "") String searchKeyword) {
 
