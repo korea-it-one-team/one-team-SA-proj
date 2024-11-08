@@ -6,6 +6,8 @@
 <style>
     .main-container-section-1 {
         overflow: hidden;
+        background: url('/assets/home-main-bg.png') no-repeat center;
+        background-size: cover;
     }
 
     .main-container-section-1,
@@ -21,8 +23,9 @@
     }
 
     body {
-        background: url('/assets/home-main-bg.png') no-repeat center;
-        background-size: cover;
+        background-color: #1e1e1e;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 
     .transparent-black {
@@ -46,8 +49,6 @@
         margin: 0 auto;
         overflow: hidden;
     }
-
-
 
     .transparent-flex-container {
         display: flex;
@@ -131,12 +132,189 @@
         text-shadow: calc(4 * var(--rpx-vw)) calc(4 * var(--rpx-vw)) 0 #7a9d0b;
         top: calc(70 * var(--rpx-vh));
     }
+
+    .main-container-section-2,
+    .main-container-section-2 * {
+        box-sizing: border-box;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+        outline: 0;
+    }
+
+    .main-container-section-2 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+        gap: calc(45 * var(--rpx-vw));
+        position: relative;
+        width: calc(1440 * var(--rpx-vw));
+        height: calc(1024 * var(--rpx-vh));
+        margin: 0 auto;
+        padding: 0 calc(60 * var(--rpx-vw)) 0 calc(60 * var(--rpx-vw));
+        background: #1e1e1e;
+        overflow: hidden;
+    }
+    .news-contents {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+        flex-grow: 1;
+        flex-shrink: 0;
+        flex-basis: 0;
+        position: relative;
+        min-width: 0;
+        max-width: calc(525 * var(--rpx-vw));
+    }
+    .shadow-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+        flex-grow: 1;
+        flex-shrink: 0;
+        flex-basis: 0;
+        position: relative;
+        background: #ffffff;
+        z-index: 1;
+        border-radius: calc(25 * var(--rpx-vw));
+        box-shadow: calc(8 * var(--rpx-vw)) calc(8 * var(--rpx-vw)) 0 0 #7a9d0b;
+    }
+    .news-box-title {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        align-self: stretch;
+        flex-wrap: nowrap;
+        flex-shrink: 0;
+        position: relative;
+        padding: calc(15 * var(--rpx-vh)) 0 calc(15 * var(--rpx-vh)) 0;
+        cursor: pointer;
+        background: #cdf256;
+        border: none;
+        z-index: 2;
+        border-radius: calc(25 * var(--rpx-vw)) calc(25 * var(--rpx-vw)) 0 0;
+    }
+    .news-box-text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        flex-basis: auto;
+        position: relative;
+        width: calc(178 * var(--rpx-vw));
+        height: calc(36 * var(--rpx-vh));
+        color: #000000;
+        font-family: NEXON Football Gothic B, var(--default-font-family);
+        font-size: calc(24 * var(--rpx-vw));
+        font-weight: 700;
+        text-align: center;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        z-index: 3;
+        overflow: hidden;
+    }
+    .news-box-lists {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        align-self: stretch;
+        flex-wrap: nowrap;
+        flex-shrink: 0;
+        position: relative;
+        height: calc(645 * var(--rpx-vh));
+        background-size: cover;
+        z-index: 4;
+    }
+    .schedule-contents {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+        flex-grow: 1;
+        flex-shrink: 0;
+        flex-basis: 0;
+        position: relative;
+        min-width: 0;
+        z-index: 5;
+    }
+    .shadow-box-1 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+        flex-grow: 1;
+        flex-shrink: 0;
+        flex-basis: 0;
+        position: relative;
+        background: #ffffff;
+        z-index: 6;
+        border-radius: calc(25 * var(--rpx-vw));
+        box-shadow: calc(8 * var(--rpx-vw)) calc(8 * var(--rpx-vw)) 0 0 #7a9d0b;
+    }
+    .schedule-box-title {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        align-self: stretch;
+        flex-wrap: nowrap;
+        flex-shrink: 0;
+        position: relative;
+        padding: calc(15 * var(--rpx-vh)) 0 calc(15 * var(--rpx-vh)) 0;
+        cursor: pointer;
+        background: #cdf256;
+        border: none;
+        z-index: 2;
+        border-radius: calc(25 * var(--rpx-vw)) calc(25 * var(--rpx-vw)) 0 0;
+    }
+    .schedule-box-text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        flex-basis: auto;
+        position: relative;
+        width: calc(178 * var(--rpx-vw));
+        height: calc(36 * var(--rpx-vh));
+        color: #000000;
+        font-family: NEXON Football Gothic B, var(--default-font-family);
+        font-size: calc(24 * var(--rpx-vw));
+        font-weight: 700;
+        text-align: center;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        z-index: 3;
+        overflow: hidden;
+    }
+    .schedule-box-lists {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        align-self: stretch;
+        flex-wrap: nowrap;
+        flex-shrink: 0;
+        position: relative;
+        height: calc(645 * var(--rpx-vh));
+        background-size: cover;
+        z-index: 9;
+    }
 </style>
 
 <body>
-<div class="transparent-black"></div>
 <header th:replace="~{common/header-2 :: header-2}"></header>
 <div class="main-container-section-1">
+    <div class="transparent-black"></div>
     <div class="transparent-flex-container"></div>
     <div class="banners">
         <div class="banner-container">
@@ -145,5 +323,24 @@
         </div>
     </div>
 </div>
+<div class="main-container-section-2">
+    <div class="news-contents">
+        <div class="shadow-box">
+            <button class="news-box-title">
+                <span class="news-box-text">해외 축구 뉴스</span>
+            </button>
+            <div class="news-box-lists"></div>
+        </div>
+    </div>
+    <div class="schedule-contents">
+        <div class="shadow-box-1">
+            <div class="schedule-box-title">
+                <button class="schedule-box-text">최신 경기 일정</button>
+            </div>
+            <div class="schedule-box-lists"></div>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{common/footer :: footer}"></footer>
 </body>
 </html>

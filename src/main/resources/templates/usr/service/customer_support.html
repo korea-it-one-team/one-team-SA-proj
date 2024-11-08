@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <title>고객센터</title>
+    <link rel="stylesheet" href="/resource/common.css"/>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');</style>
+    <script>
+        // 섹션 표시 함수
+        function showSection(section) {
+            $('.content-section').hide();
+            $('#' + section).show();
+            $('.faq-list').slideUp();
+            $('.content_answer').slideUp();
+        }
+
+        $(document).ready(function () {
+            showSection('faq');
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('.category-title').on('click', function () {
+                const faqList = $(this).next('.faq-list');
+                $('.faq-list').not(faqList).addClass('hidden');
+                faqList.removeClass('hidden');
+                $('.faq-answer').slideUp();
+            });
+
+            $('.faq-question').on('click', function () {
+                $(this).next('.faq-answer').slideToggle();
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('form').on('submit', function (event) {
+                event.preventDefault();
+
+                const title = $('#title').val();
+                const content = $('#content').val();
+
+                $.ajax({
+                    url: '/submit-consultation',
+                    method: 'POST',
+                    data: {title: title, content: content},
+                    success: function (response) {
+                        alert('상담 저장이 완료되었습니다.');
+                        location.reload();
+                    },
+                    error: function () {
+                        alert('상담 저장 중 오류가 발생했습니다.');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <style>
+        .content-section {
+            margin: auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-title {
+            font-size: 1.5rem;
+            padding: 12px 24px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+            color: #333;
+        }
+
+        .category-title:hover {
+            background-color: #e0e0e0;
+        }
+
+        .faq-question {
+            margin: 10px 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #007bff;
+            transition: color 0.3s;
+        }
+
+        .faq-question:hover {
+            color: #0056b3;
+        }
+
+        .faq-answer {
+            margin-left: 20px;
+            font-size: 1.2rem;
+            color: #555;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+<header th:replace="~{common/header-2 :: header-2}"></header>
+<div class="make-header-margin"></div>
+
+<div class="container mx-auto p-5 bg-white shadow-lg rounded-lg mt-5">
+    <h1 class="text-4xl font-bold text-center mb-5">고객센터</h1>
+
+    <div class="flex justify-center space-x-4 mb-5">
+        <button class="btn btn-primary" onclick="showSection('faq')">자주 묻는 질문</button>
+        <button class="btn btn-primary" onclick="showSection('consultation')">1:1 상담</button>
+        <button class="btn btn-primary" onclick="showSection('history')">상담내역</button>
+    </div>
+
+    <div id="faq" class="content-section">
+        <h2 class="text-2xl font-bold mb-6" style="color: black;">자주 묻는 질문 Q&A</h2>
+        <div id="faq-list" class="flex flex-wrap gap-4 mb-4">
+            <th:block th:each="category : ${categorys}">
+                <div>
+                    <h3 class="category-title btn btn-outline" th:text="${category.category_name}" data-category-id="[[${category.id}]]"></h3>
+                    <div class="faq-list hidden mt-2" th:data-category-id="${category.id}">
+                        <th:block th:each="faq : ${faqs}">
+                            <th:block th:if="${faq.category_name == category.category_name}">
+                                <h4 class="faq-question cursor-pointer" th:text="${faq.question}" th:data-faq-id="${faq.id}"></h4>
+                                <div class="faq-answer hidden" th:data-faq-id="${faq.id}">
+                                    <p th:text="${faq.answer}"></p>
+                                </div>
+                            </th:block>
+                        </th:block>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+    </div>
+
+    <div id="consultation" class="content-section" style="display: none;">
+        <h2 class="text-xl font-semibold">1:1 상담</h2>
+        <form th:action="@{/submit-consultation}" method="post">
+            <div class="mb-4">
+                <label for="title" class="block text-sm font-medium">제목:</label>
+                <input type="text" class="input input-bordered w-full" id="title" name="title" required>
+            </div>
+            <div class="mb-4">
+                <label for="content" class="block text-sm font-medium">내용:</label>
+                <textarea class="textarea textarea-bordered w-full h-80" id="content" name="content" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-success">저장</button>
+        </form>
+    </div>
+
+    <div id="history" class="content-section" style="display: none;">
+        <h2 class="text-xl font-semibold">상담내역</h2>
+        <ul class="space-y-4">
+            <th:block th:each="consultation : ${consultations}">
+                <li class="p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                    <a href="#" th:onclick="'showConsultationDetails(' + ${consultation.id} + ')'"
+                       class="text-blue-600 font-bold hover:underline" th:text="${consultation.title}"></a>
+
+                    <div class="hidden content_answer" th:class="'content_answer' + ${consultation.id} + ' mt-2'">
+                        <div class="bg-gray-100 p-3 rounded-lg border-l-4 border-blue-500">
+                            <span class="text-gray-700 font-semibold">내용:</span>
+                            <p class="text-gray-600" th:text="${consultation.content}"></p>
+                        </div>
+                        <th:block th:if="${isAdmin}">
+                            <div class="bg-gray-100 p-3 rounded-lg border-l-4 border-green-500 mt-2">
+                                <span class="text-gray-700 font-semibold">답변:</span>
+                                <input type="text" class="input input-bordered w-full mt-1" th:value="${consultation.answer}"/>
+                                <button class="btn btn-success mt-2" th:onclick="'saveAnswer(' + ${consultation.id} + ')'">저장</button>
+                            </div>
+                        </th:block>
+                        <th:block th:if="${!isAdmin}">
+                            <div class="bg-gray-100 p-3 rounded-lg border-l-4 border-green-500 mt-2">
+                                <span class="text-gray-700 font-semibold">답변:</span>
+                                <p class="text-gray-600" th:text="${consultation.answer}"></p>
+                            </div>
+                        </th:block>
+                    </div>
+                </li>
+            </th:block>
+        </ul>
+    </div>
+</div>
+
+<script>
+    function showConsultationDetails(id){
+        $('.content_answer').addClass('hidden');
+        $('.content_answer' + id).removeClass('hidden');
+    }
+
+    function saveAnswer(id) {
+        const answer = $('.content_answer' + id + ' input[type="text"]').val();
+
+        $.ajax({
+            url: '/save-answer',
+            method: 'POST',
+            data: { id: id, answer: answer },
+            success: function(response) {
+                alert('답변이 저장되었습니다.');
+                location.reload();
+            },
+            error: function() {
+                alert('답변 저장 중 오류가 발생했습니다.');
+            }
+        });
+    }
+</script>
+</body>
+</html>

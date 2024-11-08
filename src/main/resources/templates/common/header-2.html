@@ -1,17 +1,17 @@
-<header class="header" th:fragment="header-2">
-    <div class="header-items">
-        <div class="logo">
-            <div class="icon-box">
-                <img src="/assets/header-icon.svg" alt="Header Icon" class="header-icon">
+<header class="my-header" th:fragment="header-2">
+    <div class="my-header-items">
+        <div class="my-logo">
+            <div class="my-icon-box">
+                <img src="/assets/header-icon.svg" alt="Header Icon" class="my-header-icon">
             </div>
             <span class="kick-analysis" onclick="window.location.href='/'">KICKNALYSIS</span>
         </div>
-        <div class="header-menu">
+        <div class="my-header-menu">
             <span class="game-schedule-prediction" onclick="window.location.href='/usr/home/gameSchedule'">경기일정 및 예측</span>
             <span class="analysis-community" onclick="window.location.href='/usr/article/list'">분석 커뮤니티</span>
             <span class="product-exchange" onclick="window.location.href='/usr/gifticons/List'">상품교환</span>
-            <span class="customer-center">고객센터</span>
+            <span class="customer-center" onclick="window.location.href='/customer-support'">고객센터</span>
         </div>
-        <span class="login-button" onclick="window.location.href='/usr/member/login'">LOGIN</span>
+        <span class="my-login-button" onclick="window.location.href='/usr/member/login'">LOGIN</span>
     </div>
 </header>

@@ -75,9 +75,9 @@
             <img th:src="${gifticon.image_url}" th:alt="${gifticon.name}" />
         </figure>
         <div class="card-body">
-            <h2 class="card-title" th:text="${gifticon.name}"></h2>
-            <p class="point_price points" th:data-points="${gifticon.points}">Points: <span th:text="${gifticon.points}"></span></p>
-            <p class="stock stocks" th:text="'Stocks : ' + ${gifticon.stock} + ' 개'"></p>
+            <h2 class="card-title text-black" th:text="${gifticon.name}"></h2>
+            <p class="point_price points text-black" th:data-points="${gifticon.points}">Points: <span th:text="${gifticon.points}"></span></p>
+            <p class="stock stocks text-black" th:text="'Stocks : ' + ${gifticon.stock} + ' 개'"></p>
             <div class="card-actions justify-end">
                 <button class="btn btn-primary"
                         th:onclick="|exchangeGifticon(${gifticon.id}, ${gifticon.stock})|">
