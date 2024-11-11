@@ -330,6 +330,7 @@ button {
 	padding: calc(10 * var(--rpx-vh)) calc(10 * var(--rpx-vw)) calc(10 * var(--rpx-vh))
 	calc(10 * var(--rpx-vw));
 	z-index: 2;
+	cursor: pointer;
 }
 .my-btn-circle {
 	display: flex;

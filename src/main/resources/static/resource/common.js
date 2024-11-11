@@ -8,6 +8,10 @@ $('select[data-value]').each(function(index, el) {
 	}
 });
 
+function myScrollToTop() {
+	window.scrollTo({ top: 0, behavior: 'smooth'});
+}
+
 // function setHeaderMargin() {
 // 	const header = document.querySelector('.header');
 // 	const headerMargin = document.querySelector('.make-header-margin');

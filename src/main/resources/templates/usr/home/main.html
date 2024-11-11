@@ -196,7 +196,6 @@
         flex-shrink: 0;
         position: relative;
         padding: calc(15 * var(--rpx-vh)) 0 calc(15 * var(--rpx-vh)) 0;
-        cursor: pointer;
         background: #cdf256;
         border: none;
         z-index: 2;
@@ -225,7 +224,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start; /* Center에서 위쪽으로 시작하도록 변경 */
         align-self: stretch;
         flex-wrap: nowrap;
         flex-shrink: 0;
@@ -233,6 +232,18 @@
         height: calc(645 * var(--rpx-vh));
         background-size: cover;
         z-index: 4;
+        overflow-y: auto; /* 추가: 스크롤 활성화 */
+        padding: calc(10 * var(--rpx-vh)); /* 내부 여백 추가 */
+    }
+
+    .news-list-container {
+        font-family: "Noto Sans KR";
+        font-weight: 400;
+        color: #1e1e1e;
+        width: 100%; /* 너비를 news-box-lists에 맞추기 */
+        max-height: calc(600 * var(--rpx-vh)); /* 전체 높이를 제한하여 스크롤이 news-box-lists 내에 머물도록 설정 */
+        overflow-y: auto; /* 추가: 스크롤을 컨테이너에 추가 */
+        padding-right: calc(5 * var(--rpx-vw)); /* 스크롤과 텍스트 사이 간격 */
     }
     .schedule-contents {
         display: flex;
@@ -271,7 +282,6 @@
         flex-shrink: 0;
         position: relative;
         padding: calc(15 * var(--rpx-vh)) 0 calc(15 * var(--rpx-vh)) 0;
-        cursor: pointer;
         background: #cdf256;
         border: none;
         z-index: 2;
@@ -309,6 +319,39 @@
         background-size: cover;
         z-index: 9;
     }
+
+    /* 스피너 CSS */
+    .spinner {
+        border: 8px solid #f3f3f3;
+        border-top: 8px solid #3498db;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 50px;
+    }
+
+    /* 스피너 애니메이션 */
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .total-news-btn {
+        color: #7a9d0b;
+        font-family: 'NEXON Football Gothic B';
+        font-size: calc(16 * var(--rpx-vw));
+    }
+
+    .total-news {
+        margin-bottom: calc(13 * var(--rpx-vh));
+    }
 </style>
 
 <body>
@@ -326,10 +369,24 @@
 <div class="main-container-section-2">
     <div class="news-contents">
         <div class="shadow-box">
-            <button class="news-box-title">
+            <div class="news-box-title">
                 <span class="news-box-text">해외 축구 뉴스</span>
-            </button>
-            <div class="news-box-lists"></div>
+            </div>
+            <div class="news-box-lists">
+                <!-- 네이버 야구 뉴스 링크 -->
+                <div class="total-news">
+                    <a class="total-news-btn" target="_blank" href="https://sports.news.naver.com/wfootball/news/index?isphoto=N">전체 뉴스 보기</a>
+                </div>
+
+                <!-- 뉴스 리스트를 표시할 요소 -->
+                <div class="news-list-container">
+                    <ul id="news-list"></ul>
+                </div>
+
+                <div class="loading-spinner" id="loadingSpinner" style="display: none;">
+                    <div class="spinner"></div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="schedule-contents">
@@ -342,5 +399,69 @@
     </div>
 </div>
 <footer th:replace="~{common/footer :: footer}"></footer>
+
+<!--네이버 뉴스 AJAX 요청-->
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $("#loadingSpinner").show();
+
+        function fetchNews() {
+            $('#news-list').empty();
+
+            $.ajax({
+                url: "/getNews",
+                method: "GET",
+                success: function (data) {
+                    let newsHtml = '';
+                    $.each(data, function (index, news) {
+                        newsHtml += `
+                            <li style="display: flex; align-items: flex-start; margin-bottom: calc(10 * var(--rpx-vh));">
+                                ${news.imgUrl ? `
+                                    <img src="${news.imgUrl}" alt="${news.title}"
+                                        style="
+                                            width: calc(120 * var(--rpx-vw));
+                                            height: calc(90 * var(--rpx-vh));
+                                            margin-right: calc(10 * var(--rpx-vw));
+                                            object-fit: cover;
+                                            object-position: center;
+                                        "
+                                    />` : ''}
+                                <div style="flex-grow: 1;">
+                                    <h2 style="margin: 0; font-size: calc(16 * var(--rpx-vw)); font-weight: 700;">
+                                        <a href="${news.link}" target="_blank">${news.title}</a>
+                                    </h2>
+                                    <p style="margin: calc(5 * var(--rpx-vh)) 0; font-size: calc(12 * var(--rpx-vw));">
+                                        ${news.desc}
+                                    </p>
+                                    <span style="font-size: calc(12 * var(--rpx-vw)); color: #578CE1;">
+                                        ${news.press}
+                                    </span>
+                                    <span style="color: #E3E3E3;"> | </span>
+                                    <span style="font-size: calc(12 * var(--rpx-vw)); color: gray;">
+                                        ${news.time}
+                                    </span>
+                                </div>
+                            </li>
+                        `;
+
+                        // 마지막 항목이 아닌 경우에만 <hr> 추가
+                        if (index < data.length - 1) {
+                            newsHtml += '<hr style="color:#7a9d0b; margin-bottom: calc(10 * var(--rpx-vh));">';
+                        }
+                    });
+                    $('#news-list').html(newsHtml);
+                },
+                error: function () {
+                    $('#news-list').html('<li>뉴스를 불러오는 데 실패했습니다.</li>');
+                },
+                complete: function () {
+                    $("#loadingSpinner").hide();
+                }
+            });
+        }
+
+        fetchNews();
+    });
+</script>
 </body>
 </html>
