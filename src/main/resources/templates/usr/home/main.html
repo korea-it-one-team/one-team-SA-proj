@@ -242,9 +242,25 @@
         color: #1e1e1e;
         width: 100%; /* 너비를 news-box-lists에 맞추기 */
         max-height: calc(600 * var(--rpx-vh)); /* 전체 높이를 제한하여 스크롤이 news-box-lists 내에 머물도록 설정 */
-        overflow-y: auto; /* 추가: 스크롤을 컨테이너에 추가 */
+        overflow-y: scroll; /* 추가: 스크롤을 컨테이너에 추가 */
         padding-right: calc(5 * var(--rpx-vw)); /* 스크롤과 텍스트 사이 간격 */
     }
+
+    /* 스크롤바 스타일 - 우선순위를 높이기 위해 !important 추가 */
+    .news-list-container::-webkit-scrollbar {
+        width: 12px !important;
+    }
+
+    .news-list-container::-webkit-scrollbar-track {
+        background: #f1f1f1 !important;
+    }
+
+    .news-list-container::-webkit-scrollbar-thumb {
+        background-color: #4caf50 !important;
+        border-radius: 10px !important;
+        border: 3px solid #f1f1f1 !important;
+    }
+
     .schedule-contents {
         display: flex;
         align-items: center;
@@ -321,16 +337,26 @@
     }
 
     /* 스피너 CSS */
+    /* 스피너 부모 요소 */
+    #loadingSpinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 50%; /* 세로 가운데 정렬 */
+        left: 50%; /* 가로 가운데 정렬 */
+        transform: translate(-50%, -50%);
+        z-index: 5; /* 다른 요소들보다 위에 표시 */
+        pointer-events: none; /* 로딩 중 다른 요소에 영향을 주지 않도록 설정 */
+    }
+
     .spinner {
-        border: 8px solid #f3f3f3;
-        border-top: 8px solid #3498db;
+        border: calc(8 * var(--rpx-vw)) solid #4caf50;
+        border-top: calc(8 * var(--rpx-vw)) solid transparent;
         border-radius: 50%;
-        width: 40px;
-        height: 40px;
+        width: calc(80 * var(--rpx-vw));
+        height: calc(80 * var(--rpx-vw));
         animation: spin 1s linear infinite;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 50px;
     }
 
     /* 스피너 애니메이션 */
@@ -375,7 +401,7 @@
             <div class="news-box-lists">
                 <!-- 네이버 야구 뉴스 링크 -->
                 <div class="total-news">
-                    <a class="total-news-btn" target="_blank" href="https://sports.news.naver.com/wfootball/news/index?isphoto=N">전체 뉴스 보기</a>
+                    <a class="total-news-btn" target="_blank" href="https://sports.news.naver.com/wfootball/news/index?isphoto=N">전체 뉴스 보러 가기</a>
                 </div>
 
                 <!-- 뉴스 리스트를 표시할 요소 -->
@@ -383,7 +409,7 @@
                     <ul id="news-list"></ul>
                 </div>
 
-                <div class="loading-spinner" id="loadingSpinner" style="display: none;">
+                <div class="my-loading-spinner" id="loadingSpinner" style="display: none;">
                     <div class="spinner"></div>
                 </div>
             </div>
