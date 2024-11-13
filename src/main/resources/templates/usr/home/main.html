@@ -220,6 +220,7 @@
         z-index: 3;
         overflow: hidden;
     }
+
     .news-box-lists {
         display: flex;
         flex-direction: column;
@@ -246,19 +247,23 @@
         padding-right: calc(5 * var(--rpx-vw)); /* 스크롤과 텍스트 사이 간격 */
     }
 
-    /* 스크롤바 스타일 - 우선순위를 높이기 위해 !important 추가 */
-    .news-list-container::-webkit-scrollbar {
+    .news-box-lists .news-list-container::-webkit-scrollbar {
         width: 12px !important;
+        height: 12px !important;
     }
 
-    .news-list-container::-webkit-scrollbar-track {
+    .news-box-lists .news-list-container::-webkit-scrollbar-track {
         background: #f1f1f1 !important;
     }
 
-    .news-list-container::-webkit-scrollbar-thumb {
+    .news-box-lists .news-list-container::-webkit-scrollbar-thumb {
         background-color: #4caf50 !important;
         border-radius: 10px !important;
         border: 3px solid #f1f1f1 !important;
+    }
+
+    .news-box-lists .news-list-container::-webkit-scrollbar-corner {
+        background: #f1f1f1 !important;
     }
 
     .schedule-contents {

@@ -12,6 +12,7 @@
             <span class="product-exchange" onclick="window.location.href='/usr/gifticons/List'">상품교환</span>
             <span class="customer-center" onclick="window.location.href='/customer-support'">고객센터</span>
         </div>
-        <span class="my-login-button" onclick="window.location.href='/usr/member/login'">LOGIN</span>
+        <span th:if="${!rq.isLogined()}" class="my-login-button" onclick="window.location.href='/usr/member/login'">LOGIN</span>
+        <span th:if="${rq.isLogined()}" class="my-login-button" onclick="window.location.href='/usr/member/doLogout'">LOGOUT</span>
     </div>
 </header>

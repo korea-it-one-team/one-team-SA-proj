@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="light" xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="UTF-8">
     <title th:text="${pageTitle}">페이지 제목</title>
@@ -12,42 +12,44 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- 제이쿼리 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- 제이쿼리 및 ui -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <!-- 폰트어썸 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <!-- 테일윈드 및 daisyUI -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/daisyui/4.12.10/full.css" />
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/daisyui/4.12.10/full.css" />-->
 
-    <script>
-        function Theme__toggle() {
-            const theme = localStorage.getItem('theme') ?? 'light';
+<!--    <script>-->
+<!--        function Theme__toggle() {-->
+<!--            const theme = localStorage.getItem('theme') ?? 'light';-->
 
-            if (theme == 'light') {
-                localStorage.setItem('theme', 'dark');
-                Theme__applyTo('dark');
-            } else {
-                localStorage.setItem('theme', 'light');
-                Theme__applyTo('light');
-            }
-        }
+<!--            if (theme == 'light') {-->
+<!--                localStorage.setItem('theme', 'dark');-->
+<!--                Theme__applyTo('dark');-->
+<!--            } else {-->
+<!--                localStorage.setItem('theme', 'light');-->
+<!--                Theme__applyTo('light');-->
+<!--            }-->
+<!--        }-->
 
-        function Theme__applyTo(themeName) {
-            $('html').attr('data-theme', themeName);
-        }
+<!--        function Theme__applyTo(themeName) {-->
+<!--            $('html').attr('data-theme', themeName);-->
+<!--        }-->
 
-        function Theme__init() {
-            const theme = localStorage.getItem('theme') ?? 'light';
-            Theme__applyTo(theme);
-        }
+<!--        function Theme__init() {-->
+<!--            const theme = localStorage.getItem('theme') ?? 'dark';-->
+<!--            Theme__applyTo(theme);-->
+<!--        }-->
 
-        $(document).ready(function () {
-            Theme__init();
-        });
-    </script>
+<!--        $(document).ready(function () {-->
+<!--            Theme__init();-->
+<!--        });-->
+<!--    </script>-->
 
     <!-- 토스트 UI -->
 
@@ -387,7 +389,7 @@
                 const initialValue =
                     $initialValueEl.length == 0 ? "" : $initialValueEl.html().trim();
 
-                const theme = localStorage.getItem('theme') ?? "light";
+                const theme = localStorage.getItem('theme') ?? "dark";
 
                 const editor = new toastui.Editor({
                     el: node,
@@ -439,7 +441,7 @@
                     $initialValueEl.length == 0 ? "" : $initialValueEl.html().trim();
                 $node.empty();
 
-                const theme = localStorage.getItem('theme') ?? "light";
+                const theme = localStorage.getItem('theme') ?? "dark";
 
                 let viewer = new toastui.Editor.factory({
                     el: node,
