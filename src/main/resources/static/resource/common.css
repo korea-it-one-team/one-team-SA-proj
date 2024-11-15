@@ -20,6 +20,7 @@ body {
 	background-color: #1e1e1e;
 	color: white;
 	font-family: 'NEXON Football Gothic B', Audiowide;
+	overflow-x: hidden;
 }
 
 body * {
