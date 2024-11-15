@@ -161,34 +161,6 @@ input::placeholder {
 	font-size: 1.125rem;
 }
 
-
-/*!*테마*!*/
-/*.btn-theme-toggle>span:first-child {*/
-/*	display: none;*/
-/*}*/
-
-/*html[data-theme="dark"] .btn-theme-toggle>span:first-child {*/
-/*	display: inline;*/
-/*}*/
-
-/*html[data-theme="dark"] * {*/
-/*	color: white;*/
-/*}*/
-
-/*!* 에디터 미리보기 부분 적용. *!*/
-/*html[data-theme="dark"] .toastui-editor-md-preview {*/
-/*	color: white;*/
-/*}*/
-
-/*!* important 강제성 부여.(우선순위 높게) *!*/
-/*html[data-theme="dark"] .toastui-editor-contents * {*/
-/*	color: white !important;*/
-/*}*/
-
-/*html[data-theme="dark"] .btn-theme-toggle>span:last-child {*/
-/*	display: none;*/
-/*}*/
-
 /* header */
 .make-header-margin {
 	height: calc(86 * var(--rpx-vw));

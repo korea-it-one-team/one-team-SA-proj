@@ -87,11 +87,17 @@
     }
 
     .date-picker-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .date-picker-input-section {
         display: flex; /* 플렉스 박스를 사용하여 정렬 */
         justify-content: flex-start; /* 수평 중앙 정렬 */
         align-items: center; /* 수직 중앙 정렬 */
-        flex-direction: row; /* 세로 방향으로 정렬 */
-        width: 100%;
+        flex-direction: row;
         gap: calc(10 * var(--rpx-vw));
     }
 
@@ -123,6 +129,11 @@
 
     #gameSchedule-list {
         width: 100%;
+    }
+
+    .predict-instructions-text {
+        align-self: flex-end;
+        font-size: calc(12 * var(--rpx-vw))
     }
 
     .league-container {
@@ -159,17 +170,21 @@
         gap: calc(8 * var(--rpx-vw)); /* 요소 간의 간격 조절 */
     }
 
+    .match-info > span {
+        padding: calc(4 * var(--rpx-vw)) calc(4 * var(--rpx-vw)) calc(1 * var(--rpx-vw)) calc(4 * var(--rpx-vw));
+    }
+
     .matchTime {
         font-weight: bold;
         color: #ffffff;
         min-width: calc(50 * var(--rpx-vw));
         font-size: calc(16 * var(--rpx-vw));
+        padding: calc(4 * var(--rpx-vw)) calc(4 * var(--rpx-vw)) calc(1 * var(--rpx-vw)) calc(4 * var(--rpx-vw));
     }
 
     .home-label {
         background-color: #cdf256;
         color: #1e1e1e;
-        padding: calc(4 * var(--rpx-vw)) calc(4 * var(--rpx-vw)) calc(1 * var(--rpx-vw)) calc(4 * var(--rpx-vw));
         border-radius: calc(3 * var(--rpx-vw));
         font-size: calc(14 * var(--rpx-vw));
         text-align: center;
@@ -251,8 +266,11 @@
     <!-- 날짜 선택 추가 -->
     <div class="date-picker-and-gameSchedule-flex-box">
         <div class="date-picker-container">
-            <label for="datepicker" class="label-for-datepicker">날짜 선택</label>
-            <input type="text" id="datepicker" readonly>
+            <div class="date-picker-input-section">
+                <label for="datepicker" class="label-for-datepicker">날짜 선택</label>
+                <input type="text" id="datepicker" readonly>
+            </div>
+            <div class="predict-instructions-text">홈팀을 기준으로 경기 예측 버튼을 눌러주세요!</div>
         </div>
 
         <div class="gameSchedule-list-container">
