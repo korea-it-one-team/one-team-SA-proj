@@ -1,117 +1,202 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>Gifticon List</title>
-    <!-- 테일윈드 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.1.4/tailwind.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="/resource/common.css"/>
-    <style>@import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');</style>
+<head th:replace="~{common/head :: head}">
+    <title>GIFTICON LIST</title>
+</head>
     <style>
+        :root {
+            --primary-color: #cdf256;
+        }
+
         body {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
+
+        body,
+        body * {
+            box-sizing: border-box;
+        }
+
+        .gifticon-list-section-1 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: nowrap;
+            position: relative;
+            width: calc(1440 * var(--rpx-vw)); /* 가로 기준 비율 */
+            min-height: calc(1024 * var(--rpx-vh)); /* 세로 기준 비율 */
+            margin: 0 auto;
+            padding: calc(50 * var(--rpx-vh)) 0;
+            overflow: hidden;
+            gap: calc(50 * var(--rpx-vw));
+        }
+
         .gifticon-list {
             display: flex;
             flex-wrap: wrap;
             justify-content: center; /* 중앙 정렬 */
-            gap: 20px;
-            max-width: 1270px; /* 최대 너비 설정 */
+            gap: calc(20 * var(--rpx-vw)); /* 버튼 간격 */
+            max-width: calc(1270 * var(--rpx-vw)); /* 최대 너비 설정 */
             margin: 0 auto; /* 가운데 정렬 */
         }
+
         .gifticon-item {
-            padding: 15px;
-            width: 300px; /* 너비를 고정하여 크기 조절 */
+            padding: calc(15 * var(--rpx-vw));
+            width: calc(280 * var(--rpx-vw)); /* 너비를 고정하여 크기 조절 */
             box-sizing: border-box;
             text-align: center; /* 텍스트 중앙 정렬 */
-            border-radius: 8px; /* 모서리 둥글게 */
+            border-radius: calc(4 * var(--rpx-vw)); /* 모서리 둥글게 */
+            background: #f9fafb; /* 기본 카드 배경색 */
+            box-shadow: calc(4 * var(--rpx-vw)) calc(4 * var(--rpx-vw)) 0px 0px #cdf256; /* 카드 그림자 */
             transition: transform 0.2s; /* 호버 효과 */
         }
+
         .gifticon-item:hover {
             transform: scale(1.05); /* 호버 시 약간 확대 */
         }
+
         img {
             max-width: 100%; /* 이미지 크기 조절 */
             height: auto; /* 비율 유지 */
-            border-radius: 4px; /* 이미지 모서리 둥글게 */
-        }
-        .pagination {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .pagination a {
-            margin: 0 5px;
-            text-decoration: none;
+            border-radius: calc(4 * var(--rpx-vw)); /* 이미지 모서리 둥글게 */
         }
 
-        .point_price, .stock{
+        .card-body {
+            padding: calc(10 * var(--rpx-vw)) calc(15 * var(--rpx-vw));
+        }
+
+        .card-title {
+            font-size: calc(18 * var(--rpx-vw));
+            font-weight: bold;
+            margin-bottom: calc(10 * var(--rpx-vw));
+        }
+
+        .point_price, .stock {
             text-align: left;
             font-weight: bold;
-            font-size: 1.5rem;
+            font-size: calc(16 * var(--rpx-vw));
+            color: #333;
         }
-        .gifticon-name{
-            font-size: 1rem;
+
+        .gifticon-name {
+            font-size: calc(16 * var(--rpx-vw));
         }
-        .gifticon-list-title{
-            margin: 10px;
-            font-size: 4rem;
+
+        .gifticon-list-title {
+            margin: calc(10 * var(--rpx-vw));
+            font-size: calc(64 * var(--rpx-vw));
+            font-family: Audiowide;
+        }
+
+        .btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            padding: calc(8 * var(--rpx-vw)) calc(25 * var(--rpx-vw));
+            font-size: calc(16 * var(--rpx-vw));
             font-weight: bold;
+            text-align: center;
+            border-radius: calc(25 * var(--rpx-vw));
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.2s, transform 0.2s;
+            box-shadow: calc(3 * var(--rpx-vw)) calc(3 * var(--rpx-vw)) 0px 0px #7B9D0C;
+            margin-top: calc(10 * var(--rpx-vw));
+            background-color: var(--primary-color); /* Primary 색상 */
+            color: #1e1e1e; /* 텍스트 색상 */
+        }
+
+        .btn:hover {
+            background-color: #b0e040; /* 호버 시 색상 */
+            transform: scale(1.05); /* 호버 시 약간 확대 */
+            box-shadow: calc(3 * var(--rpx-vw)) calc(3 * var(--rpx-vw)) 0px 0px #7B9D0C;
+        }
+
+        .pagination {
+            margin-top: calc(20 * var(--rpx-vw));
+            display: flex; /* 가로 정렬 */
+            justify-content: center; /* 중앙 정렬 */
+            gap: calc(8 * var(--rpx-vw)); /* 버튼 간격 */
+            flex-wrap: nowrap; /* 버튼이 한 줄에 유지되도록 설정 */
+        }
+
+        .pagination .pagination-btn {
+            margin: 0;
+            text-decoration: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: calc(40 * var(--rpx-vw));
+            height: calc(40 * var(--rpx-vw));
+            font-size: calc(28 * var(--rpx-vw));
+            border-radius: calc(4 * var(--rpx-vw));
+            background-color: #fff; /* 기본 배경 */
+            color: #1e1e1e; /* 기본 텍스트 색상 */
+            transition: background-color 0.2s;
+            font-family: Audiowide;
+        }
+
+        .pagination .pagination-btn-active {
+            background-color: var(--primary-color);
         }
     </style>
-</head>
 <body>
 <header th:replace="~{common/header-2 :: header-2}"></header>
 <div class="make-header-margin"></div>
 
-<div class="gifticon-list-title">Gifticon List</div>
-<div class="gifticon-list">
-    <div th:each="gifticon : ${gifticons}" class="card card-compact bg-base-100 w-96 shadow-xl gifticon-item">
-        <figure>
-            <img th:src="${gifticon.image_url}" th:alt="${gifticon.name}" />
-        </figure>
-        <div class="card-body">
-            <h2 class="card-title text-black" th:text="${gifticon.name}"></h2>
-            <p class="point_price points text-black" th:data-points="${gifticon.points}">Points: <span th:text="${gifticon.points}"></span></p>
-            <p class="stock stocks text-black" th:text="'Stocks : ' + ${gifticon.stock} + ' 개'"></p>
-            <div class="card-actions justify-end">
-                <button class="btn btn-primary"
-                        th:onclick="|exchangeGifticon(${gifticon.id}, ${gifticon.stock})|">
-                    교환신청하기
-                </button>
+<section class="gifticon-list-section-1">
+    <div class="gifticon-list-title">GIFTICON LIST</div>
+    <div class="gifticon-list">
+        <div th:each="gifticon : ${gifticons}" class="gifticon-item">
+            <figure>
+                <img th:src="${gifticon.image_url}" th:alt="${gifticon.name}"/>
+            </figure>
+            <div class="card-body">
+                <h2 class="card-title text-black" th:text="${gifticon.name}"></h2>
+                <p class="point_price points text-black" th:data-points="${gifticon.points}">Points: <span
+                        th:text="${gifticon.points}"></span></p>
+                <p class="stock stocks text-black" th:text="'Stocks : ' + ${gifticon.stock} + ' 개'"></p>
+                <div class="card-actions justify-end">
+                    <button class="btn btn-primary"
+                            th:onclick="|exchangeGifticon(${gifticon.id}, ${gifticon.stock})|">
+                        교환 신청하기
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- 동적 페이징 -->
-<div class="pagination flex justify-center mt-3"
-     th:with="paginationLen=3,
+    <div class="pagination"
+         th:with="paginationLen=3,
               startPage=${page - paginationLen >= 1 ? page - paginationLen : 1},
               endPage=${page + paginationLen <= pagesCount ? page + paginationLen : pagesCount},
               baseUri='?searchKeyword=' + ${searchKeyword}">
 
-    <div th:if="${startPage > 1}">
-        <a class="btn btn-sm" th:href="${baseUri + '&page=1'}">1</a>
-    </div>
-    <div th:if="${startPage > 2}">
-        <button class="btn btn-sm btn-disabled">...</button>
-    </div>
+        <div th:if="${startPage > 1}">
+            <a class="pagination-btn" th:href="${baseUri + '&page=1'}">1</a>
+        </div>
+        <div th:if="${startPage > 2}">
+            <button class="pagination-btn">...</button>
+        </div>
 
-    <div th:each="i : ${#numbers.sequence(startPage, endPage)}">
-        <a class="btn btn-sm" th:classappend="${page == i ? 'btn-active' : ''}" th:href="${baseUri + '&page=' + i}" th:text="${i}"></a>
-    </div>
+        <div th:each="i : ${#numbers.sequence(startPage, endPage)}">
+            <a class="pagination-btn" th:classappend="${page == i ? 'pagination-btn-active' : ''}" th:href="${baseUri + '&page=' + i}"
+               th:text="${i}"></a>
+        </div>
 
-    <div th:if="${endPage < pagesCount - 1}">
-        <button class="btn btn-sm btn-disabled">...</button>
-    </div>
+        <div th:if="${endPage < pagesCount - 1}">
+            <button class="pagination-btn">...</button>
+        </div>
 
-    <div th:if="${endPage < pagesCount}">
-        <a class="btn btn-sm" th:href="${baseUri + '&page=' + pagesCount}" th:text="${pagesCount}"></a>
+        <div th:if="${endPage < pagesCount}">
+            <a class="pagination-btn" th:href="${baseUri + '&page=' + pagesCount}" th:text="${pagesCount}"></a>
+        </div>
     </div>
-</div>
+</section>
 
 <footer th:replace="~{common/footer :: footer}"></footer>
 
@@ -120,19 +205,19 @@
 
         console.log("exchangeGifticon 실행됨");
 
-        if (stock <= 0){
+        if (stock <= 0) {
             alert("재고가 없습니다.");
             return false;
         }
-        if(confirm("정말 교환하시겠습니까?")){
+        if (confirm("정말 교환하시겠습니까?")) {
             $.ajax({
                 url: `../gifticons/` + id + `/application`,
                 method: 'POST',
-                success: function(response) {
+                success: function (response) {
                     alert(response.message);
                     location.reload();
                 },
-                error: function(xhr) {
+                error: function (xhr) {
                     const errorResponse = xhr.responseJSON;
                     alert(errorResponse.message);
                 }
@@ -143,7 +228,7 @@
     }
 
     // 포인트를 가격 형식으로 변환
-    document.querySelectorAll('.points').forEach(function(el) {
+    document.querySelectorAll('.points').forEach(function (el) {
         const points = el.dataset.points;
         el.textContent = "Points: " + new Intl.NumberFormat().format(points);
     });

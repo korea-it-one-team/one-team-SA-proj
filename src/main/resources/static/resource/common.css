@@ -14,6 +14,7 @@
 	"Source Han Sans CN", sans-serif;
 	--rpx-vw: 100vw / 1440;
 	--rpx-vh: 100vh / 1024;
+	--primary-color: #cdf256;
 }
 
 body {
@@ -104,18 +105,21 @@ input::placeholder {
 /* 기본 버튼 스타일 */
 .btn {
 	display: inline-flex;
-	align-items: center;
 	justify-content: center;
-	padding: 0.5rem 1rem; /* 패딩 */
-	border: 1px solid transparent; /* 테두리 기본 투명 */
-	border-radius: 0.375rem; /* 둥근 모서리 */
-	background-color: #4caf50; /* 배경색 */
-	color: #ffffff; /* 텍스트 색상 */
-	font-size: 1rem; /* 폰트 크기 */
-	font-weight: 600; /* 폰트 두께 */
+	align-items: center;
+	gap: 10px;
+	padding: calc(8 * var(--rpx-vw)) calc(25 * var(--rpx-vw));
+	font-size: calc(16 * var(--rpx-vw));
+	font-weight: bold;
+	text-align: center;
+	border-radius: calc(25 * var(--rpx-vw));
 	cursor: pointer;
-	transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; /* 전환 효과 */
 	text-decoration: none;
+	transition: background-color 0.2s, transform 0.2s;
+	box-shadow: calc(3 * var(--rpx-vw)) calc(3 * var(--rpx-vw)) 0px 0px #7B9D0C;
+	margin-top: calc(10 * var(--rpx-vw));
+	background-color: var(--primary-color); /* Primary 색상 */
+	color: #1e1e1e; /* 텍스트 색상 */
 }
 
 /* 호버 효과 */

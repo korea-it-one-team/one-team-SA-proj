@@ -387,6 +387,7 @@
         background-size: cover;
         z-index: 9;
         overflow: hidden; /* 전체 상자에서 스크롤은 gameSchedule-list-container에만 발생 */
+        padding: 0 calc(8 * var(--rpx-vw)) calc(10 * var(--rpx-vw)) calc(8 * var(--rpx-vw));
     }
 
     .total-schedule {
@@ -503,7 +504,10 @@
     }
 
     .no-game {
-        font-size: calc(16 * var(--rpx-vw));
+        font-size: calc(24 * var(--rpx-vw));
+        color: black;
+        margin: 0 auto;
+        text-align: center;
     }
 </style>
 
@@ -633,11 +637,11 @@
 <script th:inline="javascript">
     $(function () {
         // 현재 날짜 가져오기
-        // const today = new Date();
-        // const formattedDate = today.toISOString().split('T')[0]; // 'YYYY-MM-DD' 형식으로 변환
+        const today = new Date();
+        const formattedDate = today.toISOString().split('T')[0]; // 'YYYY-MM-DD' 형식으로 변환
 
         // 긴 경기 테스트용 코드
-        const formattedDate = '2024-11-11';
+        // const formattedDate = '2024-11-11';
 
         // 오늘 날짜 경기 일정 로드
         loadTodayGameSchedules(formattedDate);
