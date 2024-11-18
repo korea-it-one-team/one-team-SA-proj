@@ -6,34 +6,57 @@
 <script>
     // 섹션 표시 함수
     function showSection(section) {
+        // 모든 섹션 숨기기
         $('.content-section').hide();
+        // 지정된 섹션 표시
         $('#' + section).show();
-        $('.faq-list').slideUp();
-        $('.content_answer').slideUp();
+
+        // 자주 묻는 질문 섹션일 경우 FAQ 리스트 초기화
+        if (section === 'faq') {
+            $('.faq-list').addClass('hidden'); // FAQ 리스트 숨기기
+            $('.faq-answer').slideUp(); // FAQ 답변 숨기기
+        }
     }
 
     $(document).ready(function () {
+        // 초기 섹션 표시
         showSection('faq');
-    });
-</script>
 
-<script>
-    $(document).ready(function () {
-        $('.category-title').on('click', function () {
-            const faqList = $(this).next('.faq-list');
-            $('.faq-list').not(faqList).addClass('hidden');
-            faqList.removeClass('hidden');
-            $('.faq-answer').slideUp();
+        // 카테고리 클릭 시 FAQ 리스트 표시/숨기기
+        $(document).ready(function () {
+            $('.category-title').on('click', function () {
+                // 클릭한 버튼의 ID 가져오기
+                const categoryId = $(this).attr('id'); // 또는 $(this).prop('id');
+                console.log("Clicked category ID: " + categoryId);
+
+                // data-category-id 속성이 동일한 FAQ 리스트 선택
+                const faqItems = $(`.faq-items#${categoryId}`);
+                console.log("faqItems: ", faqItems);
+
+                // 현재 활성화된 FAQ 리스트
+                const activeItems = $('.faq-items:visible').not(faqItems);
+
+                if (activeItems.length === 0) {
+                    // 활성화된 FAQ가 없으면 즉시 슬라이드 다운
+                    faqItems.slideToggle();
+                } else {
+                    // 활성화된 FAQ가 있으면 슬라이드 업 후 0.3초 뒤에 슬라이드 다운
+                    activeItems.slideUp();
+                    setTimeout(() => {
+                        faqItems.slideToggle();
+                    }, 400); // 0.3초 딜레이
+                }
+
+                // 모든 FAQ 답변 숨기기
+                $('.faq-answer').slideUp();
+            });
+
+            $('.faq-question').on('click', function () {
+                $(this).next('.faq-answer').slideToggle();
+            });
         });
 
-        $('.faq-question').on('click', function () {
-            $(this).next('.faq-answer').slideToggle();
-        });
-    });
-</script>
-
-<script>
-    $(document).ready(function () {
+        // 상담 저장
         $('form').on('submit', function (event) {
             event.preventDefault();
 
@@ -61,11 +84,11 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         flex-wrap: nowrap;
         position: relative;
-        width: calc(1440 * var(--rpx-vw)); /* 가로 기준 비율 */
-        min-height: calc(1024 * var(--rpx-vh)); /* 세로 기준 비율 */
+        width: calc(1440 * var(--rpx-vw));
+        min-height: calc(1024 * var(--rpx-vh));
         margin: 0 auto;
         padding: calc(50 * var(--rpx-vh)) 0;
         overflow: hidden;
@@ -75,50 +98,127 @@
     .container {
         max-width: calc(1000 * var(--rpx-vw));
         padding: calc(20 * var(--rpx-vw));
-        background-color: #252525; /* 배경색 변경 */
-        color: white; /* 텍스트 색상 변경 */
+        background-color: #252525;
+        color: white;
         border-radius: calc(16 * var(--rpx-vw));
         box-shadow: 0 calc(10 * var(--rpx-vw)) calc(20 * var(--rpx-vw)) rgba(0, 0, 0, 0.1);
     }
 
     .content-section {
         margin: auto;
-        padding: 20px;
-        background-color: #f9f9f9;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: calc(20 * var(--rpx-vw));
+        background-color: #3a3a3a;
+        border-radius: calc(8 * var(--rpx-vw));
+        box-shadow: 0 calc(2 * var(--rpx-vw)) calc(10 * var(--rpx-vw)) rgba(0, 0, 0, 0.1);
+        color: white;
     }
 
     .category-title {
-        font-size: 1.5rem;
-        padding: 12px 24px;
-        border-radius: 8px;
-        transition: background-color 0.3s;
-        color: #333;
-    }
-
-    .category-title:hover {
-        background-color: #e0e0e0;
+        margin-bottom: calc(10 * var(--rpx-vw));
     }
 
     .faq-question {
-        margin: 10px 0;
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: #007bff;
+        margin: calc(10 * var(--rpx-vw)) 0;
+        font-size: calc(16 * var(--rpx-vw));
+        font-weight: bold;
+        cursor: pointer;
+        text-align: left;
+        color: var(--primary-color);
         transition: color 0.3s;
     }
 
     .faq-question:hover {
-        color: #0056b3;
+        color: #b0e040;
     }
 
     .faq-answer {
-        margin-left: 20px;
-        font-size: 1.2rem;
-        color: #555;
-        font-weight: bold;
+        margin-left: calc(20 * var(--rpx-vw));
+        font-size: calc(14 * var(--rpx-vw));
+        color: white;
+        font-weight: normal;
         line-height: 1.5;
+    }
+
+    .faq-list {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-top: calc(10 * var(--rpx-vw));
+        gap: calc(10 * var(--rpx-vw));
+    }
+
+    .category-title-box {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: flex-start;
+        gap: calc(15 * var(--rpx-vw));
+    }
+
+    .faq-items {
+        padding: calc(10 * var(--rpx-vw));
+        background-color: #252525;
+        border-radius: calc(8 * var(--rpx-vw));
+        box-shadow: 0 calc(2 * var(--rpx-vw)) calc(4 * var(--rpx-vw)) rgba(0, 0, 0, 0.1);
+        width: 100%;
+    }
+
+    .input-bordered {
+        display: block;
+        width: 100%;
+        padding: calc(10 * var(--rpx-vw));
+        font-size: calc(14 * var(--rpx-vw));
+        border: 1px solid #555;
+        border-radius: calc(8 * var(--rpx-vw));
+        background-color: #3a3a3a;
+        color: white;
+        outline: none;
+        transition: border-color 0.3s, background-color 0.3s;
+    }
+
+    .input-bordered:focus {
+        border-color: var(--primary-color);
+        background-color: #252525;
+    }
+
+    .textarea-bordered {
+        display: block;
+        width: 100%;
+        padding: calc(10 * var(--rpx-vw));
+        font-size: calc(14 * var(--rpx-vw));
+        border: 1px solid #555;
+        border-radius: calc(8 * var(--rpx-vw));
+        background-color: #3a3a3a;
+        color: white;
+        outline: none;
+        resize: vertical;
+        height: calc(200 * var(--rpx-vh));
+        transition: border-color 0.3s, background-color 0.3s;
+    }
+
+    .textarea-bordered:focus {
+        border-color: var(--primary-color);
+        background-color: #252525;
+    }
+
+    .space-y-4 > * + * {
+        margin-top: calc(16 * var(--rpx-vw));
+    }
+
+    .p-4 {
+        padding: calc(16 * var(--rpx-vw));
+    }
+
+    .rounded-lg {
+        border-radius: calc(8 * var(--rpx-vw));
+    }
+
+    .shadow-md {
+        box-shadow: 0 calc(2 * var(--rpx-vw)) calc(4 * var(--rpx-vw)) rgba(0, 0, 0, 0.1);
+    }
+
+    .hover\:shadow-lg:hover {
+        box-shadow: 0 calc(4 * var(--rpx-vw)) calc(8 * var(--rpx-vw)) rgba(0, 0, 0, 0.15);
     }
 </style>
 <body>
@@ -126,80 +226,88 @@
 <div class="make-header-margin"></div>
 <section class="customer-center-section-1">
     <div class="container">
-        <h1 class="text-4xl font-bold text-center mb-5">고객센터</h1>
+        <h1 class="text-center mb-5" style="font-size: calc(32 * var(--rpx-vw)); font-weight: bold;">고객센터</h1>
 
-        <div class="flex justify-center space-x-4 mb-5">
+        <div class="flex justify-center mb-5"
+             style="display: flex; justify-content: center; gap: calc(16 * var(--rpx-vw));">
             <button class="btn btn-primary" onclick="showSection('faq')">자주 묻는 질문</button>
             <button class="btn btn-primary" onclick="showSection('consultation')">1:1 상담</button>
             <button class="btn btn-primary" onclick="showSection('history')">상담내역</button>
         </div>
 
         <div id="faq" class="content-section">
-            <h2 class="text-2xl font-bold mb-6" style="color: black;">자주 묻는 질문 Q&A</h2>
-            <div id="faq-list" class="flex flex-wrap gap-4 mb-4">
+            <h2 class="mb-6" style="font-size: calc(24 * var(--rpx-vw)); font-weight: bold;">자주 묻는 질문 Q&A</h2>
+            <div id="faq-list" class="faq-list">
+                <div class="category-title-box">
+                    <th:block th:each="category : ${categorys}">
+                        <!-- 버튼: 항상 표시 -->
+                        <button class="category-title btn" th:text="${category.category_name}"
+                                th:id="'data-category-id-' + ${category.id}"></button>
+                    </th:block>
+                </div>
+
                 <th:block th:each="category : ${categorys}">
-                    <div>
-                        <h3 class="category-title btn btn-outline" th:text="${category.category_name}"
-                            data-category-id="[[${category.id}]]"></h3>
-                        <div class="faq-list hidden mt-2" th:data-category-id="${category.id}">
-                            <th:block th:each="faq : ${faqs}">
-                                <th:block th:if="${faq.category_name == category.category_name}">
-                                    <h4 class="faq-question cursor-pointer" th:text="${faq.question}"
-                                        th:data-faq-id="${faq.id}"></h4>
-                                    <div class="faq-answer hidden" th:data-faq-id="${faq.id}">
-                                        <p th:text="${faq.answer}"></p>
-                                    </div>
-                                </th:block>
+                    <!-- FAQ 리스트: 초기 숨김 -->
+                    <div class="faq-items" style="display: none;" th:id="'data-category-id-' + ${category.id}">
+                        <th:block th:each="faq : ${faqs}">
+                            <th:block th:if="${faq.category_name == category.category_name}">
+                                <h4 class="faq-question" th:text="${faq.question}" th:data-faq-id="${faq.id}"></h4>
+                                <div class="faq-answer" style="display: none;" th:data-faq-id="${faq.id}">
+                                    <p th:text="${faq.answer}"></p>
+                                </div>
                             </th:block>
-                        </div>
+                        </th:block>
                     </div>
                 </th:block>
             </div>
         </div>
 
-        <div id="consultation" class="content-section" style="display: none;">
-            <h2 class="text-xl font-semibold">1:1 상담</h2>
+        <div id="consultation" class="content-section hidden">
+            <h2 class="mb-6" style="font-size: calc(24 * var(--rpx-vw)); font-weight: bold;">1:1 상담</h2>
             <form th:action="@{/submit-consultation}" method="post">
                 <div class="mb-4">
-                    <label for="title" class="block text-sm font-medium">제목:</label>
-                    <input type="text" class="input input-bordered w-full" id="title" name="title" required>
+                    <label for="title" style="display: block; font-weight: bold;">제목</label>
+                    <input type="text" class="input-bordered" id="title" name="title" required>
                 </div>
                 <div class="mb-4">
-                    <label for="content" class="block text-sm font-medium">내용:</label>
-                    <textarea class="textarea textarea-bordered w-full h-80" id="content" name="content"
-                              required></textarea>
+                    <label for="content" style="display: block; font-weight: bold;">내용</label>
+                    <textarea class="textarea-bordered" id="content" name="content" required></textarea>
                 </div>
                 <button type="submit" class="btn btn-success">저장</button>
             </form>
         </div>
 
-        <div id="history" class="content-section" style="display: none;">
-            <h2 class="text-xl font-semibold">상담내역</h2>
+        <div id="history" class="content-section hidden">
+            <h2 class="mb-6" style="font-size: calc(24 * var(--rpx-vw)); font-weight: bold;">상담내역</h2>
             <ul class="space-y-4">
                 <th:block th:each="consultation : ${consultations}">
-                    <li class="p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                    <li class="p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+                        style="background-color: #3a3a3a;">
                         <a href="#" th:onclick="'showConsultationDetails(' + ${consultation.id} + ')'"
-                           class="text-blue-600 font-bold hover:underline" th:text="${consultation.title}"></a>
+                           style="color: var(--primary-color); text-decoration: none; font-weight: bold;"
+                           th:text="${consultation.title}"></a>
 
-                        <div class="hidden content_answer" th:class="'content_answer' + ${consultation.id} + ' mt-2'">
-                            <div class="bg-gray-100 p-3 rounded-lg border-l-4 border-blue-500">
-                                <span class="text-gray-700 font-semibold">내용:</span>
-                                <p class="text-gray-600" th:text="${consultation.content}"></p>
+                        <div class="hidden content_answer mt-2" th:class="'content_answer' + ${consultation.id}">
+                            <div class="p-3 rounded-lg border-l-4"
+                                 style="background-color: #252525; border-color: var(--primary-color);">
+                                <span style="font-weight: bold; color: var(--primary-color);">내용</span>
+                                <p style="color: white;" th:text="${consultation.content}"></p>
                             </div>
                             <th:block th:if="${isAdmin}">
-                                <div class="bg-gray-100 p-3 rounded-lg border-l-4 border-green-500 mt-2">
-                                    <span class="text-gray-700 font-semibold">답변:</span>
-                                    <input type="text" class="input input-bordered w-full mt-1"
-                                           th:value="${consultation.answer}"/>
+                                <div class="p-3 rounded-lg border-l-4 mt-2"
+                                     style="background-color: #252525; border-color: #10b981;">
+                                    <span style="font-weight: bold; color: #10b981;">답변</span>
+                                    <input type="text" class="input-bordered" th:value="${consultation.answer}"/>
                                     <button class="btn btn-success mt-2"
                                             th:onclick="'saveAnswer(' + ${consultation.id} + ')'">저장
                                     </button>
                                 </div>
                             </th:block>
                             <th:block th:if="${!isAdmin}">
-                                <div class="bg-gray-100 p-3 rounded-lg border-l-4 border-green-500 mt-2">
-                                    <span class="text-gray-700 font-semibold">답변:</span>
-                                    <p class="text-gray-600" th:text="${consultation.answer}"></p>
+                                <div class="p-3 rounded-lg border-l-4 mt-2"
+                                     style="background-color: #252525; border-color: #10b981;">
+                                    <span style="font-weight: bold; color: #10b981;">답변:</span>
+                                    <p style="color: white;" th:text="${consultation.answer}"></p>
                                 </div>
                             </th:block>
                         </div>

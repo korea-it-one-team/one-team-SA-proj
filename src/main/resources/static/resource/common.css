@@ -124,8 +124,9 @@ input::placeholder {
 
 /* 호버 효과 */
 .btn:hover {
-	background-color: #43a047; /* 배경색 변경 */
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+	background-color: #b0e040; /* 호버 시 색상 */
+	transform: scale(1.05); /* 호버 시 약간 확대 */
+	box-shadow: calc(3 * var(--rpx-vw)) calc(3 * var(--rpx-vw)) 0px 0px #7B9D0C;
 }
 
 /* 포커스 효과 */
