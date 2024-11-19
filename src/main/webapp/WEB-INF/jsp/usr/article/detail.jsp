@@ -87,6 +87,14 @@ function doGoodReaction(articleId) {
 					var DislikeCount = $('#DislikeCount');
 					var DislikeCountC = $('.DislikeCount');
 
+					// 모든 좋아요 카운트 업데이트
+                    likeCount.text(data.data1);
+                    likeCountBtn.text(data.data1);
+
+                    // 모든 싫어요 카운트 업데이트
+                    DislikeCount.text(data.data2);
+                    DislikeCountBtn.text(data.data2);
+
 					if(data.resultCode == 'S-1'){
 						likeButton.toggleClass('btn-outline');
 						likeCount.text(data.data1);
@@ -142,6 +150,15 @@ function doBadReaction(articleId) {
 					var DislikeButton = $('#DislikeButton');
 					var DislikeCount = $('#DislikeCount');
 					var DislikeCountC = $('.DislikeCount');
+
+					// 모든 좋아요 카운트 업데이트
+                    likeCount.text(data.data1);
+                    likeCountBtn.text(data.data1);
+
+                    // 모든 싫어요 카운트 업데이트
+                    DislikeCount.text(data.data2);
+                    DislikeCountBtn.text(data.data2);
+
 
 					if(data.resultCode == 'S-1'){
 						DislikeButton.toggleClass('btn-outline');

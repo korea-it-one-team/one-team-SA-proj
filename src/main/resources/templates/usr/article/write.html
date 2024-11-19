@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head th:replace="~{common/head :: head}">
     <title>DETAIL</title>
-<!--    <th:block th:with="toastUi=true"></th:block>-->
+    <!--    <th:block th:with="toastUi=true"></th:block>-->
 </head>
 
 <body>
@@ -19,7 +19,7 @@
         const editor = $(form).find('.toast-ui-editor').data('data-toast-editor');
         const markdown = editor.getMarkdown().trim();
         if (markdown.length === 0) {
-            alert('내용 써');
+            alert('내용을 써주세요.');
             return;
         }
 
@@ -31,14 +31,16 @@
 </script>
 
 <header th:replace="~{common/header :: header}"></header>
-<hr />
+<hr/>
 
 <section class="mt-24 text-xl px-4">
     <div class="mx-auto">
-        <form onsubmit="ArticleWrite__submit(this); return false;" action="../article/doWrite" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="body" />
+        <form onsubmit="ArticleWrite__submit(this); return false;" action="../article/doWrite" method="POST"
+              enctype="multipart/form-data">
+            <input type="hidden" name="body"/>
             <input type="hidden" name="id" th:value="${currentId}">
-            <table class="table" border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
+            <table class="table" border="1" cellspacing="0" cellpadding="5"
+                   style="width: 100%; border-collapse: collapse;">
                 <tbody>
                 <tr>
                     <th>게시판</th>
@@ -54,23 +56,28 @@
                 <tr>
                     <th>제목</th>
                     <td style="text-align: center;">
-                        <input class="input input-bordered input-primary input-sm w-full max-w-xs" name="title" autocomplete="off" type="text" placeholder="제목을 입력해" />
+                        <input class="input input-bordered input-primary input-sm w-full max-w-xs"
+                               name="title" autocomplete="off"
+                               type="text" placeholder="제목을 입력해"
+                               th:value="${#strings.escapeXml(param.title)}"/>
                     </td>
                 </tr>
+
                 <tr>
                     <th>첨부 이미지</th>
                     <td>
-                        <input id="fileInput" placeholder="이미지를 선택해주세요" type="file" />
+                        <input id="fileInput" placeholder="이미지를 선택해주세요" type="file" name="file"/>
                     </td>
                 </tr>
                 <tr>
                     <th>내용</th>
                     <td style="text-align: center;">
                         <div class="toast-ui-editor">
-                            <script type="text/x-template"></script>
+                            <script type="text/x-template" th:text="${#strings.escapeXml(param.body)}"></script>
                         </div>
                     </td>
                 </tr>
+
                 <tr>
                     <th></th>
                     <td style="text-align: center;">

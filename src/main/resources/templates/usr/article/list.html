@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
-<head th:replace="~{common/head :: head}">
+<head th:replace="~{common/head                                                                                                                                                                                                                                                                  :: head}">
     <title th:text="${board.code + ' LIST'}">LIST</title>
 </head>
 
@@ -88,13 +88,10 @@
             <a class="btn btn-sm" th:href="${baseUri + '&page=' + pagesCount}" th:text="${pagesCount}"></a>
         </div>
     </div>
-
-    <!-- 직관적인 페이징 -->
-    <div class="pagination flex justify-center mt-3">
-        <div class="btn-group">
-            <a th:each="i : ${#numbers.sequence(1, pagesCount)}" class="btn btn-sm" th:classappend="${param.page == i ? 'btn-active' : ''}" th:href="${baseUri + '&page=' + i}" th:text="${i}"></a>
-        </div>
+    <div class="btn">
+        <a href="/usr/article/write">글쓰기</a>
     </div>
+
 </section>
 
 </body>

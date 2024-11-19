@@ -22,6 +22,9 @@ public class GenFileService {
     @Value("${custom.genFileDirPath}")
     private String genFileDirPath;
 
+    @Value("${custom.videoFileDirPath}")
+    private String videoFileDirPath; // 동영상 파일 저장 경로
+
     @Autowired
     private GenFileRepository genFileRepository;
 
@@ -44,7 +47,7 @@ public class GenFileService {
         String fileInputName = multipartFile.getName();
         String[] fileInputNameBits = fileInputName.split("__");
 
-        if (fileInputNameBits[0].equals("file") == false) {
+        if (!fileInputNameBits[0].equals("file")) {
             return new ResultData("F-1", "파라미터 명이 올바르지 않습니다.");
         }
 
@@ -80,11 +83,18 @@ public class GenFileService {
         int newGenFileId = (int) saveMetaRd.getBody().get("id");
 
         // 새 파일이 저장될 폴더(io파일) 객체 생성
-        String targetDirPath = genFileDirPath + "/" + relTypeCode + "/" + fileDir;
+        String targetDirPath;
+        if (multipartFile.getContentType().startsWith("video")) {  // 동영상 파일 처리
+            targetDirPath = videoFileDirPath + "/" + relTypeCode + "/" + fileDir;
+        } else {
+            targetDirPath = genFileDirPath + "/" + relTypeCode + "/" + fileDir;
+        }
+        System.out.println(multipartFile.getContentType());
+
         java.io.File targetDir = new java.io.File(targetDirPath);
 
         // 새 파일이 저장될 폴더가 존재하지 않는다면 생성
-        if (targetDir.exists() == false) {
+        if (!targetDir.exists()) {
             targetDir.mkdirs();
         }
 
@@ -133,6 +143,12 @@ public class GenFileService {
     }
 
     public GenFile getGenFile(String relTypeCode, int relId, String typeCode, String type2Code, int fileNo) {
+        System.out.println("relTypeCode: " + relTypeCode);
+        System.out.println("relId: " + relId);
+        System.out.println("typeCode: " + typeCode);
+        System.out.println("type2Code: " + type2Code);
+        System.out.println("fileNo: " + fileNo);
+
         return genFileRepository.getGenFile(relTypeCode, relId, typeCode, type2Code, fileNo);
     }
 
