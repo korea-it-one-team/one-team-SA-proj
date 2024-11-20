@@ -1,6 +1,5 @@
 server:
   port: 8088
-
 spring:
   cloud:
     gcp:
@@ -9,11 +8,9 @@ spring:
           location: classpath:${CLASSPATH}
         project-id: ${PROJECT_ID}
         bucket: ${BUCKET_KEY}
-
   devtools:
     restart:
       enabled: false
-
   mail:
     host: smtp.gmail.com
     port: 587
@@ -25,7 +22,6 @@ spring:
           auth: true
           starttls:
             enable: true
-
   servlet:
     multipart:
       max-file-size: 100MB
