@@ -186,7 +186,7 @@ input::placeholder {
 	right: 0;
 	top: 0;
 	min-width: 0;
-	padding: calc(20 * var(--rpx-vw)) calc(15 * var(--rpx-vw));
+	padding: calc(20 * var(--rpx-vw)) calc(25 * var(--rpx-vw));
 	background: #1e1e1e;
 	border-bottom: 1px solid white;
 	z-index: 1000;
@@ -199,8 +199,9 @@ input::placeholder {
 	align-self: stretch;
 	flex-wrap: nowrap;
 	flex-shrink: 1;
-	gap: calc(135 * var(--rpx-vw));
+	gap: calc(100 * var(--rpx-vw));
 	position: relative;
+	padding: 0 calc(20 * var(--rpx-vw));
 	z-index: 1;
 }
 
@@ -255,9 +256,8 @@ input::placeholder {
 	justify-content: center;
 	flex-wrap: nowrap;
 	flex-shrink: 1;
-	gap: calc(80 * var(--rpx-vw));
+	gap: calc(50 * var(--rpx-vw));
 	position: relative;
-	width: calc(695 * var(--rpx-vw));
 	z-index: 5;
 }
 
@@ -337,23 +337,33 @@ input::placeholder {
 	cursor: pointer;
 }
 
-.my-login-button {
+.my-auth-buttons {
+	display: flex;
+	flex-direction: row; /* 수평 배치 */
+	align-items: center; /* 수직 가운데 정렬 */
+	justify-content: flex-end; /* 오른쪽 정렬 */
+	gap: calc(24 * var(--rpx-vw)); /* 버튼 간 충분한 간격 설정 */
+}
+
+.my-login-button,
+.my-join-button,
+.my-myPage-button,
+.my-logout-button {
 	display: flex;
 	align-items: center;
-	justify-content: flex-end;
-	flex-shrink: 1;
-	flex-basis: auto;
+	justify-content: center;
+	flex-shrink: 0; /* 크기 축소 방지 */
 	position: relative;
-	width: calc(99 * var(--rpx-vw));
-	height: calc(36 * var(--rpx-vh));
 	color: #ffffff;
 	font-family: Audiowide, var(--default-font-family);
-	font-size: calc(28 * var(--rpx-vw));
+	font-size: calc(28 * var(--rpx-vw)); /* 텍스트 크기 통일 */
 	font-weight: 400;
-	text-align: right;
+	text-align: center;
 	white-space: nowrap;
 	z-index: 10;
 	cursor: pointer;
+	padding: 0; /* 내부 여백 제거 */
+	box-sizing: border-box; /* 경계 포함 크기 계산 */
 }
 
 /* 푸터 */

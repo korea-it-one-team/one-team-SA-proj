@@ -484,7 +484,7 @@
         text-align: center;
     }
 
-    .team-name {
+    .team-name, .my-vs-text {
         font-size: calc(16 * var(--rpx-vw));
         color: #ffffff;
         font-weight: bold;
@@ -705,7 +705,7 @@
                 let awayScoreClass = gameSchedule.awayTeamScore > gameSchedule.homeTeamScore ? 'high-score' : 'low-score';
                 listItem.find('.match-info').append(`<span class="score ${homeScoreClass}">${gameSchedule.homeTeamScore}</span> : <span class="score ${awayScoreClass}">${gameSchedule.awayTeamScore}</span>`);
             } else {
-                listItem.find('.match-info').append(`<span> vs </span>`);
+                listItem.find('.match-info').append(`<span class="my-vs-text"> vs </span>`);
             }
 
             listItem.find('.match-info').append(`<span class="team-name">${gameSchedule.awayTeam}</span></div>`);

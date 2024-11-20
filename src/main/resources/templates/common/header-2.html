@@ -12,7 +12,14 @@
             <span class="product-exchange" onclick="window.location.href='/usr/gifticons/List'">상품교환</span>
             <span class="customer-center" onclick="window.location.href='/customer-support'">고객센터</span>
         </div>
-        <span th:if="${!rq.isLogined()}" class="my-login-button" onclick="window.location.href='/usr/member/login'">LOGIN</span>
-        <span th:if="${rq.isLogined()}" class="my-login-button" onclick="window.location.href='/usr/member/doLogout'">LOGOUT</span>
+        <!-- 로그인/로그아웃 버튼 -->
+        <div class="my-auth-buttons">
+            <!-- 로그아웃 상태 -->
+            <span class="my-login-button" th:if="${!rq.isLogined()}" onclick="window.location.href='/usr/member/login'">LOGIN</span>
+            <span class="my-join-button" th:if="${!rq.isLogined()}" onclick="window.location.href='/usr/member/join'">JOIN</span>
+            <!-- 로그인 상태 -->
+            <span class="my-myPage-button" th:if="${rq.isLogined()}" onclick="window.location.href='/usr/member/myPage'">MYPAGE</span>
+            <span class="my-logout-button" th:if="${rq.isLogined()}" onclick="if(confirm('로그아웃 하시겠습니까?')) window.location.href='/usr/member/doLogout'">LOGOUT</span>
+        </div>
     </div>
 </header>
