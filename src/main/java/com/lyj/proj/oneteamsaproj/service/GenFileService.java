@@ -36,6 +36,8 @@ public class GenFileService {
                 "type2Code", type2Code, "fileNo", fileNo, "originFileName", originFileName, "fileExtTypeCode",
                 fileExtTypeCode, "fileExtType2Code", fileExtType2Code, "fileExt", fileExt, "fileSize", fileSize,
                 "fileDir", fileDir);
+        System.out.println("DEBUG: saveMeta param = " + param);
+
         genFileRepository.saveMeta(param);
 
         int id = Ut.getAsInt(param.get("id"), 0);
@@ -101,7 +103,7 @@ public class GenFileService {
         String targetFileName = newGenFileId + "." + fileExt;
         String targetFilePath = targetDirPath + "/" + targetFileName;
 
-        // 파일 생성(업로드된 파일을 지정된 경로롤 옮김)
+        // 파일 생성(업로드된 파일을 지정된 경로로 옮김)
         try {
             multipartFile.transferTo(new File(targetFilePath));
         } catch (IllegalStateException | IOException e) {
@@ -120,6 +122,13 @@ public class GenFileService {
         int relId = Integer.parseInt(fileInputNameBits[2]);
         String typeCode = fileInputNameBits[3];
         String type2Code = fileInputNameBits[4];
+        // 파일 MIME 타입 확인 후 type2Code 변경
+        if (multipartFile.getContentType().startsWith("video")) {
+            type2Code = "Video";  // 동영상인 경우 type2Code를 Vid로 설정
+        } else {
+            type2Code = "Img";  // 그 외의 경우 Img로 설정
+        }
+        System.out.println("DEBUG: Extracted type2Code = " + type2Code);
         int fileNo = Integer.parseInt(fileInputNameBits[5]);
 
         return save(multipartFile, relTypeCode, relId, typeCode, type2Code, fileNo);
@@ -133,6 +142,13 @@ public class GenFileService {
         String relTypeCode = fileInputNameBits[1];
         String typeCode = fileInputNameBits[3];
         String type2Code = fileInputNameBits[4];
+        // 파일 MIME 타입 확인 후 type2Code 변경
+        if (multipartFile.getContentType().startsWith("video")) {
+            type2Code = "Video";  // 동영상인 경우 type2Code를 Video로 설정
+        } else {
+            type2Code = "Img";  // 그 외의 경우 Img로 설정
+        }
+        System.out.println("DEBUG: Extracted type2Code = " + type2Code);
         int fileNo = Integer.parseInt(fileInputNameBits[5]);
 
         return save(multipartFile, relTypeCode, relId, typeCode, type2Code, fileNo);

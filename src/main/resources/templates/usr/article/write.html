@@ -62,11 +62,10 @@
                                th:value="${#strings.escapeXml(param.title)}"/>
                     </td>
                 </tr>
-
                 <tr>
-                    <th>첨부 이미지</th>
+                    <th>첨부 파일</th>
                     <td>
-                        <input id="fileInput" placeholder="이미지를 선택해주세요" type="file" name="file"/>
+                        <input id="fileInput" placeholder="이미지 또는 동영상을 선택해주세요." type="file" name="files" accept="image/*, video/*" multiple/>
                     </td>
                 </tr>
                 <tr>
