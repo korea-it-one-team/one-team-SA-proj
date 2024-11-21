@@ -235,31 +235,34 @@ public class UsrArticleController {
     }
 
     @RequestMapping("/usr/article/list")
-    public String showList(HttpServletRequest req, Model model, @RequestParam(defaultValue = "1") int boardId,
+    public String showList(HttpServletRequest req, Model model,
+                           @RequestParam(defaultValue = "1") Integer boardId,
                            @RequestParam(defaultValue = "1") int page,
                            @RequestParam(defaultValue = "title,body") String searchKeywordTypeCode,
                            @RequestParam(defaultValue = "") String searchKeyword) throws IOException {
 
         Rq rq = (Rq) req.getAttribute("rq");
 
+        // boardId 유효성 검사
+        if (boardId == null || boardId <= 0) {
+            return rq.historyBackOnView("잘못된 게시판 ID입니다.");
+        }
+
         Board board = boardService.getBoardById(boardId);
+
+        if (board == null) {
+            return rq.historyBackOnView("없는 게시판입니다.");
+        }
 
         // 페이지네이션
         int articlesCount = articleService.getArticlesCount(boardId, searchKeywordTypeCode, searchKeyword);
 
-        // 한 페이지에 글 10개
-        // 글 20개 -> 2page
-        // 글 25개 -> 3page
         int itemsInAPage = 10;
 
         int pagesCount = (int) Math.ceil(articlesCount / (double) itemsInAPage);
 
         List<Article> articles = articleService.getForPrintArticles(boardId, itemsInAPage, page, searchKeywordTypeCode,
                 searchKeyword);
-
-        if (board == null) {
-            return rq.historyBackOnView("없는 게시판입니다.");
-        }
 
         model.addAttribute("articles", articles);
         model.addAttribute("articlesCount", articlesCount);
