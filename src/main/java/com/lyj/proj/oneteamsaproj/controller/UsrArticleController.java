@@ -64,6 +64,11 @@ public class UsrArticleController {
         // 이미지 파일 여러개 첨부했을 때
         List<GenFile> files = genFileService.getFilesByRelTypeCodeAndRelId("article", id);
 
+        // 서비스 메서드 호출 전
+        System.out.println("type2Code: " + "video" + ", relId: " + id);
+
+        int videoFileCount = genFileService.getFileCountByType2CodeAndRelId("video", id);
+
         int repliesCount = replies.size();
 
         model.addAttribute("article", article);
@@ -72,6 +77,7 @@ public class UsrArticleController {
         model.addAttribute("repliesCount", repliesCount);
 
         model.addAttribute("files", files);
+        model.addAttribute("videoFileCount", videoFileCount);
 
         model.addAttribute("isAlreadyAddGoodRp",
 

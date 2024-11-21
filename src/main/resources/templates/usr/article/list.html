@@ -16,19 +16,23 @@
             <div th:text="${articlesCount + '개'}"></div>
             <div class="flex-grow"></div>
             <form action="" method="get">
-                <input type="hidden" name="boardId" th:value="${param.boardId}" />
+                <input type="hidden" name="boardId" th:value="${param.boardId}"/>
                 <div class="flex">
-                    <select class="select select-sm select-bordered max-w-xs" name="searchKeywordTypeCode" th:value="${param.searchKeywordTypeCode}">
+                    <select class="select select-sm select-bordered max-w-xs" name="searchKeywordTypeCode"
+                            th:value="${param.searchKeywordTypeCode}">
                         <option value="title">title</option>
                         <option value="body">body</option>
                         <option value="title,body">title+body</option>
                         <option value="writer">writer</option>
                     </select>
                     <label class="ml-3 input input-bordered input-sm flex items-center gap-2">
-                        <input type="text" name="searchKeyword" placeholder="Search" th:value="${param.searchKeyword}" />
+                        <input type="text" name="searchKeyword" placeholder="Search" th:value="${param.searchKeyword}"/>
                         <button type="submit">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="h-4 w-4 opacity-70">
-                                <path fill-rule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clip-rule="evenodd" />
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                                 class="h-4 w-4 opacity-70">
+                                <path fill-rule="evenodd"
+                                      d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                                      clip-rule="evenodd"/>
                             </svg>
                         </button>
                     </label>
@@ -52,8 +56,10 @@
                 <td style="text-align: center;" th:text="${article.id}"></td>
                 <td style="text-align: center;" th:text="${#strings.substring(article.regDate, 0, 10)}"></td>
                 <td style="text-align: center;">
-                    <a class="hover:underline" th:href="@{/usr/article/detail(id=${article.id})}" th:text="${article.title}">
-                        <span th:if="${article.extra__repliesCount > 0}" style="color: red;" th:text="'[' + ${article.extra__repliesCount} + ']'"></span>
+                    <a class="hover:underline" th:href="@{/usr/article/detail(id=${article.id})}"
+                       th:text="${article.title}">
+                        <span th:if="${article.extra__repliesCount > 0}" style="color: red;"
+                              th:text="'[' + ${article.extra__repliesCount} + ']'"></span>
                     </a>
                 </td>
                 <td style="text-align: center;" th:text="${article.extra__writer}"></td>
@@ -68,22 +74,36 @@
     </div>
 
     <!-- 동적 페이징 -->
-    <div th:with="paginationLen=3, startPage=${page - paginationLen >= 1 ? page - paginationLen : 1}, endPage=${page + paginationLen <= pagesCount ? page + paginationLen : pagesCount}" class="pagination flex justify-center mt-3">
+    <div th:with="paginationLen=3,
+              startPage=${page - paginationLen >= 1 ? page - paginationLen : 1},
+              endPage=${page + paginationLen <= pagesCount ? page + paginationLen : pagesCount},
+              baseUri='?boardId=' + ${boardId} + '&searchKeywordTypeCode=' + ${searchKeywordTypeCode} + '&searchKeyword=' + ${searchKeyword}"
+         class="pagination flex justify-center mt-3">
+
+        <!-- 첫 번째 페이지로 이동 -->
         <div th:if="${startPage > 1}">
             <a class="btn btn-sm" th:href="${baseUri + '&page=1'}">1</a>
         </div>
+
+        <!-- 생략 표시 (앞부분) -->
         <div th:if="${startPage > 2}">
             <button class="btn btn-sm btn-disabled">...</button>
         </div>
 
+        <!-- 페이지 번호 반복 -->
         <div th:each="i : ${#numbers.sequence(startPage, endPage)}">
-            <a class="btn btn-sm" th:classappend="${param.page == i ? 'btn-active' : ''}" th:href="${baseUri + '&page=' + i}" th:text="${i}"></a>
+            <a class="btn btn-sm"
+               th:classappend="${param.page == i ? 'btn-active' : ''}"
+               th:href="${baseUri + '&page=' + i}"
+               th:text="${i}"></a>
         </div>
 
+        <!-- 생략 표시 (뒷부분) -->
         <div th:if="${endPage < pagesCount - 1}">
             <button class="btn btn-sm btn-disabled">...</button>
         </div>
 
+        <!-- 마지막 페이지로 이동 -->
         <div th:if="${endPage < pagesCount}">
             <a class="btn btn-sm" th:href="${baseUri + '&page=' + pagesCount}" th:text="${pagesCount}"></a>
         </div>
@@ -91,6 +111,7 @@
     <div class="btn">
         <a href="/usr/article/write">글쓰기</a>
     </div>
+
 
 </section>
 

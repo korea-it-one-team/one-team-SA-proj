@@ -274,4 +274,8 @@ public class GenFileService {
         // relTypeCode와 relId에 해당하는 파일 목록을 반환하도록 repository 메서드 호출
         return genFileRepository.getGenFilesByRelTypeCodeAndRelId(relTypeCode, relId);
     }
+
+    public int getFileCountByType2CodeAndRelId(String type2Code, int relId) {
+        return genFileRepository.getFileCountByType2CodeAndRelId(type2Code, relId);
+    }
 }

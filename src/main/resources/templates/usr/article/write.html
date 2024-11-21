@@ -101,7 +101,7 @@
 
 <div class="main-content">
     <div class="write-container">
-        <form onsubmit="ArticleWrite__submit(this); return false;" th:action="@{/article/doWrite}" method="POST"
+        <form onsubmit="ArticleWrite__submit(this); return false;" th:action="@{/usr/article/doWrite}" method="POST"
               enctype="multipart/form-data">
             <input type="hidden" name="body" />
             <input type="hidden" name="id" th:value="${currentId}">
