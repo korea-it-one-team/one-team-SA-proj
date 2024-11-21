@@ -32,4 +32,6 @@ public interface GenFileRepository {
                                                                          @Param("relIds") List<Integer> relIds, @Param("typeCode") String typeCode,
                                                                          @Param("type2Code") String type2Code);
 
+    int getFileCountByType2CodeAndRelId(@Param("type2Code")String type2Code, @Param("relId") int relId);
+
 }

@@ -117,7 +117,6 @@ input::placeholder {
 	text-decoration: none;
 	transition: background-color 0.2s, transform 0.2s;
 	box-shadow: calc(3 * var(--rpx-vw)) calc(3 * var(--rpx-vw)) 0px 0px #7B9D0C;
-	margin-top: calc(10 * var(--rpx-vw));
 	background-color: var(--primary-color); /* Primary 색상 */
 	color: #1e1e1e; /* 텍스트 색상 */
 }
@@ -132,7 +131,7 @@ input::placeholder {
 /* 포커스 효과 */
 .btn:focus {
 	outline: none;
-	border-color: #4caf50; /* 포커스 시 테두리 */
+	border-color: #7B9D0C; /* 포커스 시 테두리 */
 	box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.4); /* 포커스 시 그림자 */
 }
 
@@ -145,25 +144,36 @@ input::placeholder {
 	border-color: transparent;
 }
 
-/* 다른 색상 예제 - 파란색 버튼 */
-.btn-blue {
-	background-color: #2196f3;
-	border-color: #2196f3;
+.btn-red {
+	background-color: #dc3545;
+	color: #ffffff;
+	box-shadow: calc(3 * var(--rpx-vw)) calc(3 * var(--rpx-vw)) 0px 0px #9e1f2d;
 }
 
-.btn-blue:hover {
-	background-color: #1976d2;
+.btn-red:hover {
+	background-color: #b02a37;
+	box-shadow: calc(3 * var(--rpx-vw)) calc(3 * var(--rpx-vw)) 0px 0px #9e1f2d;
 }
 
 /* 버튼 크기 조정 */
 .btn-sm {
-	padding: 0.25rem 0.5rem;
-	font-size: 0.875rem;
+	padding: calc(4 * var(--rpx-vw)) calc(10 * var(--rpx-vw));
+	font-size: calc(12 * var(--rpx-vw));
 }
 
 .btn-lg {
-	padding: 0.75rem 1.5rem;
-	font-size: 1.125rem;
+	padding: calc(12 * var(--rpx-vw)) calc(30 * var(--rpx-vw));
+	font-size: calc(20 * var(--rpx-vw));
+}
+
+.btn-xs {
+	padding: calc(4 * var(--rpx-vw)) calc(8 * var(--rpx-vw));
+	font-size: calc(10 * var(--rpx-vw));
+	box-shadow: none;
+}
+
+.btn-xs:hover {
+	box-shadow: none;
 }
 
 /* header */

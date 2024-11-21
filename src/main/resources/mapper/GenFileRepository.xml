@@ -105,6 +105,14 @@
         ORDER BY relId, fileNo
     </select>
 
+    <select id="getFileCountByType2CodeAndRelId" resultType="int">
+        SELECT COUNT(*)
+        FROM genFile
+        WHERE type2Code = #{type2Code}
+        AND relId = #{relId}
+    </select>
+
+
     <update id="changeRelId">
         UPDATE genFile
         <set>

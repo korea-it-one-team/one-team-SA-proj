@@ -3,47 +3,138 @@
 <head th:replace="~{common/head :: head}">
     <title th:text="${pageTitle}">MYPAGE</title>
 </head>
+<style>
+    .my-page-section-1 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+        position: relative;
+        width: calc(1440 * var(--rpx-vw)); /* 가로 기준 비율 */
+        min-height: calc(1024 * var(--rpx-vh)); /* 세로 기준 비율 */
+        margin: 0 auto;
+        padding: calc(50 * var(--rpx-vh)) 0;
+        overflow: hidden;
+        gap: calc(50 * var(--rpx-vw));
+    }
+
+    .mypage-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #1e1e1e;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        color: #ffffff;
+    }
+
+    .mypage-header h2 {
+        font-size: 24px;
+        font-weight: bold;
+        color: #a3ff12;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .mypage-content {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+    }
+
+    .mypage-info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px;
+        background-color: #252525;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .mypage-label {
+        font-size: 14px;
+        font-weight: bold;
+        color: #bbbbbb;
+    }
+
+    .mypage-value {
+        font-size: 14px;
+        color: #ffffff;
+    }
+
+    .mypage-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
+        width: 100%;
+    }
+
+    .mypage-btn {
+        display: inline-block;
+        text-align: center;
+        background-color: #a3ff12;
+        color: #1e1e1e;
+        font-weight: bold;
+        font-size: 14px;
+        padding: 10px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s;
+        cursor: pointer;
+    }
+
+    .mypage-btn:hover {
+        background-color: #8fdc0f;
+    }
+
+</style>
 <body>
 <header th:replace="~{common/header-2 :: header-2}"></header>
 <div class="make-header-margin"></div>
-<section class="mt-24 text-xl px-4">
-    <div class="mx-auto">
-        <table class="table" border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
-            <tbody>
-            <tr>
-                <th>가입일</th>
-                <td style="text-align: center;" th:text="${rq.loginedMember.regDate}">가입일</td>
-            </tr>
-            <tr>
-                <th>아이디</th>
-                <td style="text-align: center;" th:text="${rq.loginedMember.loginId}">아이디</td>
-            </tr>
-            <tr>
-                <th>이름</th>
-                <td style="text-align: center;" th:text="${rq.loginedMember.name}">이름</td>
-            </tr>
-            <tr>
-                <th>닉네임</th>
-                <td style="text-align: center;" th:text="${rq.loginedMember.nickname}">닉네임</td>
-            </tr>
-            <tr>
-                <th>이메일</th>
-                <td style="text-align: center;" th:text="${rq.loginedMember.email}">이메일</td>
-            </tr>
-            <tr>
-                <th>전화번호</th>
-                <td style="text-align: center;" th:text="${rq.loginedMember.cellphoneNum}">전화번호</td>
-            </tr>
-            <tr>
-                <th>회원정보 수정</th>
-                <td style="text-align: center;">
-                    <a th:href="@{/usr/member/checkPw}" class="btn btn-primary">수정</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <div class="btns">
-            <button class="btn" type="button" onclick="history.back()">뒤로가기</button>
+
+<section class="my-page-section-1">
+    <div class="mypage-container">
+        <div class="mypage-header">
+            <h2>MY PAGE</h2>
+        </div>
+        <div class="mypage-content">
+            <div class="mypage-info-item">
+                <span class="mypage-label">가입일</span>
+                <span class="mypage-value" th:text="${rq.loginedMember.regDate}">가입일</span>
+            </div>
+            <div class="mypage-info-item">
+                <span class="mypage-label">아이디</span>
+                <span class="mypage-value" th:text="${rq.loginedMember.loginId}">아이디</span>
+            </div>
+            <div class="mypage-info-item">
+                <span class="mypage-label">이름</span>
+                <span class="mypage-value" th:text="${rq.loginedMember.name}">이름</span>
+            </div>
+            <div class="mypage-info-item">
+                <span class="mypage-label">닉네임</span>
+                <span class="mypage-value" th:text="${rq.loginedMember.nickname}">닉네임</span>
+            </div>
+            <div class="mypage-info-item">
+                <span class="mypage-label">이메일</span>
+                <span class="mypage-value" th:text="${rq.loginedMember.email}">이메일</span>
+            </div>
+            <div class="mypage-info-item">
+                <span class="mypage-label">전화번호</span>
+                <span class="mypage-value" th:text="${rq.loginedMember.cellphoneNum}">전화번호</span>
+            </div>
+            <div class="mypage-actions">
+                <a th:href="@{/usr/member/checkPw}" class="mypage-btn">회원정보 수정</a>
+                <button class="mypage-btn" type="button" onclick="history.back()">뒤로가기</button>
+            </div>
         </div>
     </div>
 </section>

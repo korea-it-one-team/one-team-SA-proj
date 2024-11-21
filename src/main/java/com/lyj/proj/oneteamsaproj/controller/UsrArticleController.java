@@ -66,6 +66,8 @@ public class UsrArticleController {
 
         int repliesCount = replies.size();
 
+        int videoFileCount = genFileService.getFileCountByType2CodeAndRelId("video", id);
+
         model.addAttribute("article", article);
 //		model.addAttribute("usersReaction", usersReaction);
 
@@ -73,6 +75,7 @@ public class UsrArticleController {
         model.addAttribute("repliesCount", repliesCount);
 
         model.addAttribute("files", files);
+        model.addAttribute("videoFileCount", videoFileCount);
 
         model.addAttribute("isAlreadyAddGoodRp",
 
