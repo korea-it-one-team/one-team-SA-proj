@@ -91,6 +91,9 @@ CREATE TABLE exchange_logs (
                                log_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                FOREIGN KEY (exchange_id) REFERENCES exchange_history(id)
 );
+#### 관리자 테스트 데이터
+INSERT INTO `member` (regDate,updateDate, loginId, loginPw, `name`, nickname,cellphoneNum, email, points, authLevel)
+VALUES (NOW(), NOW(), 'admin', 'admin','admin', 'admin','010-0000-0000', 'admin@example.com', 100, 7);
 
 
 INSERT INTO `member` (regDate,updateDate, loginId, loginPw, `name`, nickname,cellphoneNum, email, points) VALUES
@@ -557,6 +560,10 @@ DROP TABLE winDrawLose;
 SELECT * FROM `member`;
 
 SELECT * FROM winDrawLose;
+
+SELECT * FROM genFile;
+
+SELECT COUNT(*) FROM genFile WHERE type2Code = "video" AND relId = 5;
 
 SELECT * FROM gameSchedule WHERE startDate = '2024-10-19' ORDER BY id ASC;
 

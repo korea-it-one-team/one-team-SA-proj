@@ -11,6 +11,15 @@
 <section class="mt-24 text-xl px-4">
     <div class="mx-auto">
         <!-- ${articles} -->
+        <div>
+            <a th:href="@{/usr/article/list(boardId=1, page=1)}">NOTICE</a>
+        </div>
+        <div>
+            <a th:href="@{/usr/article/list(boardId=2, page=1)}">ANALYSIS</a>
+        </div>
+        <div>
+            <a th:href="@{/usr/article/list(boardId=3, page=1)}">FREE</a>
+        </div>
 
         <div class="mb-4 flex">
             <div th:text="${articlesCount + '개'}"></div>
@@ -110,9 +119,11 @@
             <a class="btn btn-sm" th:href="${baseUri + '&page=' + pagesCount}" th:text="${pagesCount}"></a>
         </div>
     </div>
-    <div class="btn">
+    <!-- 공지사항 게시판이 아니면 로그인한 모든 회원 글쓰기 버튼 보이게, 공지사항 게시판이면 관리자만 보이게 -->
+    <div class="btn" th:if="${rq.loginedMember != null and (rq.isAdmin() or (boardId != 1 and !rq.isAdmin()))}">
         <a href="/usr/article/write">글쓰기</a>
     </div>
+
 </section>
 
 </body>
