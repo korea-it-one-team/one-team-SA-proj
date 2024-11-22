@@ -50,7 +50,8 @@
             <tbody>
             <tr th:each="article : ${articles}" class="hover">
                 <td style="text-align: center;" th:text="${article.id}"></td>
-                <td style="text-align: center;" th:text="${#strings.substring(article.regDate, 0, 10)}"></td>
+                <!-- 날짜/시간 표현 구간 수정 -->
+                <td style="text-align: center;" th:text="${article.formattedDate}"></td>
                 <td style="text-align: center;">
                     <a class="hover:underline" th:href="@{/usr/article/detail(id=${article.id})}" th:text="${article.title}">
                         <span th:if="${article.extra__repliesCount > 0}" style="color: red;" th:text="'[' + ${article.extra__repliesCount} + ']'"></span>

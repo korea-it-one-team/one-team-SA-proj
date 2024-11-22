@@ -8,6 +8,8 @@ import com.lyj.proj.oneteamsaproj.vo.ResultData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -57,18 +59,42 @@ public class ArticleService {
         return articleRepository.getArticleById(id);
     }
 
-    public List<Article> getForPrintArticles(int boardId, int itemsInAPage, int page, String searchKeywordTypeCode,
-                                             String searchKeyword) {
-
-//		SELECT * FROM article WHERE boardId = 1 ORDER BY DESC LIMIT 0, 10; 1page
-//		SELECT * FROM article WHERE boardId = 1 ORDER BY DESC LIMIT 10, 10; 2page
+    public List<Article> getForPrintArticles(int boardId, int itemsInAPage, int page, String searchKeywordTypeCode, String searchKeyword) {
 
         int limitFrom = (page - 1) * itemsInAPage;
         int limitTake = itemsInAPage;
 
-        return articleRepository.getForPrintArticles(boardId, limitFrom, limitTake, searchKeywordTypeCode,
-                searchKeyword);
+
+    //  ---- 날짜/시간 표현 구간 시작 ----
+    //  게시글 목록의 날짜 표현부분을 현재 날짜를 기준으로 시간(HH:mm)으로 표현, 과거의 게시글은 YYYY-MM-DD 형식으로.
+
+        List<Article> articles = articleRepository.getForPrintArticles(boardId, limitFrom, limitTake, searchKeywordTypeCode, searchKeyword);
+
+        // 게시글 리스트의 날짜를 가공하여 추가
+        for (Article article : articles) {
+            formatArticleDate(article);
+        }
+
+        return articles;
     }
+
+    private void formatArticleDate(Article article) {
+        String regDateStr = article.getRegDate();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); // 실제 날짜 포맷에 맞춰주세요
+
+        // String을 LocalDateTime으로 변환
+        LocalDateTime regDate = LocalDateTime.parse(regDateStr, formatter);
+        LocalDateTime now = LocalDateTime.now();
+
+        // 오늘 날짜인지 비교하고 포맷 설정
+        if (regDate.toLocalDate().isEqual(now.toLocalDate())) {
+            article.setFormattedDate(regDate.format(DateTimeFormatter.ofPattern("HH:mm")));
+        } else {
+            article.setFormattedDate(regDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        }
+    }
+    //  ---- 날짜/시간 표현 구간 끝 ----
+
 
     public List<Article> getArticles() {
         return articleRepository.getArticles();
