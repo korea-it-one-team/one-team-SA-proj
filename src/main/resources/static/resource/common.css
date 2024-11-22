@@ -84,7 +84,7 @@ input {
 /* 포커스 시 스타일 */
 input:focus {
 	outline: none; /* 기본 outline 제거 */
-	border-color: #4caf50; /* 포커스 시 경계선 색상 */
+	border-color: #cdf256; /* 포커스 시 경계선 색상 */
 	box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2); /* 포커스 시 그림자 */
 }
 
@@ -98,7 +98,7 @@ input:disabled {
 
 /* 인풋 내부 텍스트 색상 */
 input::placeholder {
-	color: #9ca3af; /* 플레이스홀더 텍스트 색상 */
+	color: #aaaaaa; /* 플레이스홀더 텍스트 색상 */
 }
 
 /*btn 스타일 통일*/

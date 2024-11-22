@@ -6,49 +6,174 @@
 </head>
 
 <style>
-    .btns {
-        border: 1px solid #e1e1e1;
-        border-radius: 5px;
-        width: 70px;
-        height: 40px;
-        color: 444444;
-        background: #e1e1e1;
-        font-size: 16px;
-    }
-
-    .btn-write {
-        border: 1px solid #e1e1e1;
-        border-radius: 5px;
-        width: 70px;
-        height: 40px;
-        color: 444444;
-        background: #e1e1e1;
-    }
-
-    .btn-back {
-        border: 0px;
-        color: 999999;
-        width: 120px;
-        height: 40px;
-        line-height: 40px;
-        text-align: center;
-        font-size: 16px;
+    .article-write-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+        position: relative;
+        width: calc(1440 * var(--rpx-vw)); /* 가로 기준 비율 */
+        min-height: calc(1024 * var(--rpx-vh)); /* 세로 기준 비율 */
+        margin: 0 auto;
+        padding: calc(50 * var(--rpx-vh)) 0;
+        overflow: hidden;
+        gap: calc(50 * var(--rpx-vw));
     }
 
     .write-container {
         display: flex;
         flex-direction: column;
-        gap: 0px;
+        gap: calc(20 * var(--rpx-vw));
+        width: 70%;
+        background-color: #252525;
+        border-radius: calc(10 * var(--rpx-vw));
+        padding: calc(20 * var(--rpx-vw));
+    }
+
+    .article-write-form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
         align-items: flex-start;
+        gap: calc(12 * var(--rpx-vw));
+    }
+
+    .write-form-line {
+        display: flex;
+        flex-direction: row;
         justify-content: flex-start;
-        width: 1000px;
-        margin-top: 100px;
-        margin-left: calc(50% - 450px);
+        align-items: center;
+        gap: calc(10 * var(--rpx-vw));
+        width: 100%;
+    }
+
+    .write-form-label {
+        background-color: #cdf256;
+        border-radius: calc(4 * var(--rpx-vw));
+        color: #1e1e1e;
+        padding: calc(4 * var(--rpx-vw)) 0;
+        text-align: center;
+        min-width: calc(70 * var(--rpx-vw));
+        font-size: calc(14 * var(--rpx-vw));
+    }
+
+    .write-form-nickname-text {
+        font-size: calc(14 * var(--rpx-vw));
+    }
+
+    .write-form-select {
+        padding: calc(6 * var(--rpx-vw)) calc(12 * var(--rpx-vw)) calc(6 * var(--rpx-vw)) calc(12 * var(--rpx-vw));
+        font-size: calc(14 * var(--rpx-vw));
+        border: 1px solid #444;
+        border-radius: calc(4 * var(--rpx-vw));
+        background-color: #383838;
+        color: #aaaaaa;
+    }
+
+    .write-form-input {
+        flex-grow: 1;
+        padding: calc(6 * var(--rpx-vw)) calc(12 * var(--rpx-vw)) calc(6 * var(--rpx-vw)) calc(12 * var(--rpx-vw));
+        border: 1px solid #ddd;
+        border-radius: calc(4 * var(--rpx-vw));
+        font-size: calc(14 * var(--rpx-vw));
+        color: #ffffff;
+        background: #333333;
+    }
+
+    /* 커스텀 파일 버튼 */
+    .custom-file-wrapper {
+        display: flex;
+        align-items: center;
+        gap: calc(10 * var(--rpx-vw));
+        flex-grow: 1;
+        padding: calc(6 * var(--rpx-vw)) calc(12 * var(--rpx-vw)) calc(6 * var(--rpx-vw)) calc(12 * var(--rpx-vw));
+        border: 1px solid #ddd;
+        border-radius: calc(4 * var(--rpx-vw));
+        font-size: calc(14 * var(--rpx-vw));
+        color: #aaaaaa;
+        background: #333333;
+    }
+
+    .custom-file-button {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        padding: calc(4 * var(--rpx-vw)) calc(6 * var(--rpx-vw));
+        font-size: calc(10 * var(--rpx-vw));
+        font-weight: bold;
+        text-align: center;
+        border-radius: calc(4 * var(--rpx-vw));
+        cursor: pointer;
+        text-decoration: none;
+        transition: background-color 0.2s, transform 0.2s;
+        box-shadow: calc(1.4 * var(--rpx-vw)) calc(1.4 * var(--rpx-vw)) 0px 0px #7B9D0C;
+        background-color: var(--primary-color); /* Primary 색상 */
+        color: #1e1e1e; /* 텍스트 색상 */
+    }
+
+    .custom-file-button:hover {
+        background-color: #b0e040;
+    }
+
+    /* 파일명 표시 텍스트 */
+    .custom-file-name {
+        font-size: calc(14 * var(--rpx-vw));
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /*토스트 UI wrapper*/
+    .write-editor-container {
+        width: 100%;
+        color: #ffffff;
+    }
+
+    /* ToastUI Editor 내부 텍스트 색상 */
+    .ProseMirror {
+        color: #ffffff !important; /* 입력 텍스트 색상 흰색 */
+    }
+
+    .write-btns {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        gap: calc(10 * var(--rpx-vw));
+    }
+
+    .article-submit-btn {
+        width: 100%;
+        background: var(--primary-color);
+        color: #1e1e1e;
+        padding: calc(10 * var(--rpx-vw));
+        font-size: calc(16 * var(--rpx-vw));
+        border: none;
+        border-radius: calc(8 * var(--rpx-vw));
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .article-submit-btn:hover {
+        background: #b0e040;
+    }
+
+    .back-button {
+        font-size: calc(16 * var(--rpx-vw));
+        color: var(--primary-color);
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .back-button:hover {
+        text-decoration: underline;
     }
 </style>
 
 <body>
-
 <script th:inline="javascript">
     function ArticleWrite__submit(form) {
         form.title.value = form.title.value.trim();
@@ -58,8 +183,13 @@
             return;
         }
 
-        const editor = $(form).find('.toast-ui-editor').data('data-toast-editor');
+        // 에디터 객체 가져오기
+        toastui.Editor.factory({
+            el: document.querySelector('#editor')
+        });
+
         const markdown = editor.getMarkdown().trim();
+
         if (markdown.length === 0) {
             alert('내용을 써주세요.');
             return;
@@ -69,6 +199,27 @@
 
         form.body.value = markdown;
         form.submit();
+    }
+
+    function updateFileName(input) {
+        const fileNameEl = document.getElementById('fileName');
+        if (input.files.length > 0) {
+            fileNameEl.textContent = input.files[0].name; // 파일명 표시
+            fileNameEl.style.color = '#ffffff'; // 파일 선택 시 텍스트 색상 흰색으로 변경
+        } else {
+            fileNameEl.textContent = '선택된 파일 없음'; // 기본 메시지
+            fileNameEl.style.color = '#aaaaaa'; // 파일 미선택 시 기본 색상 적용
+        }
+    }
+
+    function updateSelectColor(selectElement) {
+        if (selectElement.value === "") {
+            // 기본 선택 상태: 텍스트 색상 회색
+            selectElement.style.color = "#aaaaaa";
+        } else {
+            // 다른 옵션 선택: 텍스트 색상 흰색
+            selectElement.style.color = "#ffffff";
+        }
     }
 </script>
 
@@ -83,7 +234,7 @@
             return;
         }
 
-        const editor = $(form).find('.toast-ui-editor').data(
+        const editor = $(form).find('#editor').data(
             'data-toast-editor');
         const markdown = editor.getMarkdown().trim();
 
@@ -99,52 +250,47 @@
     }
 </script>
 
-<div class="main-content">
+<section class="article-write-section">
     <div class="write-container">
         <form onsubmit="ArticleWrite__submit(this); return false;" th:action="@{/usr/article/doWrite}" method="POST"
-              enctype="multipart/form-data">
-            <input type="hidden" name="body" />
+              enctype="multipart/form-data" class="article-write-form">
+            <input type="hidden" name="body"/>
             <input type="hidden" name="id" th:value="${currentId}">
-
-            <div style="margin-bottom: 20px;">
-                닉네임
-                <span style="margin-left: 20px;" th:text="${rq.loginedMember.nickname}"></span>
-            </div>
-
-            <div style="margin-bottom: 20px;">
-                게시판
-                <select class="input input-bordered input-sm w-full max-w-xs" style="margin-left: 21px;" name="boardId">
+            <div class="write-form-line">
+                <label class="write-form-label">게시판</label>
+                <select class="input write-form-select" name="boardId" onchange="updateSelectColor(this)">
                     <option value="" selected disabled>게시판을 선택해주세요.</option>
-                    <option th:value="1">공지사항</option>
-                    <option th:value="2">자유게시판</option>
-                    <option th:value="3">질의응답</option>
+                    <option value="1">NOTICE</option>
+                    <option value="2">ANALYSIS</option>
+                    <option value="3">FREE</option>
                 </select>
             </div>
-            <div style="margin-bottom: 20px;">
-                제목
-                <input class="input input-bordered input-sm w-full" style="margin-left: 35px; width: 800px;" name="title"
-                autocomplete="off" type="text" placeholder="제목을 입력하세요." maxlength="20" th:value="${#strings.escapeXml(param.title)}"/>
+            <div class="write-form-line">
+                <label class="write-form-label">제목</label>
+                <input class="input write-form-input" name="title"
+                       autocomplete="off" type="text" placeholder="제목을 입력하세요." maxlength="20"
+                       th:value="${#strings.escapeXml(param.title)}"/>
             </div>
-            <div style="margin-bottom: 20px;">
-                첨부 파일
-                <input id="fileInput" placeholder="동영상을 선택해주세요" type="file" name="file"/>
-            </div>
-            <div>
-                내용
-                <div style="text-align: center; display: inline-block;">
-                    <div class="toast-ui-editor">
-                        <script type="text/x-template" th:value="${#strings.escapeXml(param.title)}"></script>
-                    </div>
+            <div class="write-form-line">
+                <label class="write-form-label">동영상 첨부</label>
+                <div class="custom-file-wrapper">
+                    <label for="fileInput" class="custom-file-button">파일 선택</label>
+                    <span id="fileName" class="custom-file-name">선택된 파일 없음</span>
+                    <input id="fileInput" type="file" name="file" class="hidden" onchange="updateFileName(this)">
                 </div>
             </div>
-            <div></div>
-            <div style="text-align: center; margin-top: 20px;">
-                <button class="btn-write">등록</button>
-                <button class="btn-back" type="button" onclick="history.back()">뒤로가기</button>
+            <div class="write-editor-container">
+                <div id="editor">
+                    <script type="text/x-template" th:value="${#strings.escapeXml(param.title)}"></script>
+                </div>
+            </div>
+            <div class="write-btns">
+                <button class="article-submit-btn">등록</button>
+                <button class="back-button" type="button" onclick="history.back()">뒤로가기</button>
             </div>
         </form>
     </div>
-</div>
+</section>
 
 <footer th:replace="~{common/footer :: footer}"></footer>
 

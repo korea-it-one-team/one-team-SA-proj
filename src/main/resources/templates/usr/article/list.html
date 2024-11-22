@@ -8,7 +8,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         flex-wrap: nowrap;
         position: relative;
         width: calc(1440 * var(--rpx-vw)); /* 가로 기준 비율 */
@@ -32,10 +32,10 @@
     .board-menu {
         display: flex;
         justify-content: center;
-        gap: calc(20 * var(--rpx-vw));
+        gap: calc(30 * var(--rpx-vw));
         background-color: #252525;
         border-radius: calc(8 * var(--rpx-vw));
-        padding: calc(10 * var(--rpx-vw)) 0;
+        padding: calc(8 * var(--rpx-vw)) 0;
         width: 100%;
     }
 
@@ -43,19 +43,15 @@
         list-style: none;
     }
 
-    .board-menu a {
+    .board-menu .board-name {
+        font-family: Audiowide;
+        font-size: calc(24 * var(--rpx-vw));
         text-decoration: none;
-        font-weight: bold;
         transition: color 0.3s ease;
     }
 
     .board-menu a:hover {
         color: #cdf256;
-    }
-
-    .board-name {
-        font-family: Audiowide;
-        font-size: calc(22 * var(--rpx-vw));
     }
 
     .now-board-name {
@@ -76,6 +72,7 @@
     }
 
     .article-count {
+        padding: 0 calc(8 * var(--rpx-vw)) 0 0;
         font-size: calc(14 * var(--rpx-vw));
     }
 
@@ -151,11 +148,14 @@
         display: flex;
         gap: calc(10 * var(--rpx-vw));
         align-items: center;
+        justify-content: center;
         width: 100%;
     }
 
     .search-select {
-        padding: calc(8 * var(--rpx-vw)) calc(12 * var(--rpx-vw));
+        padding: calc(10 * var(--rpx-vw)) calc(12 * var(--rpx-vw));
+        height: 100%;
+        font-size: calc(14 * var(--rpx-vw));
         border: 1px solid #444;
         border-radius: calc(4 * var(--rpx-vw));
         background-color: #252525;
@@ -165,13 +165,16 @@
     .search-wrapper {
         display: flex;
         align-items: center;
+        justify-content: center;
         width: 100%;
+        height: 100%;
         gap: calc(10 * var(--rpx-vw));
+        font-size: calc(14 * var(--rpx-vw));
     }
 
     .search-input {
         flex-grow: 1;
-        padding: calc(8 * var(--rpx-vw));
+        padding: calc(8 * var(--rpx-vw)) calc(12 * var(--rpx-vw));
         border: 1px solid #444;
         border-radius: calc(4 * var(--rpx-vw));
         background-color: #252525;
@@ -186,22 +189,21 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: calc(48 * var(--rpx-vw)); /* 버튼 크기 */
-        height: calc(48 * var(--rpx-vw));
-        background-color: #252525;
+        background-color: #cdf256;
         border: none;
         border-radius: calc(4 * var(--rpx-vw));
         cursor: pointer;
+        padding: calc(9 * var(--rpx-vw));
     }
 
     .search-button svg {
-        width: calc(16 * var(--rpx-vw)); /* 아이콘 크기 */
-        height: calc(16 * var(--rpx-vw));
-        fill: #ffffff;
+        width: calc(20 * var(--rpx-vw)); /* 아이콘 크기 */
+        height: calc(20 * var(--rpx-vw));
+        fill: #1e1e1e;
     }
 
     .search-button:hover {
-        background-color: #cdf256;
+        background-color: #b0e040;
     }
 
     .pagination {
@@ -289,13 +291,13 @@
         <form action="" method="get" class="article-search-form">
             <input type="hidden" name="boardId" th:value="${param.boardId}"/>
             <select name="searchKeywordTypeCode" class="search-select" th:value="${param.searchKeywordTypeCode}">
-                <option value="title">title</option>
-                <option value="body">body</option>
-                <option value="title,body">title+body</option>
-                <option value="writer">writer</option>
+                <option value="title">제목</option>
+                <option value="body">내용</option>
+                <option value="title,body">제목 및 내용</option>
+                <option value="writer">작성자</option>
             </select>
             <div class="search-wrapper">
-                <input type="text" name="searchKeyword" class="search-input" placeholder="Search"
+                <input type="text" name="searchKeyword" class="search-input" placeholder="검색어를 입력하세요."
                        th:value="${param.searchKeyword}"/>
                 <button type="submit" class="search-button">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
