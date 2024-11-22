@@ -153,6 +153,23 @@
         color: #ffffff;
     }
 
+    .reply-submit-btn {
+        width: 100%;
+        background: var(--primary-color);
+        color: #1e1e1e;
+        padding: calc(10 * var(--rpx-vw));
+        font-size: calc(16 * var(--rpx-vw));
+        border: none;
+        border-radius: calc(8 * var(--rpx-vw));
+        margin-top: calc(8 * var(--rpx-vw));
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .reply-submit-btn:hover {
+        background: #b0e040;
+    }
+
     .reply-list-container {
         width: 70%;
         margin: 0 auto;
@@ -163,8 +180,7 @@
 
     .empty-replies {
         text-align: center;
-        color: #aaaaaa;
-        font-style: italic;
+        color: #9ca3af;
     }
 
     .reply-item {
@@ -191,6 +207,7 @@
     .reply-author {
         font-size: calc(14 * var(--rpx-vw));
         font-weight: bold;
+        min-width: calc(110 * var(--rpx-vw));
         color: #ffffff;
     }
 
@@ -453,7 +470,7 @@
         $.post({
             url: action,
             type: 'POST',
-            data: { id: replyId, body: text },
+            data: {id: replyId, body: text},
             success: function (data) {
                 console.log("수정 성공:", data);
 
@@ -521,9 +538,10 @@
             </div>
             <div class="regDate-and-hit">
                 <div class="article-regDate" th:text="${article.regDate}"></div>
-                <div class="article-hit">조회수 <span class="article-detail__hit-count" th:text="${article.hitCount}"></span></div>
+                <div class="article-hit">조회수 <span class="article-detail__hit-count"
+                                                   th:text="${article.hitCount}"></span></div>
             </div>
-            <hr class="divider" />
+            <hr class="divider"/>
             <div class="article-content">
                 <!-- 동영상 파일, 없으면 안뜨게 -->
                 <div style="margin-bottom: 10px;" th:if="${videoFileCount > 0}">
@@ -566,11 +584,12 @@
     <!-- 댓글 섹션 -->
     <div class="reply-container">
         <div th:if="${rq.isLogined()}">
-            <form class="reply-form" action="../reply/doWrite" method="POST" onsubmit="ReplyWrite__submit(this); return false;">
-                <input type="hidden" name="relTypeCode" value="article" />
-                <input type="hidden" name="relId" th:value="${article.id}" />
+            <form class="reply-form" action="../reply/doWrite" method="POST"
+                  onsubmit="ReplyWrite__submit(this); return false;">
+                <input type="hidden" name="relTypeCode" value="article"/>
+                <input type="hidden" name="relId" th:value="${article.id}"/>
                 <textarea class="input reply-input" name="body" autocomplete="off" placeholder="내용을 입력하세요."></textarea>
-                <button class="btn reply-submit">등록</button>
+                <button class="reply-submit-btn">등록</button>
             </form>
         </div>
 
@@ -582,8 +601,10 @@
     </div>
 
     <div class="reply-list-container">
-        <div th:if="${#lists.isEmpty(replies)}" class="empty-replies">
-            댓글이 없습니다.
+        <div th:if="${#lists.isEmpty(replies)}" class="reply-item">
+            <div class="empty-replies">
+                아직 댓글이 없습니다.
+            </div>
         </div>
         <div th:unless="${#lists.isEmpty(replies)}">
             <div th:each="reply : ${replies}" class="reply-item">
@@ -593,8 +614,10 @@
                 </div>
                 <div class="reply-body">
                     <span class="reply-body-text" th:id="'reply-' + ${reply.id}" th:text="${reply.body}"></span>
-                    <form method="POST" th:id="'modify-form-' + ${reply.id}" class="hidden modify-form" action="/usr/reply/doModify">
-                        <input type="text" th:name="'reply-text-' + ${reply.id}" th:value="${reply.body}" class="reply-modify-input"/>
+                    <form method="POST" th:id="'modify-form-' + ${reply.id}" class="hidden modify-form"
+                          action="/usr/reply/doModify">
+                        <input type="text" th:name="'reply-text-' + ${reply.id}" th:value="${reply.body}"
+                               class="reply-modify-input"/>
                     </form>
                 </div>
                 <div class="reply-actions" th:if="${reply.userCanModify}">
@@ -613,7 +636,7 @@
                         저장
                     </button>
                     <div class="reply-delete" th:if="${reply.userCanDelete}">
-                </div>
+                    </div>
                     <a class="btn btn-red btn-sm"
                        onclick="if(confirm('정말 삭제하시겠습니까?') == false) return false;"
                        th:href="@{../reply/doDelete(id=${reply.id})}">삭제</a>

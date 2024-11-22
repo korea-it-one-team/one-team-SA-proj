@@ -113,7 +113,7 @@ public class UsrGameScheduleController {
         LocalDate selectedDate = LocalDate.parse(date);
         List<GameSchedule> schedules = gameScheduleService.getGameSchedulesByDate(selectedDate);
         // 로그인된 회원 정보 가져오기
-        Member loginedMember = (Member) session.getAttribute("loginedMember");
+        Member loginedMember = rq.getLoginedMember();
 
         // 예측 정보를 가져오기 (로그인된 경우)
         Map<Integer, String> userPredictionsMap = new HashMap<>();

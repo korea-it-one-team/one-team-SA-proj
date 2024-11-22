@@ -3,6 +3,121 @@
 <head th:replace="~{common/head :: head}">
     <title>JOIN</title>
 </head>
+<style>
+    :root {
+        --primary-color: #cdf256;
+    }
+
+    .join-member-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+        position: relative;
+        width: calc(1440 * var(--rpx-vw)); /* 가로 기준 비율 */
+        min-height: calc(1024 * var(--rpx-vh)); /* 세로 기준 비율 */
+        margin: 0 auto;
+        padding: calc(60 * var(--rpx-vh)) 0;
+        overflow: hidden;
+        gap: calc(80 * var(--rpx-vw));
+    }
+
+    .join-member-card {
+        background: #252525;
+        padding: calc(32 * var(--rpx-vw));
+        border-radius: calc(16 * var(--rpx-vw));
+        box-shadow: 0 calc(8 * var(--rpx-vw)) calc(16 * var(--rpx-vw)) rgba(0, 0, 0, 0.1); /* 기본 그림자 */
+        width: calc(600 * var(--rpx-vw)); /* 카드 크기 증가 */
+    }
+
+    .join-member-title {
+        font-size: calc(32 * var(--rpx-vw));
+        color: var(--primary-color);
+        text-align: center;
+        margin-bottom: calc(24 * var(--rpx-vw));
+        font-family: Audiowide;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: calc(16 * var(--rpx-vw));
+        margin-bottom: calc(16 * var(--rpx-vw));
+    }
+
+    .label-join-member {
+        font-size: calc(14 * var(--rpx-vw));
+        color: #ffffff;
+        width: calc(150 * var(--rpx-vw)); /* 라벨 너비 고정 */
+        text-align: left; /* 라벨 왼쪽 정렬 */
+    }
+
+    .join-member-input {
+        width: 100%; /* 모든 입력 필드 동일한 크기 */
+        padding: calc(6 * var(--rpx-vw)) calc(12 * var(--rpx-vw)) calc(4 * var(--rpx-vw)) calc(12 * var(--rpx-vw));
+        border: 1px solid #ddd;
+        border-radius: calc(8 * var(--rpx-vw));
+        font-size: calc(14 * var(--rpx-vw));
+        color: #ffffff;
+        margin: 0;
+        background: #333333;
+    }
+
+    .join-member-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 calc(4 * var(--rpx-vw)) rgba(205, 242, 86, 0.3);
+    }
+
+    .input-with-message {
+        display: flex;
+        flex-direction: column;
+        width: 100%; /* 부모 요소에 맞게 확장 */
+    }
+
+    .checkDup-msg {
+        font-size: calc(12 * var(--rpx-vw));
+        color: #cdf256; /* 에러 메시지 색상 */
+        margin-top: calc(4 * var(--rpx-vw)); /* 입력 필드 하단 간격 */
+        text-align: right;
+    }
+
+    .join-member-button {
+        width: 100%;
+        background: var(--primary-color);
+        color: #1e1e1e;
+        padding: calc(12 * var(--rpx-vw));
+        font-size: calc(16 * var(--rpx-vw));
+        border: none;
+        border-radius: calc(8 * var(--rpx-vw));
+        margin-top: calc(16 * var(--rpx-vw));
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .join-member-button:hover {
+        background: #b0e040;
+    }
+
+    .join-member-back {
+        margin-top: calc(20 * var(--rpx-vw));
+        text-align: center;
+    }
+
+    .back-button {
+        font-size: calc(16 * var(--rpx-vw));
+        color: var(--primary-color);
+        cursor: pointer;
+    }
+
+    .back-button:hover {
+        text-decoration: underline;
+    }
+
+</style>
 
 <body>
 <!-- lodash debounce -->
@@ -12,66 +127,86 @@
     let validLoginId = "";
     function JoinForm__submit(form) {
         form.loginId.value = form.loginId.value.trim();
-        if (form.loginId.value == 0) {
+        if (form.loginId.value.length === 0) {
             alert('아이디를 입력해주세요');
             return;
         }
-        if (form.loginId.value != validLoginId) {
+        if (form.loginId.value !== validLoginId) {
             alert('사용할 수 없는 아이디입니다.');
             form.loginId.focus();
             return;
         }
 
         form.loginPw.value = form.loginPw.value.trim();
-        if (form.loginPw.value == 0) {
+        if (form.loginPw.value.length === 0) {
             alert('비밀번호를 입력해주세요');
             return;
         }
         form.loginPwConfirm.value = form.loginPwConfirm.value.trim();
-        if (form.loginPwConfirm.value == 0) {
+        if (form.loginPwConfirm.value.length === 0) {
             alert('비밀번호 확인을 입력해주세요');
             return;
         }
-        if (form.loginPwConfirm.value != form.loginPw.value) {
+        if (form.loginPwConfirm.value !== form.loginPw.value) {
             alert('비밀번호가 일치하지 않습니다');
             form.loginPw.focus();
             return;
         }
+
         form.name.value = form.name.value.trim();
-        if (form.name.value == 0) {
+        if (form.name.value.length === 0) {
             alert('이름을 입력해주세요');
             return;
         }
         form.nickname.value = form.nickname.value.trim();
-        if (form.nickname.value == 0) {
+        if (form.nickname.value.length === 0) {
             alert('닉네임을 입력해주세요');
             return;
         }
+        if(form.nickname.value.length >= 12) {
+            alert('닉네임은 12글자 이하로 입력해주세요')
+            return;
+        }
         form.email.value = form.email.value.trim();
-        if (form.email.value == 0) {
+        if (form.email.value.length === 0) {
             alert('이메일을 입력해주세요');
             return;
         }
+
         form.cellphoneNum.value = form.cellphoneNum.value.trim();
-        if (form.cellphoneNum.value == 0) {
+        if (form.cellphoneNum.value.length === 0) {
             alert('전화번호를 입력해주세요');
             return;
         }
+
+        // 전화번호 형식 확인
+        const phonePattern = /^\d{3}-\d{3,4}-\d{4}$/;
+        if (!phonePattern.test(form.cellphoneNum.value)) {
+            alert('유효한 전화번호 형식이 아닙니다. 3자리-3~4자리-4자리 형식으로 입력해주세요.');
+            form.cellphoneNum.focus();
+            return;
+        }
+
         form.submit();
     }
 
     function checkLoginIdDup(el) {
-        $('.checkDup-msg').empty();
+        const $checkDupMsg = $('.checkDup-msg'); // 중복 체크 메시지 요소
         const form = $(el).closest('form').get(0);
-        if (form.loginId.value.length == 0) {
+
+        // 입력값이 없을 경우 메시지를 숨기고 종료
+        if (form.loginId.value.length === 0) {
+            $checkDupMsg.addClass('hidden').empty();
             validLoginId = '';
             return;
         }
+
+        // 입력값이 있는 경우 메시지 숨김 해제 및 중복 체크 수행
         $.get('../member/getLoginIdDup', {
-            isAjax : 'Y',
-            loginId : form.loginId.value
+            isAjax: 'Y',
+            loginId: form.loginId.value
         }, function(data) {
-            $('.checkDup-msg').html('<div class="">' + data.msg + '</div>')
+            $checkDupMsg.removeClass('hidden').html('<div class="">' + data.msg + '</div>');
             if (data.success) {
                 validLoginId = data.data1;
             } else {
@@ -80,80 +215,109 @@
         }, 'json');
     }
 
+    // 디바운스 적용
     const checkLoginIdDupDebounced = _.debounce(checkLoginIdDup, 600);
+</script>
+
+<script>
+    function oninputPhone(target) {
+        target.value = target.value
+            .replace(/[^0-9]/g, '') // 숫자가 아닌 문자를 모두 제거
+            .replace(/(\d{3})(\d{3,4})(\d{4})/, '$1-$2-$3') // 3자리-3~4자리-4자리로 포맷
+            .substring(0, 13); // 최대 길이 제한
+    }
 </script>
 
 <header th:replace="~{common/header-2 :: header-2}"></header>
 <div class="make-header-margin"></div>
-
-<section class="mt-24 text-xl px-4">
-    <div class="mx-auto">
+<section class="join-member-section">
+    <div class="join-member-card">
+        <h2 class="join-member-title">JOIN MEMBER</h2>
         <form th:action="@{/usr/member/doJoin}" method="POST" onsubmit="JoinForm__submit(this); return false;">
-            <table class="table" border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
-                <tbody>
-                <tr>
-                    <th>아이디</th>
-                    <td style="text-align: center;">
-                        <input onkeyup="checkLoginIdDupDebounced(this);"
-                               class="input input-bordered input-primary input-sm w-full max-w-xs" name="loginId" autocomplete="off"
-                               type="text" placeholder="아이디를 입력해주세요" />
-                    </td>
-                </tr>
-                <tr>
-                    <th></th>
-                    <td style="text-align: center;">
-                        <div class="checkDup-msg"></div>
-                    </td>
-                </tr>
-                <tr>
-                    <th>비밀번호</th>
-                    <td style="text-align: center;">
-                        <input class="input input-bordered input-primary input-sm w-full max-w-xs" name="loginPw" autocomplete="off"
-                               type="text" placeholder="비밀번호를 입력해주세요" />
-                    </td>
-                </tr>
-                <tr>
-                    <th>이름</th>
-                    <td style="text-align: center;">
-                        <input class="input input-bordered input-primary input-sm w-full max-w-xs" name="name" autocomplete="off"
-                               type="text" placeholder="이름 입력해주세요" />
-                    </td>
-                </tr>
-                <tr>
-                    <th>닉네임</th>
-                    <td style="text-align: center;">
-                        <input class="input input-bordered input-primary input-sm w-full max-w-xs" name="nickname" autocomplete="off"
-                               type="text" placeholder="닉네임 입력해주세요" />
-                    </td>
-                </tr>
-                <tr>
-                    <th>전화번호</th>
-                    <td style="text-align: center;">
-                        <input class="input input-bordered input-primary input-sm w-full max-w-xs" name="cellphoneNum" autocomplete="off"
-                               type="text" placeholder="전화번호를 입력해주세요" />
-                    </td>
-                </tr>
-                <tr>
-                    <th>이메일</th>
-                    <td style="text-align: center;">
-                        <input class="input input-bordered input-primary input-sm w-full max-w-xs" name="email" autocomplete="off"
-                               type="text" placeholder="이메일을 입력해주세요" />
-                    </td>
-                </tr>
-                <tr>
-                    <th></th>
-                    <td style="text-align: center;">
-                        <button type="submit" class="btn btn-primary">가입</button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="form-group">
+                <label class="label-join-member" for="loginId">아이디</label>
+                <div class="input-with-message">
+                    <input
+                            id="loginId"
+                            class="join-member-input"
+                            name="loginId"
+                            autocomplete="off"
+                            type="text"
+                            placeholder="아이디를 입력해주세요"
+                            onkeyup="checkLoginIdDupDebounced(this);" />
+                    <div class="checkDup-msg hidden" id="checkDupMsg"></div> <!-- 중복 체크 메시지 -->
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="label-join-member" for="loginPw">비밀번호</label>
+                <input
+                        id="loginPw"
+                        class="join-member-input"
+                        name="loginPw"
+                        autocomplete="off"
+                        type="password"
+                        placeholder="비밀번호를 입력해주세요" />
+            </div>
+            <div class="form-group">
+                <label class="label-join-member" for="loginPwConfirm">비밀번호 확인</label>
+                <input
+                        id="loginPwConfirm"
+                        class="join-member-input"
+                        name="loginPwConfirm"
+                        autocomplete="off"
+                        type="password"
+                        placeholder="비밀번호 확인을 입력해주세요" />
+            </div>
+            <div class="form-group">
+                <label class="label-join-member" for="name">이름</label>
+                <input
+                        id="name"
+                        class="join-member-input"
+                        name="name"
+                        autocomplete="off"
+                        type="text"
+                        placeholder="이름을 입력해주세요" />
+            </div>
+            <div class="form-group">
+                <label class="label-join-member" for="nickname">닉네임</label>
+                <input
+                        id="nickname"
+                        class="join-member-input"
+                        name="nickname"
+                        autocomplete="off"
+                        type="text"
+                        placeholder="닉네임을 입력해주세요" />
+            </div>
+            <div class="form-group">
+                <label class="label-join-member" for="cellphoneNum">전화번호</label>
+                <input
+                id="cellphoneNum"
+                type="text"
+                class="form-control join-member-input"
+                name="cellphoneNum"
+                autocomplete="off"
+                placeholder="전화번호를 입력해주세요"
+                maxlength="13"
+                oninput="oninputPhone(this)" />
+            </div>
+            <div class="form-group">
+                <label class="label-join-member" for="email">이메일</label>
+                <input
+                        id="email"
+                        class="join-member-input"
+                        name="email"
+                        autocomplete="off"
+                        type="email"
+                        placeholder="이메일을 입력해주세요" />
+            </div>
+            <button class="join-member-button" type="submit">가입</button>
         </form>
-        <div class="btns">
-            <button class="btn" type="button" onclick="history.back()">뒤로가기</button>
+        <div class="join-member-back">
+            <button class="back-button" type="button" onclick="history.back()">뒤로가기</button>
         </div>
     </div>
 </section>
+
 <footer th:replace="~{common/footer :: footer}"></footer>
 </body>
 </html>

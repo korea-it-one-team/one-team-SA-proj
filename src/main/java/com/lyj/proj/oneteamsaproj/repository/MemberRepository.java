@@ -23,7 +23,8 @@ public interface MemberRepository {
             `name` = #{name}, 
             nickname = #{nickname}, 
             cellphoneNum = #{cellphoneNum}, 
-            email = #{email}
+            email = #{email},
+            points = 100
             """)
     public void doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum, String email);
 

@@ -14,7 +14,7 @@
         width: calc(1440 * var(--rpx-vw)); /* 가로 기준 비율 */
         min-height: calc(1024 * var(--rpx-vh)); /* 세로 기준 비율 */
         margin: 0 auto;
-        padding: calc(50 * var(--rpx-vh)) 0;
+        padding: calc(60 * var(--rpx-vh)) 0;
         overflow: hidden;
         gap: calc(50 * var(--rpx-vw));
     }
@@ -24,28 +24,27 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        width: 100%;
-        max-width: 400px;
+        width: calc(480 * var(--rpx-vw)); /* 컨테이너 너비 */
         margin: 0 auto;
-        padding: 20px;
-        background-color: #1e1e1e;
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        padding: calc(20 * var(--rpx-vw));
+        background-color: #252525;
+        border-radius: calc(10 * var(--rpx-vw));
+        box-shadow: 0 calc(4 * var(--rpx-vw)) calc(10 * var(--rpx-vw)) rgba(0, 0, 0, 0.5);
         color: #ffffff;
     }
 
     .mypage-header h2 {
-        font-size: 24px;
-        font-weight: bold;
-        color: #a3ff12;
-        margin-bottom: 20px;
+        font-size: calc(28 * var(--rpx-vw)); /* 제목 크기 */
+        color: #cdf256; /* 포인트 컬러 */
+        margin-bottom: calc(20 * var(--rpx-vw));
         text-align: center;
+        font-family: Audiowide;
     }
 
     .mypage-content {
         display: flex;
         flex-direction: column;
-        gap: 15px;
+        gap: calc(15 * var(--rpx-vw));
         width: 100%;
     }
 
@@ -53,49 +52,48 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 10px 15px;
-        background-color: #252525;
-        border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        padding: calc(12 * var(--rpx-vw)) calc(15 * var(--rpx-vw));
+        background-color: #383838;
+        border-radius: calc(6 * var(--rpx-vw));
+        box-shadow: 0 calc(2 * var(--rpx-vw)) calc(4 * var(--rpx-vw)) rgba(0, 0, 0, 0.2);
     }
 
     .mypage-label {
-        font-size: 14px;
+        font-size: calc(14 * var(--rpx-vw)); /* 레이블 크기 */
         font-weight: bold;
         color: #bbbbbb;
     }
 
     .mypage-value {
-        font-size: 14px;
+        font-size: calc(14 * var(--rpx-vw)); /* 값 크기 */
         color: #ffffff;
     }
 
     .mypage-actions {
         display: flex;
         flex-direction: column;
-        gap: 10px;
-        margin-top: 20px;
+        gap: calc(10 * var(--rpx-vw));
+        margin-top: calc(20 * var(--rpx-vw));
         width: 100%;
     }
 
     .mypage-btn {
         display: inline-block;
         text-align: center;
-        background-color: #a3ff12;
+        background-color: #cdf256; /* 포인트 컬러 */
         color: #1e1e1e;
         font-weight: bold;
-        font-size: 14px;
-        padding: 10px 15px;
-        border-radius: 5px;
+        font-size: calc(14 * var(--rpx-vw));
+        padding: calc(10 * var(--rpx-vw)) calc(10 * var(--rpx-vw));
+        border-radius: calc(5 * var(--rpx-vw));
         text-decoration: none;
         transition: background-color 0.3s;
         cursor: pointer;
     }
 
     .mypage-btn:hover {
-        background-color: #8fdc0f;
+        background-color: #b6db4a; /* 포인트 컬러의 호버 상태 */
     }
-
 </style>
 <body>
 <header th:replace="~{common/header-2 :: header-2}"></header>
@@ -124,6 +122,10 @@
                 <span class="mypage-value" th:text="${rq.loginedMember.nickname}">닉네임</span>
             </div>
             <div class="mypage-info-item">
+                <span class="mypage-label">보유 포인트</span>
+                <span class="mypage-value" th:text="${rq.loginedMember.points}">보유 포인트</span>
+            </div>
+            <div class="mypage-info-item">
                 <span class="mypage-label">이메일</span>
                 <span class="mypage-value" th:text="${rq.loginedMember.email}">이메일</span>
             </div>
@@ -137,6 +139,7 @@
             </div>
         </div>
     </div>
+
 </section>
 <footer th:replace="~{common/footer :: footer}"></footer>
 </body>
