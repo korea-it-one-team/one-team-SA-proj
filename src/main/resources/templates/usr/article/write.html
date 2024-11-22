@@ -126,8 +126,9 @@
                 autocomplete="off" type="text" placeholder="제목을 입력하세요." maxlength="20" />
             </div>
             <div style="margin-bottom: 20px;">
-                동영상 파일 첨부
-                <input class="input" id="fileInput" placeholder="파일을 선택해주세요" type="file" name="file"/>
+                동영상 파일
+                <!-- accept="video/*"  : 파일 올릴 때, 동영상 파일만 탐색이 된다. -->
+                <input class="input" id="fileInput" placeholder="파일을 선택해주세요" type="file" name="file" accept="video/*"/>
             </div>
             <div>
                 내용
