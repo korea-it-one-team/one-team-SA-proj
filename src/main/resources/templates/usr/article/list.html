@@ -91,12 +91,14 @@
         </div>
 
         <!-- 페이지 번호 반복 -->
-        <div th:each="i : ${#numbers.sequence(startPage, endPage)}">
+        <div th:each="i : ${#numbers.sequence(startPage, endPage)}"
+             th:if="${i > 0}">
             <a class="btn btn-sm"
                th:classappend="${param.page == i ? 'btn-active' : ''}"
                th:href="${baseUri + '&page=' + i}"
                th:text="${i}"></a>
         </div>
+
 
         <!-- 생략 표시 (뒷부분) -->
         <div th:if="${endPage < pagesCount - 1}">
@@ -111,8 +113,6 @@
     <div class="btn">
         <a href="/usr/article/write">글쓰기</a>
     </div>
-
-
 </section>
 
 </body>

@@ -538,6 +538,7 @@ INSERT INTO faq (category_id, question, answer) VALUES
 (5, '커뮤니티의 규칙은 무엇인가요?', '커뮤니티 사용 시 상호 존중과 예의를 지켜주세요. 비방글은 삭제됩니다.'),
 (5, '게시글 신고는 어떻게 하나요?', '문제가 있는 게시글의 "신고" 버튼을 클릭하여 신고할 수 있습니다.');
 
+ALTER TABLE `member` ADD `deletePendingDate` DATETIME DEFAULT NULL COMMENT '탈퇴 유예 종료일';
 
 ################(INIT 끝)
 

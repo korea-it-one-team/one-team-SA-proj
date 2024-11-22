@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -118,6 +119,7 @@ public class MemberService {
         }
     }
 
+    // 관리자가 탈퇴
     private void deleteMember(Member member) {
         memberRepository.deleteMember(member.getId());
     }
@@ -145,5 +147,34 @@ public class MemberService {
 
     public void addPoints(int memberId, int points) {
         memberRepository.addPoints(memberId, points); // 승부 예측 성공시 포인트 +5 추가 메서드
+    }
+
+    // 회원이 직접 탈퇴처리
+    public void doDeleteMember(int memberId, int gracePeriodDays) {
+        Member member = memberRepository.getMemberById(memberId);
+        if (member == null || member.getDelStatus() == 1 || member.getDelStatus() == 2) {
+            throw new IllegalStateException("존재하지 않거나 이미 삭제된 회원입니다.");
+        }
+        memberRepository.doDeleteMember(memberId, gracePeriodDays);
+    }
+
+    // 회원이 탈퇴처리 취소
+    public void restoreMember(int memberId) {
+        Member member = memberRepository.getMemberById(memberId);
+        if (member == null || member.getDelStatus() != 1) {
+            throw new IllegalStateException("존재하지 않거나 정지되지 않은 회원입니다.");
+        }
+        if (member.getDeletePendingDate() != null && member.getDeletePendingDate().isBefore(LocalDateTime.now())) {
+            throw new IllegalStateException("탈퇴 유예 기간이 만료되어 복구할 수 없습니다.");
+        }
+
+        int affectedRows = memberRepository.restoreMember(memberId);
+        if (affectedRows == 0) {
+            throw new IllegalStateException("회원 복구에 실패했습니다.");
+        }
+    }
+
+    public int deleteExpiredMembers() {
+        return memberRepository.markMembersAsUnrecoverable();
     }
 }
