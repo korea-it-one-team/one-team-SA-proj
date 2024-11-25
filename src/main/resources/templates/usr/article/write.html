@@ -260,7 +260,7 @@
                 <label class="write-form-label">게시판</label>
                 <select class="input write-form-select" name="boardId" onchange="updateSelectColor(this)">
                     <option value="" selected disabled>게시판을 선택해주세요.</option>
-                    <option value="1">NOTICE</option>
+                    <option th:if="${rq.isAdmin()}" value="1">NOTICE</option>
                     <option value="2">ANALYSIS</option>
                     <option value="3">FREE</option>
                 </select>
@@ -285,7 +285,7 @@
                 </div>
             </div>
             <div class="write-btns">
-                <button class="article-submit-btn">등록</button>
+                <button class="article-submit-btn" type="submit">등록</button>
                 <button class="back-button" type="button" onclick="history.back()">뒤로가기</button>
             </div>
         </form>

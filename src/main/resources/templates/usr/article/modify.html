@@ -236,7 +236,7 @@
 <header th:replace="~{common/header-2 :: header-2}"></header>
 <div class="make-header-margin"></div>
 <script type="text/javascript">
-    function ArticleWrite__submit(form) {
+    function ArticleModify__submit(form) {
         form.title.value = form.title.value.trim();
 
         if (form.title.value.length == 0) {
@@ -253,7 +253,7 @@
             return;
         }
 
-        $('#fileInput').attr('name', 'file__article__' + [[${currentId}]] + '__extra__Img__1');
+        $('#fileInput').attr('name', 'file__article__' + [[${article.Id}]] + '__extra__Img__1');
 
         form.body.value = markdown;
         form.submit();
@@ -262,17 +262,18 @@
 
 <section class="article-write-section">
     <div class="write-container">
-        <form onsubmit="ArticleWrite__submit(this); return false;" th:action="@{/usr/article/doWrite}" method="POST"
+        <form onsubmit="ArticleModify__submit(this); return false;" th:action="@{/usr/article/doModify}" method="POST"
               enctype="multipart/form-data" class="article-write-form">
             <input type="hidden" name="body"/>
-            <input type="hidden" name="id" th:value="${currentId}">
+            <input type="hidden" name="id" th:value="${article.id}">
             <div class="write-form-line">
                 <label class="write-form-label">게시판</label>
                 <select class="input write-form-select" name="boardId" onchange="updateSelectColor(this)">
-                    <option value="" selected disabled>게시판을 선택해주세요.</option>
-                    <option value="1">NOTICE</option>
-                    <option value="2">ANALYSIS</option>
-                    <option value="3">FREE</option>
+                    <option value="" disabled th:selected="${article.boardId == null}">게시판을 선택해주세요.</option>
+                    <!-- NOTICE: Admin일 때만 표시 -->
+                    <option value="1" th:if="${rq.isAdmin()}" th:selected="${article.boardId == 1}">NOTICE</option>
+                    <option value="2" th:selected="${article.boardId == 2}">ANALYSIS</option>
+                    <option value="3" th:selected="${article.boardId == 3}">FREE</option>
                 </select>
             </div>
             <div class="write-form-line">
@@ -284,7 +285,9 @@
                 <label class="write-form-label">동영상 첨부</label>
                 <div class="custom-file-wrapper">
                     <label for="fileInput" class="custom-file-button">파일 선택</label>
-                    <span id="fileName" class="custom-file-name">선택된 파일 없음</span>
+                    <span id="fileName" class="custom-file-name"
+                          th:text="${file != null ? file.originFileName : '선택된 파일 없음'}">선택된 파일 없음
+                    </span>
                     <input id="fileInput" type="file" name="file" class="hidden" onchange="updateFileName(this)">
                 </div>
             </div>
@@ -294,12 +297,17 @@
                 </div>
             </div>
             <div class="write-btns">
-                <div class="modify-btn article-submit-btn" th:if="${article.userCanModify}">
-                    <a th:href="@{/usr/article/modify(id=${article.id})}">수정</a>
-                </div>
-                <div class="modify-btn article-delete-btn" th:if="${article.userCanDelete}">
-                    <a th:href="@{/usr/article/doDelete(id=${article.id})}">삭제</a>
-                </div>
+                <!-- 수정 버튼 -->
+                <button class="modify-btn article-submit-btn" type="submit" th:if="${article.userCanModify}">
+                    수정
+                </button>
+                <!-- 삭제 버튼 -->
+                <button class="modify-btn article-delete-btn" type="button"
+                        th:if="${article.userCanDelete}"
+                        th:onclick="|location.href='/usr/article/doDelete?id=' + ${article.id}|">
+                    삭제
+                </button>
+                <!-- 뒤로가기 버튼 -->
                 <button class="back-button" type="button" onclick="history.back()">뒤로가기</button>
             </div>
         </form>
