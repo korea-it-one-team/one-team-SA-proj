@@ -6,8 +6,10 @@ import com.lyj.proj.oneteamsaproj.utils.Ut;
 import com.lyj.proj.oneteamsaproj.vo.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -41,6 +43,10 @@ public class UsrArticleController {
     @Autowired
     private ReplyService replyService;
 
+    @Autowired
+    private ImageService imageService;
+
+
     // 액션 메서드, 컨트롤 메서드
     @RequestMapping("/usr/article/detail")
     public String showDetail(HttpServletRequest req, Model model, int id) {
@@ -68,6 +74,9 @@ public class UsrArticleController {
 
         int repliesCount = replies.size();
 
+        int videoFileCount = genFileService.getFileCountByType2CodeAndRelId("video", id);
+        int imageFileCount = genFileService.getFileCountByType2CodeAndRelId("Img", id);
+
         model.addAttribute("article", article);
 
         model.addAttribute("replies", replies);
@@ -75,6 +84,7 @@ public class UsrArticleController {
 
         model.addAttribute("files", files);
         model.addAttribute("videoFileCount", videoFileCount);
+        model.addAttribute("imageFileCount", imageFileCount);
 
         model.addAttribute("isAlreadyAddGoodRp",
 
@@ -190,6 +200,7 @@ public class UsrArticleController {
     @RequestMapping("/usr/article/doWrite")
     @ResponseBody
     public String doWrite(HttpServletRequest req, String boardId, String title, String body, String replaceUri,
+                          @RequestParam("imageUrls") String imageUrls,
                           MultipartRequest multipartRequest) {
 
         Rq rq = (Rq) req.getAttribute("rq");
@@ -211,6 +222,23 @@ public class UsrArticleController {
         int id = (int) writeArticleRd.getData1();  // 게시물 ID
 
         Article article = articleService.getArticleById(id);
+
+        // 이미지 URL들을 처리 (쉼표로 구분된 URL들)
+        String[] images = imageUrls.split(",");
+        // images 배열을 사용하여 처리
+        // 파일 업로드
+
+        if (images != null && images.length > 0) {
+            try {
+                // images 배열을 순차적으로 처리
+                for (String imageUrl : images) {
+                    // 각 이미지 URL을 처리 (예: DB에 저장하거나, 다른 서비스에 저장)
+                    imageService.saveImage(imageUrl, article.getId(), article.getBoardId());  // 이미지 업로드
+                }
+            } catch (IOException e) {
+                return Ut.jsHistoryBack("F-4", "이미지 업로드 중 오류 발생.");
+            }
+        }
 
         // 파일 처리
         Map<String, List<MultipartFile>> fileMap = multipartRequest.getMultiFileMap();

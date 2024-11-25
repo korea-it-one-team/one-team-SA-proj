@@ -23,18 +23,16 @@ public interface GifticonRepository {
 	@Select("""
         SELECT COUNT(*)
         FROM gifticons
-        WHERE `name` LIKE CONCAT('%', #{searchKeyword}, '%')
         """)
-	int getGifticonCount(String searchKeyword);
+	int getGifticonCount();
 
 	@Select("""
         SELECT *
         FROM gifticons
-        WHERE `name` LIKE CONCAT('%', #{searchKeyword}, '%')
         ORDER BY id DESC
         LIMIT #{limitFrom}, #{limitTake}
         """)
-	List<Gifticon> getForPrintGifticons(int limitFrom, int limitTake, String searchKeyword);
+	List<Gifticon> getForPrintGifticons(int limitFrom, int limitTake);
 
 	@Update("""
            		UPDATE gifticons

@@ -1,9 +1,15 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>고객센터</title>
+    <!-- daisyUI -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/daisyui/4.12.10/full.css"/>
+    <!-- 테일윈드 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.1.4/tailwind.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="/resource/common.css"/>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');</style>
 
     <!-- 스타일 -->
     <style>
@@ -52,14 +58,20 @@
     <script>
         // 섹션 표시 함수
         function showSection(section) {
-            $('.content-section').hide();
-            $('#' + section).show();
+            $('.content-section').hide(); // 모든 섹션 숨기기
+            $('#' + section).show(); // 선택한 섹션 보이기
             $('.faq-list').slideUp();
             $('.content_answer').slideUp();
         }
 
+        // 페이지 로드 시 초기 설정
         $(document).ready(function () {
-            showSection('faq');
+            showSection('faq'); // 기본적으로 FAQ 섹션 표시
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
 
             // 카테고리 클릭 시 FAQ 토글
             $('.category-title').on('click', function () {
@@ -73,10 +85,21 @@
             $('.faq-question').on('click', function () {
                 $(this).next('.faq-answer').slideToggle();
             });
+        });
+    </script>
 
+    <script>
+        $(document).ready(function () {
             // 상담 저장 처리
             $('form').on('submit', function (event) {
-                event.preventDefault();
+                event.preventDefault(); // 기본 제출 방지
+                const loginedMemberId = [[${rq.getLoginedMemberId()}]]; // 서버에서 전달된 값
+
+                if (loginedMemberId === 0) {
+                    // 로그인이 되어 있지 않으면 이벤트 바인딩 차단
+                    alert('로그인이 필요한 기능입니다.');
+                    return;
+                }
 
                 const title = $('#title').val();
                 const content = $('#content').val();
@@ -85,42 +108,25 @@
                     url: '/submit-consultation',
                     method: 'POST',
                     data: {title: title, content: content},
-                    success: function () {
-                        alert('상담 저장이 완료되었습니다.');
+                    success: function (response) {
+                        alert('상담 저장이 완료 되었습니다.');
+                        // 페이지 새로고침
                         location.reload();
+
                     },
                     error: function () {
-                        alert('상담 저장 중 오류가 발생했습니다.');
+                        alert('상담 저장 중 오류가 발생했습니다.'); // 에러 처리
                     }
                 });
             });
         });
-
-        function showConsultationDetails(id) {
-            $('.content_answer').addClass('hidden');
-            $('.content_answer' + id).removeClass('hidden');
-        }
-
-        function saveAnswer(id) {
-            const answer = $('.content_answer' + id + ' input[type="text"]').val();
-
-            $.ajax({
-                url: '/save-answer',
-                method: 'POST',
-                data: {id: id, answer: answer},
-                success: function () {
-                    alert('답변이 저장되었습니다.');
-                    location.reload();
-                },
-                error: function () {
-                    alert('답변 저장 중 오류가 발생했습니다.');
-                }
-            });
-        }
     </script>
 </head>
+
 <body>
-<div class="container mx-auto p-5 bg-white shadow-lg rounded-lg mt-5">
+
+<header th:replace="~{common/header-2 :: header-2}"></header>
+<section class="mt-28 text-xl px-4">
     <h1 class="text-4xl font-bold text-center mb-5">고객센터</h1>
 
     <div class="flex justify-center space-x-4 mb-5">
@@ -135,10 +141,10 @@
             <div th:each="category : ${categories}">
                 <div>
                     <h3 class="category-title btn btn-outline" th:data-category-id="${category.id}"
-                        th:text="${category.categoryName}">
+                        th:text="${category.category_name}">
                     </h3>
                     <div class="faq-list hidden mt-2" th:data-category-id="${category.id}">
-                        <div th:each="faq : ${faqs}" th:if="${faq.categoryName == category.categoryName}">
+                        <div th:each="faq : ${faqs}" th:if="${faq.category_name == category.category_name}">
                             <h4 class="faq-question cursor-pointer" th:data-faq-id="${faq.id}"
                                 th:text="${faq.question}"></h4>
                             <div class="faq-answer hidden" th:data-faq-id="${faq.id}">
@@ -166,37 +172,61 @@
             <button type="submit" class="btn btn-success">저장</button>
         </form>
     </div>
-
     <div id="history" class="content-section" style="display: none;">
         <h2 class="text-xl font-semibold">상담내역</h2>
         <ul class="space-y-4">
-            <div th:each="consultation : ${consultations}">
-                <li class="p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                    <a href="#" th:onclick="'showConsultationDetails(' + ${consultation.id} + ')'"
-                       class="text-blue-600 font-bold hover:underline"
-                       th:text="${consultation.title}"></a>
-                    <div class="hidden" th:class="'content_answer' + ${consultation.id}">
-                        <div class="bg-gray-100 p-3 rounded-lg border-l-4 border-blue-500">
-                            <span class="text-gray-700 font-semibold">내용:</span>
-                            <p class="text-gray-600" th:text="${consultation.content}"></p>
-                        </div>
-                        <div th:if="${isAdmin}" class="bg-gray-100 p-3 rounded-lg border-l-4 border-green-500 mt-2">
-                            <span class="text-gray-700 font-semibold">답변:</span>
-                            <input type="text" class="input input-bordered w-full mt-1"
-                                   th:value="${consultation.answer}">
-                            <button class="btn btn-success mt-2" th:onclick="'saveAnswer(' + ${consultation.id} + ')'">
-                                저장
-                            </button>
-                        </div>
-                        <div th:if="${!isAdmin}" class="bg-gray-100 p-3 rounded-lg border-l-4 border-green-500 mt-2">
-                            <span class="text-gray-700 font-semibold">답변:</span>
-                            <p class="text-gray-600" th:text="${consultation.answer}"></p>
-                        </div>
+            <li th:each="consultation : ${consultations}" class="p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                <a href="#"
+                   th:onclick="'showConsultationDetails(' + ${consultation.id} + ')'"
+                   class="text-blue-600 font-bold hover:underline"
+                   th:text="${consultation.title}"></a>
+                <div th:class="'content_answer content_answer' + ${consultation.id} + ' hidden mt-2'">
+                    <div class="bg-gray-100 p-3 rounded-lg border-l-4 border-blue-500">
+                        <span class="text-gray-700 font-semibold">내용:</span>
+                        <p class="text-gray-600" th:text="${consultation.content}"></p>
                     </div>
-                </li>
-            </div>
+                    <div th:if="${isAdmin}" class="bg-gray-100 p-3 rounded-lg border-l-4 border-green-500 mt-2">
+                        <span class="text-gray-700 font-semibold">답변:</span>
+                        <input type="text" class="input input-bordered w-full mt-1"
+                               th:value="${consultation.answer}">
+                        <button class="btn btn-success mt-2"
+                                th:onclick="'saveAnswer(' + ${consultation.id} + ')'">
+                            저장
+                        </button>
+                    </div>
+                    <div th:if="${!isAdmin}" class="bg-gray-100 p-3 rounded-lg border-l-4 border-green-500 mt-2">
+                        <span class="text-gray-700 font-semibold">답변:</span>
+                        <p class="text-gray-600" th:text="${consultation.answer}"></p>
+                    </div>
+                </div>
+            </li>
         </ul>
     </div>
-</div>
+
+</section>
+<script>
+    function showConsultationDetails(id) {
+        $('.content_answer').addClass('hidden');
+        $('.content_answer' + id).removeClass('hidden');
+    }
+
+    function saveAnswer(id) {
+        const answer = $('.content_answer' + id + ' input[type="text"]').val();
+        console.log(answer);
+        // AJAX 요청으로 답변 저장
+        $.ajax({
+            url: '/save-answer',
+            method: 'POST',
+            data: {id: id, answer: answer},
+            success: function (response) {
+                alert('답변이 저장되었습니다.');
+                location.reload(); // 페이지 새로고침
+            },
+            error: function () {
+                alert('답변 저장 중 오류가 발생했습니다.');
+            }
+        });
+    }
+</script>
 </body>
 </html>

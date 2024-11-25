@@ -278,4 +278,25 @@ public class GenFileService {
     public int getFileCountByType2CodeAndRelId(String type2Code, int relId) {
         return genFileRepository.getFileCountByType2CodeAndRelId(type2Code, relId);
     }
+
+    public void updateOrSave(MultipartFile multipartFile, int id) {
+        // 기존 파일 존재 여부 확인
+        List<GenFile> existingFiles = genFileRepository.getGenFilesByRelTypeCodeAndRelId("article", id);
+
+        if (!existingFiles.isEmpty()) {
+            // 기존 파일 삭제
+            deleteGenFile(existingFiles.get(0));
+        }
+
+        // 새 파일 저장
+        save(multipartFile, id);
+    }
+
+    public GenFile getGenFileByRelId(String relTypeCode, int relId) {
+        List<GenFile> existingFiles = genFileRepository.getGenFilesByRelTypeCodeAndRelId("article", relId);
+        if (existingFiles.isEmpty()) {
+            return null;
+        }
+        return existingFiles.get(0);
+    }
 }

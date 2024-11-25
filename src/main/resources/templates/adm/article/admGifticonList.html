@@ -4,9 +4,11 @@
     <title>Admin Gifticon Management</title>
     <!-- daisyUI -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/daisyui/4.12.10/full.css" />
-    <!-- Tailwind -->
+    <!-- 테일윈드 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.1.4/tailwind.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="/resource/common.css"/>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');</style>
 
     <style>
         /* 기존 스타일 그대로 유지 */
@@ -37,7 +39,7 @@
             max-width: 100%;
             border-radius: 4px;
         }
-        .header {
+        .head-h1 {
             margin: 10px;
             font-size: 4rem;
             font-weight: bold;
@@ -45,7 +47,10 @@
     </style>
 </head>
 <body>
-<div class="header">Admin Gifticon Management</div>
+<header th:replace="~{common/header-2 :: header-2}"></header>
+
+<div class="make-header-margin"></div>
+<div class="head-h1">Admin Gifticon Management</div>
 
 <div class="gifticon-list">
     <!-- 반복문 변환 -->
@@ -69,30 +74,37 @@
         paginationLen=3,
         startPage=${page - paginationLen >= 1} ? ${page - paginationLen} : 1,
         endPage=${page + paginationLen <= pagesCount} ? ${page + paginationLen} : ${pagesCount},
-        baseUri='?searchKeyword=' + ${searchKeyword}
-     ">
+        baseUri='?'">
+
+    <!-- 첫 페이지로 이동 -->
     <div th:if="${startPage > 1}">
-        <a class="btn btn-sm" th:href="${baseUri} + '&page=1'">1</a>
+        <a class="btn btn-sm" th:href="${baseUri} + 'page=1'">1</a>
     </div>
+
+    <!-- 첫 페이지와 시작 페이지 사이의 생략 -->
     <div th:if="${startPage > 2}">
         <button class="btn btn-sm btn-disabled">...</button>
     </div>
 
+    <!-- 현재 페이지와 주변 페이지 번호 -->
     <div th:each="i : ${#numbers.sequence(startPage, endPage)}">
         <a class="btn btn-sm"
            th:classappend="${page == i} ? 'btn-active'"
-           th:href="${baseUri} + '&page=' + ${i}"
+           th:href="${baseUri} + 'page=' + ${i}"
            th:text="${i}"></a>
     </div>
 
+    <!-- 마지막 페이지와 끝 페이지 사이의 생략 -->
     <div th:if="${endPage < pagesCount - 1}">
         <button class="btn btn-sm btn-disabled">...</button>
     </div>
 
+    <!-- 마지막 페이지로 이동 -->
     <div th:if="${endPage < pagesCount}">
-        <a class="btn btn-sm" th:href="${baseUri} + '&page=' + ${pagesCount}" th:text="${pagesCount}"></a>
+        <a class="btn btn-sm" th:href="${baseUri} + 'page=' + ${pagesCount}" th:text="${pagesCount}"></a>
     </div>
 </div>
+
 
 <!-- 모달: 재고 추가 및 파일 업로드 -->
 <div id="uploadModal" class="modal">

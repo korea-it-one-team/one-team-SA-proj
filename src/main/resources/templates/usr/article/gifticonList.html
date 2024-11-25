@@ -171,35 +171,44 @@
         </div>
     </div>
 
-    <div class="pagination"
-         th:with="paginationLen=3,
-              startPage=${page - paginationLen >= 1 ? page - paginationLen : 1},
-              endPage=${page + paginationLen <= pagesCount ? page + paginationLen : pagesCount},
-              baseUri='?searchKeyword=' + ${searchKeyword}">
+<div class="pagination flex justify-center mt-3"
+     th:with="
+        paginationLen=3,
+        startPage=${page - paginationLen >= 1} ? ${page - paginationLen} : 1,
+        endPage=${page + paginationLen <= pagesCount} ? ${page + paginationLen} : ${pagesCount},
+        baseUri='?'">
 
-        <div th:if="${startPage > 1}">
-            <a class="pagination-btn" th:href="${baseUri + '&page=1'}">1</a>
-        </div>
-        <div th:if="${startPage > 2}">
-            <button class="pagination-btn">...</button>
-        </div>
+    <!-- 첫 페이지로 이동 -->
+    <div th:if="${startPage > 1}">
+        <a class="btn btn-sm" th:href="${baseUri} + 'page=1'">1</a>
+    </div>
 
-        <div th:each="i : ${#numbers.sequence(startPage, endPage)}">
-            <a class="pagination-btn" th:classappend="${page == i ? 'pagination-btn-active' : ''}" th:href="${baseUri + '&page=' + i}"
-               th:text="${i}"></a>
-        </div>
+    <!-- 첫 페이지와 시작 페이지 사이의 생략 -->
+    <div th:if="${startPage > 2}">
+        <button class="btn btn-sm btn-disabled">...</button>
+    </div>
 
-        <div th:if="${endPage < pagesCount - 1}">
-            <button class="pagination-btn">...</button>
-        </div>
+    <!-- 현재 페이지와 주변 페이지 번호 -->
+    <div th:each="i : ${#numbers.sequence(startPage, endPage)}">
+        <a class="btn btn-sm"
+           th:classappend="${page == i} ? 'btn-active'"
+           th:href="${baseUri} + 'page=' + ${i}"
+           th:text="${i}"></a>
+    </div>
 
-        <div th:if="${endPage < pagesCount}">
-            <a class="pagination-btn" th:href="${baseUri + '&page=' + pagesCount}" th:text="${pagesCount}"></a>
-        </div>
+    <!-- 마지막 페이지와 끝 페이지 사이의 생략 -->
+    <div th:if="${endPage < pagesCount - 1}">
+        <button class="btn btn-sm btn-disabled">...</button>
+    </div>
+
+    <!-- 마지막 페이지로 이동 -->
+    <div th:if="${endPage < pagesCount}">
+        <a class="btn btn-sm" th:href="${baseUri} + 'page=' + ${pagesCount}" th:text="${pagesCount}"></a>
     </div>
 </section>
 
 <footer th:replace="~{common/footer :: footer}"></footer>
+
 
 <script th:inline="javascript">
     function exchangeGifticon(id, stock) {

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head th:replace="~{common/head :: head}">
+    <title>DETAIL</title>
+    <!--    <th:block th:with="toastUi=true"></th:block>-->
+</head>
+
+<style>
+    .article-write-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+        position: relative;
+        width: calc(1440 * var(--rpx-vw)); /* 가로 기준 비율 */
+        min-height: calc(1024 * var(--rpx-vh)); /* 세로 기준 비율 */
+        margin: 0 auto;
+        padding: calc(50 * var(--rpx-vh)) 0;
+        overflow: hidden;
+        gap: calc(50 * var(--rpx-vw));
+    }
+
+    .write-container {
+        display: flex;
+        flex-direction: column;
+        gap: calc(20 * var(--rpx-vw));
+        width: 70%;
+        background-color: #252525;
+        border-radius: calc(10 * var(--rpx-vw));
+        padding: calc(20 * var(--rpx-vw));
+    }
+
+    .article-write-form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        gap: calc(12 * var(--rpx-vw));
+    }
+
+    .write-form-line {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        gap: calc(10 * var(--rpx-vw));
+        width: 100%;
+    }
+
+    .write-form-label {
+        background-color: #cdf256;
+        border-radius: calc(4 * var(--rpx-vw));
+        color: #1e1e1e;
+        padding: calc(4 * var(--rpx-vw)) 0;
+        text-align: center;
+        min-width: calc(70 * var(--rpx-vw));
+        font-size: calc(14 * var(--rpx-vw));
+    }
+
+    .write-form-nickname-text {
+        font-size: calc(14 * var(--rpx-vw));
+    }
+
+    .write-form-select {
+        padding: calc(6 * var(--rpx-vw)) calc(12 * var(--rpx-vw)) calc(6 * var(--rpx-vw)) calc(12 * var(--rpx-vw));
+        font-size: calc(14 * var(--rpx-vw));
+        border: 1px solid #444;
+        border-radius: calc(4 * var(--rpx-vw));
+        background-color: #383838;
+        color: #aaaaaa;
+    }
+
+    .write-form-input {
+        flex-grow: 1;
+        padding: calc(6 * var(--rpx-vw)) calc(12 * var(--rpx-vw)) calc(6 * var(--rpx-vw)) calc(12 * var(--rpx-vw));
+        border: 1px solid #ddd;
+        border-radius: calc(4 * var(--rpx-vw));
+        font-size: calc(14 * var(--rpx-vw));
+        color: #ffffff;
+        background: #333333;
+    }
+
+    /* 커스텀 파일 버튼 */
+    .custom-file-wrapper {
+        display: flex;
+        align-items: center;
+        gap: calc(10 * var(--rpx-vw));
+        flex-grow: 1;
+        padding: calc(6 * var(--rpx-vw)) calc(12 * var(--rpx-vw)) calc(6 * var(--rpx-vw)) calc(12 * var(--rpx-vw));
+        border: 1px solid #ddd;
+        border-radius: calc(4 * var(--rpx-vw));
+        font-size: calc(14 * var(--rpx-vw));
+        color: #aaaaaa;
+        background: #333333;
+    }
+
+    .custom-file-button {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        padding: calc(4 * var(--rpx-vw)) calc(6 * var(--rpx-vw));
+        font-size: calc(10 * var(--rpx-vw));
+        font-weight: bold;
+        text-align: center;
+        border-radius: calc(4 * var(--rpx-vw));
+        cursor: pointer;
+        text-decoration: none;
+        transition: background-color 0.2s, transform 0.2s;
+        box-shadow: calc(1.4 * var(--rpx-vw)) calc(1.4 * var(--rpx-vw)) 0px 0px #7B9D0C;
+        background-color: var(--primary-color); /* Primary 색상 */
+        color: #1e1e1e; /* 텍스트 색상 */
+    }
+
+    .custom-file-button:hover {
+        background-color: #b0e040;
+    }
+
+    /* 파일명 표시 텍스트 */
+    .custom-file-name {
+        font-size: calc(14 * var(--rpx-vw));
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /*토스트 UI wrapper*/
+    .write-editor-container {
+        width: 100%;
+        color: #ffffff;
+    }
+
+    /* ToastUI Editor 내부 텍스트 색상 */
+    .ProseMirror {
+        color: #ffffff !important; /* 입력 텍스트 색상 흰색 */
+    }
+
+    .write-btns {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        gap: calc(10 * var(--rpx-vw));
+    }
+
+    .article-submit-btn {
+        width: 100%;
+        background: var(--primary-color);
+        color: #1e1e1e;
+        padding: calc(10 * var(--rpx-vw));
+        font-size: calc(16 * var(--rpx-vw));
+        border: none;
+        border-radius: calc(8 * var(--rpx-vw));
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .article-submit-btn:hover {
+        background: #b0e040;
+    }
+
+    .back-button {
+        font-size: calc(16 * var(--rpx-vw));
+        color: var(--primary-color);
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .back-button:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<body>
+<script th:inline="javascript">
+    function ArticleWrite__submit(form) {
+        form.title.value = form.title.value.trim();
+
+        if (form.title.value.length === 0) {
+            alert("제목을 써주세요.");
+            return;
+        }
+
+        // 에디터 객체 가져오기
+        toastui.Editor.factory({
+            el: document.querySelector('#editor')
+        });
+
+        const markdown = editor.getMarkdown().trim();
+
+        if (markdown.length === 0) {
+            alert('내용을 써주세요.');
+            return;
+        }
+
+        $('#fileInput').attr('name', 'file__article__' + [[${currentId}]] + '__extra__Img__1');
+
+        form.body.value = markdown;
+        form.submit();
+    }
+
+    function updateFileName(input) {
+        const fileNameEl = document.getElementById('fileName');
+        if (input.files.length > 0) {
+            fileNameEl.textContent = input.files[0].name; // 파일명 표시
+            fileNameEl.style.color = '#ffffff'; // 파일 선택 시 텍스트 색상 흰색으로 변경
+        } else {
+            fileNameEl.textContent = '선택된 파일 없음'; // 기본 메시지
+            fileNameEl.style.color = '#aaaaaa'; // 파일 미선택 시 기본 색상 적용
+        }
+    }
+
+    function updateSelectColor(selectElement) {
+        if (selectElement.value === "") {
+            // 기본 선택 상태: 텍스트 색상 회색
+            selectElement.style.color = "#aaaaaa";
+        } else {
+            // 다른 옵션 선택: 텍스트 색상 흰색
+            selectElement.style.color = "#ffffff";
+        }
+    }
+</script>
+
+<header th:replace="~{common/header-2 :: header-2}"></header>
+<div class="make-header-margin"></div>
+<script type="text/javascript">
+    function ArticleWrite__submit(form) {
+        form.title.value = form.title.value.trim();
+
+        if (form.title.value.length == 0) {
+            alert('제목을 입력하세요.');
+            return;
+        }
+
+        // 에디터 객체 가져오기
+        toastui.Editor.factory({
+            el: document.querySelector('#editor')
+        });
+
+        const markdown = editor.getMarkdown().trim();
+
+        if (markdown.length == 0) {
+            alert('내용을 입력하세요.');
+            return;
+        }
+
+        // 이미지 URL들을 Markdown에서 추출
+        const imageUrls = [];
+        const imageRegex = /!\[.*?\]\((.*?)\)/g; // Markdown 이미지 패턴
+        let match;
+        while ((match = imageRegex.exec(markdown)) !== null) {
+            imageUrls.push(match[1]); // 이미지 URL만 추출
+        }
+        // 이미지 URL들을 hidden input 필드에 저장
+        form.imageUrls.value = imageUrls.join(','); // 쉼표로 구분하여 전송
+
+        $('#fileInput').attr('name', 'file__article__' + [[${currentId}]] + '__extra__Img__1');
+
+        form.body.value = markdown;
+        form.submit();
+    }
+</script>
+
+<section class="article-write-section">
+    <div class="write-container">
+        <form onsubmit="ArticleWrite__submit(this); return false;" th:action="@{/usr/article/doWrite}" method="POST"
+              enctype="multipart/form-data" class="article-write-form">
+            <input type="hidden" name="body"/>
+            <input type="hidden" name="id" th:value="${currentId}" id="currentId">
+            <input type="hidden" name="imageUrls"/> <!-- 이미지 URL들을 전송할 hidden 필드 추가 -->
+            <div class="write-form-line">
+                <label class="write-form-label">게시판</label>
+                <select class="input write-form-select" name="boardId" onchange="updateSelectColor(this)">
+                    <option value="" selected disabled>게시판을 선택해주세요.</option>
+                    <option value="1">NOTICE</option>
+                    <option value="2">ANALYSIS</option>
+                    <option value="3">FREE</option>
+                </select>
+            </div>
+            <div class="write-form-line">
+                <label class="write-form-label">제목</label>
+                <input class="input write-form-input" name="title"
+                       autocomplete="off" type="text" placeholder="제목을 입력하세요." maxlength="20"
+                       th:value="${#strings.escapeXml(param.title)}"/>
+            </div>
+            <div class="write-form-line">
+                <label class="write-form-label">동영상 첨부</label>
+                <div class="custom-file-wrapper">
+                    <label for="fileInput" class="custom-file-button">파일 선택</label>
+                    <span id="fileName" class="custom-file-name">선택된 파일 없음</span>
+                    <input id="fileInput" type="file" name="file" class="hidden" onchange="updateFileName(this)">
+                </div>
+            </div>
+            <div class="write-editor-container">
+                <div id="editor">
+                    <script type="text/x-template" th:value="${#strings.escapeXml(param.title)}"></script>
+                </div>
+            </div>
+            <div class="write-btns">
+                <button class="article-submit-btn">등록</button>
+                <button class="back-button" type="button" onclick="history.back()">뒤로가기</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        const currentId = document.querySelector('#currentId').value; // currentId 가져오기 (hidden input or element에서)
+
+
+        const editor = new toastui.Editor({
+            el: document.querySelector('#editor'),
+            height: '600px',
+            initialEditType: 'markdown',
+            previewStyle: 'vertical',
+            initialValue: '', // 초기 마크다운 값
+            hooks: {
+                addImageBlobHook: function (blob, callback) {
+                    // 이미지 파일을 업로드하는 FormData 생성
+                    const formData = new FormData();
+                    formData.append('file', blob);
+                    formData.append('currentId', currentId); // currentId 추가
+
+                    // 서버로 이미지를 업로드 (여러 이미지를 처리할 수 있도록 변경)
+                    fetch('/api/images/upload', {
+                        method: 'POST',
+                        body: formData,
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.url) {
+                                // 업로드된 이미지 URL을 에디터에 삽입
+                                callback(data.url, '');
+                            } else {
+                                console.error('Image upload failed: ', data);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error uploading image:', error);
+                        });
+
+                    return false;  // 기본 이미지 업로드 동작 방지
+                }
+            }
+        });
+
+        // 이미지 업로드 기능을 활성화하기 위해 클릭 시 파일 선택
+        document.querySelector(".image")
+            .addEventListener("click", function () {
+                const imageInput = document.createElement('input');
+                imageInput.type = 'file';
+                imageInput.accept = 'image/*';
+                imageInput.multiple = true;  // 여러 개의 이미지 파일 선택 가능
+
+                imageInput.addEventListener('change', function (event) {
+                    const files = event.target.files;
+                    if (files && files.length > 0) {
+                        Array.from(files).forEach(file => {
+                            const formData = new FormData();
+                            formData.append('file', file);
+                            formData.append('currentId', currentId); // currentId 추가
+
+                            fetch('/api/images/upload', {
+                                method: 'POST',
+                                body: formData,
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.url) {
+                                        // 업로드된 이미지 URL을 에디터에 삽입
+                                        editor.insertText('![](' + data.url + ')');
+                                    } else {
+                                        console.error('Image upload failed: ', data);
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error uploading image:', error);
+                                });
+                        });
+                    }
+                });
+
+                imageInput.click();  // 파일 선택 창 강제 팝업
+            });
+    </script>
+
+</section>
+
+<footer th:replace="~{common/footer :: footer}"></footer>
+
+</body>
+</html>
