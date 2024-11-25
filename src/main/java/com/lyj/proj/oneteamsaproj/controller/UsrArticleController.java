@@ -74,9 +74,6 @@ public class UsrArticleController {
 
         int repliesCount = replies.size();
 
-        int videoFileCount = genFileService.getFileCountByType2CodeAndRelId("video", id);
-        int imageFileCount = genFileService.getFileCountByType2CodeAndRelId("Img", id);
-
         model.addAttribute("article", article);
 
         model.addAttribute("replies", replies);
@@ -84,7 +81,6 @@ public class UsrArticleController {
 
         model.addAttribute("files", files);
         model.addAttribute("videoFileCount", videoFileCount);
-        model.addAttribute("imageFileCount", imageFileCount);
 
         model.addAttribute("isAlreadyAddGoodRp",
 
@@ -140,7 +136,9 @@ public class UsrArticleController {
     // 로그인 체크 -> 유무 체크 -> 권한 체크 -> 수정
     @RequestMapping("/usr/article/doModify")
     @ResponseBody
-    public String doModify(HttpServletRequest req, int id, String title, String body, MultipartRequest multipartRequest) {
+    public String doModify(HttpServletRequest req, int id, String title, String body,
+                           @RequestParam("imageUrls") String imageUrls,
+                           MultipartRequest multipartRequest) {
 
         Rq rq = (Rq) req.getAttribute("rq");
 
@@ -161,6 +159,21 @@ public class UsrArticleController {
         }
 
         article = articleService.getArticleById(id);
+
+        // 이미지 URL들을 처리 (쉼표로 구분된 URL들)
+        String[] images = imageUrls.split(",");
+
+        if (imageUrls.length() >= 2) {
+            try {
+                // images 배열을 순차적으로 처리
+                for (String imageUrl : images) {
+                    // 각 이미지 URL을 처리 (예: DB에 저장하거나, 다른 서비스에 저장)
+                    imageService.saveImage(imageUrl, article.getId(), article.getBoardId());  // 이미지 업로드
+                }
+            } catch (IOException e) {
+                return Ut.jsHistoryBack("F-4", "이미지 업로드 중 오류 발생.");
+            }
+        }
 
         // 파일 처리
         Map<String, List<MultipartFile>> fileMap = multipartRequest.getMultiFileMap();
@@ -243,10 +256,13 @@ public class UsrArticleController {
 
         // 이미지 URL들을 처리 (쉼표로 구분된 URL들)
         String[] images = imageUrls.split(",");
+        System.out.println("imageUrls : " + imageUrls);
+        System.out.println("imageUrls : " + imageUrls.length());
+
         // images 배열을 사용하여 처리
         // 파일 업로드
 
-        if (images != null && images.length > 0) {
+        if (imageUrls.length() >= 2) {
             try {
                 // images 배열을 순차적으로 처리
                 for (String imageUrl : images) {

@@ -139,6 +139,11 @@ public class GenFileService {
         System.err.println(fileInputName);
         String[] fileInputNameBits = fileInputName.split("__");
 
+        System.out.println("DEBUG: Extracted type2Code = " + fileInputNameBits[0]);
+        System.out.println("DEBUG: Extracted type2Code = " + fileInputNameBits[1]);
+        System.out.println("DEBUG: Extracted type2Code = " + fileInputNameBits[2]);
+        System.out.println("DEBUG: Extracted type2Code = " + fileInputNameBits[3]);
+
         String relTypeCode = fileInputNameBits[1];
         String typeCode = fileInputNameBits[3];
         String type2Code = fileInputNameBits[4];

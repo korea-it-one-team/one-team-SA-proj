@@ -78,7 +78,6 @@
     }
 
     .mypage-btn {
-        display: inline-block;
         text-align: center;
         background-color: #cdf256; /* 포인트 컬러 */
         color: #1e1e1e;
@@ -89,10 +88,31 @@
         text-decoration: none;
         transition: background-color 0.3s;
         cursor: pointer;
+        width: 100%;
+    }
+
+    .mypage-btn-red {
+        background-color: #dc3545;
+        color: #ffffff;
     }
 
     .mypage-btn:hover {
         background-color: #b6db4a; /* 포인트 컬러의 호버 상태 */
+    }
+
+    .mypage-btn-red:hover {
+        background-color: #b02a37;
+    }
+
+    .back-button {
+        font-size: calc(12 * var(--rpx-vw));
+        color: var(--primary-color);
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .back-button:hover {
+        text-decoration: underline;
     }
 </style>
 <body>
@@ -135,10 +155,40 @@
             </div>
             <div class="mypage-actions">
                 <a th:href="@{/usr/member/checkPw}" class="mypage-btn">회원정보 수정</a>
-                <button class="mypage-btn" type="button" onclick="history.back()">뒤로가기</button>
+                <div class="btns" th:if="${rq.loginedMember.delStatus == 0}">
+                    <form action="/usr/member/doDelete" method="post" onsubmit="return confirmDelete();">
+                        <input type="hidden" name="id" value="${rq.loginedMember.id}">
+                        <button class="mypage-btn mypage-btn-red" type="submit" >회원탈퇴</button>
+                    </form>
+                </div>
+                <div class="btns" th:if="${rq.loginedMember.delStatus == 1}">
+                    <form action="/usr/member/doRestore" method="post" onsubmit="return confirmCancel();">
+                        <input type="hidden" name="id" value="${rq.loginedMember.id}">
+                        <button class="mypage-btn mypage-btn-red" type="submit" >탈퇴취소</button>
+                    </form>
+                </div>
+            </div>
+            <div class="back-button" onclick="history.back()">뒤로가기</div>
             </div>
         </div>
-    </div>
+
+    <script>
+        function confirmDelete() {
+            if (confirm('정말 탈퇴하시겠습니까?')) {
+                alert('탈퇴되었습니다.');
+                return true; // confirm 후 계속 진행
+            }
+            return false; // confirm이 취소되면 제출을 막음
+        }
+
+        function confirmCancel() {
+            if (confirm('정말 취소하시겠습니까?')) {
+                alert('취소되었습니다.');
+                return true; // confirm 후 계속 진행
+            }
+            return false; // confirm이 취소되면 제출을 막음
+        }
+    </script>
 
 </section>
 <footer th:replace="~{common/footer :: footer}"></footer>
