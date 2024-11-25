@@ -52,15 +52,15 @@ public class UsrMemberController {
         Member member = memberService.getMemberByLoginId(loginId);
 
         if (member == null) {
-            return Ut.jsHistoryBack("F-3", Ut.f("%s는(은) 존재하지 않는 아아디 입니다.", loginId));
+            return Ut.jsHistoryBack("F-3", Ut.f("%s는(은) 존재하지 않는 아이디 입니다.", loginId));
         }
         System.err.println(Ut.sha256(loginPw));
 
         if (member.getLoginPw().equals(Ut.sha256(loginPw)) == false) {
-            return Ut.jsHistoryBack("F-4", Ut.f("비밀번호가 일치하지 않습니다!!!!!"));
+            return Ut.jsHistoryBack("F-4", Ut.f("비밀번호가 일치하지 않습니다."));
         }
 
-        if (member.isDelStatus() == true) {
+        if (member.getDelStatus() == 2) {
             return Ut.jsReplace("사용정지된 계정이야", "/");
         }
 
@@ -244,6 +244,27 @@ public class UsrMemberController {
 
         return Ut.jsReplace(notifyTempLoginPwByEmailRd.getResultCode(), notifyTempLoginPwByEmailRd.getMsg(),
                 afterFindLoginPwUri);
+    }
+
+    // 회원이 직접 탈퇴처리
+    @RequestMapping("/usr/member/doDelete")
+    public String doDelete() {
+        int loginedMemberId = rq.getLoginedMemberId();
+
+        // 7일 유예 기간 설정
+        memberService.doDeleteMember(loginedMemberId, 7);
+
+        return "redirect:/usr/member/myPage";
+    }
+
+    // 회원이 탈퇴처리 취소
+    @RequestMapping("/usr/member/doRestore")
+    public String doRestore() {
+        int loginedMemberId = rq.getLoginedMemberId();
+
+        memberService.restoreMember(loginedMemberId);
+
+        return "redirect:/usr/member/myPage";
     }
 
 }

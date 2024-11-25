@@ -22,6 +22,9 @@ public class GenFileService {
     @Value("${custom.genFileDirPath}")
     private String genFileDirPath;
 
+    @Value("${custom.videoFileDirPath}")
+    private String videoFileDirPath; // 동영상 파일 저장 경로
+
     @Autowired
     private GenFileRepository genFileRepository;
 
@@ -33,6 +36,8 @@ public class GenFileService {
                 "type2Code", type2Code, "fileNo", fileNo, "originFileName", originFileName, "fileExtTypeCode",
                 fileExtTypeCode, "fileExtType2Code", fileExtType2Code, "fileExt", fileExt, "fileSize", fileSize,
                 "fileDir", fileDir);
+        System.out.println("DEBUG: saveMeta param = " + param);
+
         genFileRepository.saveMeta(param);
 
         int id = Ut.getAsInt(param.get("id"), 0);
@@ -44,7 +49,7 @@ public class GenFileService {
         String fileInputName = multipartFile.getName();
         String[] fileInputNameBits = fileInputName.split("__");
 
-        if (fileInputNameBits[0].equals("file") == false) {
+        if (!fileInputNameBits[0].equals("file")) {
             return new ResultData("F-1", "파라미터 명이 올바르지 않습니다.");
         }
 
@@ -80,18 +85,25 @@ public class GenFileService {
         int newGenFileId = (int) saveMetaRd.getBody().get("id");
 
         // 새 파일이 저장될 폴더(io파일) 객체 생성
-        String targetDirPath = genFileDirPath + "/" + relTypeCode + "/" + fileDir;
+        String targetDirPath;
+        if (multipartFile.getContentType().startsWith("video")) {  // 동영상 파일 처리
+            targetDirPath = videoFileDirPath + "/" + relTypeCode + "/" + fileDir;
+        } else {
+            targetDirPath = genFileDirPath + "/" + relTypeCode + "/" + fileDir;
+        }
+        System.out.println(multipartFile.getContentType());
+
         java.io.File targetDir = new java.io.File(targetDirPath);
 
         // 새 파일이 저장될 폴더가 존재하지 않는다면 생성
-        if (targetDir.exists() == false) {
+        if (!targetDir.exists()) {
             targetDir.mkdirs();
         }
 
         String targetFileName = newGenFileId + "." + fileExt;
         String targetFilePath = targetDirPath + "/" + targetFileName;
 
-        // 파일 생성(업로드된 파일을 지정된 경로롤 옮김)
+        // 파일 생성(업로드된 파일을 지정된 경로로 옮김)
         try {
             multipartFile.transferTo(new File(targetFilePath));
         } catch (IllegalStateException | IOException e) {
@@ -110,6 +122,13 @@ public class GenFileService {
         int relId = Integer.parseInt(fileInputNameBits[2]);
         String typeCode = fileInputNameBits[3];
         String type2Code = fileInputNameBits[4];
+        // 파일 MIME 타입 확인 후 type2Code 변경
+        if (multipartFile.getContentType().startsWith("video")) {
+            type2Code = "Video";  // 동영상인 경우 type2Code를 Vid로 설정
+        } else {
+            type2Code = "Img";  // 그 외의 경우 Img로 설정
+        }
+        System.out.println("DEBUG: Extracted type2Code = " + type2Code);
         int fileNo = Integer.parseInt(fileInputNameBits[5]);
 
         return save(multipartFile, relTypeCode, relId, typeCode, type2Code, fileNo);
@@ -123,6 +142,13 @@ public class GenFileService {
         String relTypeCode = fileInputNameBits[1];
         String typeCode = fileInputNameBits[3];
         String type2Code = fileInputNameBits[4];
+        // 파일 MIME 타입 확인 후 type2Code 변경
+        if (multipartFile.getContentType().startsWith("video")) {
+            type2Code = "Video";  // 동영상인 경우 type2Code를 Video로 설정
+        } else {
+            type2Code = "Img";  // 그 외의 경우 Img로 설정
+        }
+        System.out.println("DEBUG: Extracted type2Code = " + type2Code);
         int fileNo = Integer.parseInt(fileInputNameBits[5]);
 
         return save(multipartFile, relTypeCode, relId, typeCode, type2Code, fileNo);
@@ -133,6 +159,12 @@ public class GenFileService {
     }
 
     public GenFile getGenFile(String relTypeCode, int relId, String typeCode, String type2Code, int fileNo) {
+        System.out.println("relTypeCode: " + relTypeCode);
+        System.out.println("relId: " + relId);
+        System.out.println("typeCode: " + typeCode);
+        System.out.println("type2Code: " + type2Code);
+        System.out.println("fileNo: " + fileNo);
+
         return genFileRepository.getGenFile(relTypeCode, relId, typeCode, type2Code, fileNo);
     }
 
@@ -241,5 +273,9 @@ public class GenFileService {
     public List<GenFile> getFilesByRelTypeCodeAndRelId(String relTypeCode, int relId) {
         // relTypeCode와 relId에 해당하는 파일 목록을 반환하도록 repository 메서드 호출
         return genFileRepository.getGenFilesByRelTypeCodeAndRelId(relTypeCode, relId);
+    }
+
+    public int getFileCountByType2CodeAndRelId(String type2Code, int relId) {
+        return genFileRepository.getFileCountByType2CodeAndRelId(type2Code, relId);
     }
 }

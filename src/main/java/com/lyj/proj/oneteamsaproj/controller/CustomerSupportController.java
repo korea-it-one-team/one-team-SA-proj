@@ -48,7 +48,7 @@ public class CustomerSupportController {
             model.addAttribute("isAdmin",false);
         };
 
-        return "usr/service/customer_support"; // JSP 파일 이름
+        return "usr/service/customer_support"; // 타임리프 파일 이름
     }
 
     @PostMapping("/submit-consultation")

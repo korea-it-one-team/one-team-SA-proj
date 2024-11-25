@@ -46,7 +46,37 @@
         <div class="btns">
             <button class="btn" type="button" onclick="history.back()">뒤로가기</button>
         </div>
+        <div class="btns" th:if="${rq.loginedMember.delStatus == 0}">
+            <form action="/usr/member/doDelete" method="post" onsubmit="return confirmDelete();">
+                <input type="hidden" name="id" value="${rq.loginedMember.id}">
+                <button class="btn" type="submit" >회원탈퇴</button>
+            </form>
+        </div>
+        <div class="btns" th:if="${rq.loginedMember.delStatus == 1}">
+            <form action="/usr/member/doRestore" method="post" onsubmit="return confirmCancel();">
+                <input type="hidden" name="id" value="${rq.loginedMember.id}">
+                <button class="btn" type="submit" >탈퇴취소</button>
+            </form>
+        </div>
     </div>
+
+    <script>
+        function confirmDelete() {
+            if (confirm('정말 탈퇴하시겠습니까?')) {
+                alert('탈퇴되었습니다.');
+                return true; // confirm 후 계속 진행
+            }
+            return false; // confirm이 취소되면 제출을 막음
+        }
+
+        function confirmCancel() {
+            if (confirm('정말 취소하시겠습니까?')) {
+                alert('취소되었습니다.');
+                return true; // confirm 후 계속 진행
+            }
+            return false; // confirm이 취소되면 제출을 막음
+        }
+    </script>
 </section>
 
 </body>
