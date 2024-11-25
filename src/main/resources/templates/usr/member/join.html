@@ -5,6 +5,10 @@
 </head>
 
 <body>
+
+<header th:replace="~{common/header-2 :: header-2}"></header>
+<div class="make-header-margin"></div>
+
 <!-- lodash debounce -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
 
@@ -82,9 +86,6 @@
 
     const checkLoginIdDupDebounced = _.debounce(checkLoginIdDup, 600);
 </script>
-
-<header th:replace="common/header :: header"></header>
-<hr />
 
 <section class="mt-24 text-xl px-4">
     <div class="mx-auto">

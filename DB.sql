@@ -56,7 +56,7 @@ CREATE TABLE `member`(
                          nickname CHAR(20) NOT NULL,
                          cellphoneNum CHAR(20) NOT NULL,
                          email CHAR(50) NOT NULL,
-                         points INT NOT NULL,
+                         points INT NOT NULL DEFAULT 0 COMMENT '기본값은 0',
                          delStatus TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴 여부 (0=탈퇴 전, 1=탈퇴 후)',
                          delDate DATETIME COMMENT '탈퇴 날짜'
 );
