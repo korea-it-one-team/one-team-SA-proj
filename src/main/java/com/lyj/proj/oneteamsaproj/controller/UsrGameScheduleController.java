@@ -132,7 +132,6 @@ public class UsrGameScheduleController {
         return response;
     }
 
-
     // DB에 저장할 메서드
     @GetMapping("/getGameSchedule")
     @ResponseBody
