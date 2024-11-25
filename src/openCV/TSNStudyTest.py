@@ -1,62 +1,110 @@
-from tsn import TSN  # TSN 라이브러리 필요
-from flask import Flask, jsonify, request
-import numpy as np
-import torch
-import cv2
+import os
+import json
+import subprocess
 
+# 기본 경로 설정
+base_dir = r"C:\work_oneteam\one-team-SA-proj\SoccerNet"
+output_dir = r"C:\work_oneteam\one-team-SA-proj\TSN_preprocessed"
+frame_interval = 1  # 1초 간격으로 프레임 추출
+frame_rate = 30  # 초당 30프레임
 
-# Flask 애플리케이션 생성
-app = Flask(__name__)
+train_list_file = os.path.join(output_dir, "train_list.txt")
+classes_file = os.path.join(output_dir, "classes.txt")
 
-# TSN 학습용 데이터 전처리 함수
-def preprocess_tsn_data(sn_folder):
-    # img1 폴더에서 프레임 샘플링
-    img_folder = sn_folder / 'img1'
-    seqinfo_file = sn_folder / 'seqinfo.ini'
+label_map = {}
+current_label_id = 0
 
-    # seqinfo.ini에서 프레임 속도 정보 가져오기
-    with open(seqinfo_file, 'r') as f:
-        lines = f.readlines()
-        fps = int([line for line in lines if "frameRate" in line][0].split('=')[1].strip())
+def generate_frames(video_path, output_dir):
+    """
+    Generate frames from video.
+    """
+    os.makedirs(output_dir, exist_ok=True)
+    ffmpeg_path = r"C:\ffmpeg-7.1-essentials_build\bin\ffmpeg.exe"
 
-    # TSN에 맞게 프레임 샘플링
-    sampled_frames = []
-    for i, img_file in enumerate(sorted(img_folder.iterdir())):
-        if i % fps == 0:
-            frame = cv2.imread(str(img_file))
-            sampled_frames.append(frame)
+    try:
+        # FFmpeg 명령어 실행
+        subprocess.run([
+            ffmpeg_path,
+            "-i", video_path,
+            "-vf", f"fps=1/{frame_interval}",
+            os.path.join(output_dir, "frame_%04d.jpg")
+        ], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error extracting frames from {video_path}: {e}")
 
-    return sampled_frames
+def process_labels_and_generate_train_list():
+    """
+    Process Labels-v2.json and Labels-cameras.json, generate train_list.txt, and create classes.txt.
+    """
+    global current_label_id
 
-# TSN 모델 학습 함수
-def train_tsn(sn_folders):
-    model = TSN(num_class=400, modality="RGB")  # 클래스 수와 TSN 모드 설정
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+    os.makedirs(output_dir, exist_ok=True)
+    total_annotations = 0
+    skipped_annotations = 0
 
-    for sn_folder in sn_folders:
-        frames = preprocess_tsn_data(sn_folder)
+    with open(train_list_file, "w") as train_list:
+        # 모든 경기 폴더 탐색 (재귀적으로)
+        for root, dirs, files in os.walk(base_dir):
+            for file in files:
+                # Labels-v2.json 및 Labels-cameras.json 파일 확인
+                if file in ["Labels-v2.json", "Labels-cameras.json"]:
+                    label_file = os.path.join(root, file)
 
-        # 모델 입력 데이터로 변환 및 학습
-        frames_tensor = torch.tensor(frames, dtype=torch.float32).permute(0, 3, 1, 2)  # [N, C, H, W] 형식
-        optimizer.zero_grad()
+                    # 비디오 파일 확인
+                    video_files = [os.path.join(root, f"1_224p.mkv"), os.path.join(root, f"2_224p.mkv")]
+                    available_videos = [video for video in video_files if os.path.exists(video)]
 
-        outputs = model(frames_tensor)
+                    if not available_videos:
+                        print(f"No videos found in {root}, skipping...")
+                        continue
 
-        # 라벨을 sn_folder에 맞춰 준비하는 부분을 구현해야 합니다.
-        # 예를 들어 실제 데이터 라벨을 가져오는 코드가 필요합니다.
-        label = ...  # 라벨 값은 실제 데이터에 따라 정의 필요
+                    # 라벨 파일 읽기
+                    with open(label_file, "r") as f:
+                        labels = json.load(f)
 
-        loss = torch.nn.functional.cross_entropy(outputs, torch.tensor([label]))  # label은 실제 라벨
+                    # 비디오 처리
+                    for video_path in available_videos:
+                        # 프레임 디렉토리 설정
+                        match_folder = os.path.relpath(root, base_dir)  # 상대 경로로 경기 폴더 얻기
+                        video_frames_dir = os.path.join(output_dir, match_folder, os.path.basename(video_path).split(".")[0] + "_frames")
+                        generate_frames(video_path, video_frames_dir)
 
-        # 역전파 및 가중치 업데이트
-        loss.backward()
-        optimizer.step()
+                        # 라벨-프레임 매핑
+                        for annotation in labels.get("annotations", []):
+                            total_annotations += 1
+                            label = annotation["label"]
 
-        # SNMOT-* 폴더에 대해 TSN 학습 실행
-        train_tsn(sn_folders)
+                            try:
+                                position_ms = int(annotation["position"])  # 밀리초 값을 정수로 변환
+                                position_s = position_ms / 1000.0  # 초 단위로 변환
+                            except (ValueError, TypeError):
+                                print(f"Invalid position value in {label_file}: {annotation['position']}")
+                                skipped_annotations += 1
+                                continue
 
-        # TSN 예제
-        torch.save(model.state_dict(), "trained_tsn_model.pth")
+                            frame_number = int(position_s / frame_interval)  # 프레임 번호 계산
+                            frame_name = f"frame_{frame_number:04d}.jpg"
+                            frame_path = os.path.join(video_frames_dir, frame_name)
 
-        if __name__ == '__main__':
-            app.run(port=5000)
+                            if os.path.exists(frame_path):
+                                # 클래스 ID 생성 및 매핑
+                                if label not in label_map:
+                                    label_map[label] = current_label_id
+                                    current_label_id += 1
+
+                                train_list.write(f"{frame_path} {label_map[label]}\n")
+                            else:
+                                skipped_annotations += 1
+                                print(f"Skipped: {frame_path} (Match: {match_folder}, Label: {label}, Position: {position_ms}ms)")
+
+    # classes.txt 생성
+    with open(classes_file, "w") as classes:
+        for label, label_id in sorted(label_map.items(), key=lambda x: x[1]):
+            classes.write(f"{label}\n")
+
+    print(f"Total annotations: {total_annotations}")
+    print(f"Skipped annotations: {skipped_annotations}")
+
+if __name__ == "__main__":
+    process_labels_and_generate_train_list()
+    print(f"Classes and train_list.txt generated in {output_dir}")

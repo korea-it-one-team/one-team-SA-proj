@@ -24,7 +24,7 @@ public class CustomerSupportController {
     @Autowired
     private Rq rq;
 
-    @RequestMapping("/customer-support")
+    @RequestMapping("/usr/customer-support")
     public String showCustomerSupport(HttpServletRequest req, Model model) {
         Rq rq = (Rq) req.getAttribute("rq");
         int member_id = 0;
@@ -35,20 +35,19 @@ public class CustomerSupportController {
         };
 
         // DB에서 FAQ, 상담내역 등을 불러와서 모델에 추가
-        List<faq_Categorys> categorys = customerSupportService.getcategorys();
+        List<faq_Categorys> categories = customerSupportService.getcategorys();
         List<Faq> faqs = customerSupportService.getFaqs();
-        List<Consultation> consultataions = customerSupportService.getHistory(member_id, member_status);
+        List<Consultation> consultations = customerSupportService.getHistory(member_id, member_status);
 
-        model.addAttribute("categorys",categorys);
+        model.addAttribute("categories",categories);
         model.addAttribute("faqs",faqs);
-        model.addAttribute("consultataions",consultataions);
+        model.addAttribute("consultations",consultations);
         if (member_status.equals("관리자")){
             model.addAttribute("isAdmin",true);
         }else {
             model.addAttribute("isAdmin",false);
         };
-
-        return "usr/service/customer_support"; // JSP 파일 이름
+        return "usr/service/customer_support"; // HTML 파일 이름
     }
 
     @PostMapping("/submit-consultation")
@@ -57,6 +56,7 @@ public class CustomerSupportController {
 
         Rq rq = (Rq) req.getAttribute("rq");
         // 상담 저장 로직
+
         Consultation consultation = customerSupportService.addConsultation(title,content,rq.getLoginedMemberId());
 
         // 저장된 상담 객체 반환
@@ -66,8 +66,6 @@ public class CustomerSupportController {
     @PostMapping("/save-answer")
     @ResponseBody
     public String saveAnswer(@RequestParam int id, @RequestParam String answer) {
-        System.out.println("saknffnk : " + id );
-        System.out.println("zzzzzzzz : " + answer );
         customerSupportService.updateAnswer(id, answer);
         return "redirect:/consultation-history"; // 상담 내역 페이지로 리다이렉트
     }

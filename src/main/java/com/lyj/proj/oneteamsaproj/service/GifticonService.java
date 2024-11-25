@@ -19,12 +19,12 @@ public class GifticonService {
         return gifticonRepository.findAll();
     }
 
-    public int getAllGifticonCount(String searchKeyword) {
-        return gifticonRepository.getGifticonCount(searchKeyword);
+    public int getAllGifticonCount() {
+        return gifticonRepository.getGifticonCount();
     }
 
 
-    public List<Gifticon> getForPrintGifticons(int itemsInAPage, int page, String searchKeyword) {
+    public List<Gifticon> getForPrintGifticons(int itemsInAPage, int page) {
         int limitFrom = (page - 1) * itemsInAPage;
         int limitTake = itemsInAPage;
 
@@ -32,7 +32,7 @@ public class GifticonService {
             // limitFrom이 -1일 경우 모든 결과를 반환하는 로직
             return gifticonRepository.findAll();
         } else {
-            return gifticonRepository.getForPrintGifticons(limitFrom, limitTake, searchKeyword);
+            return gifticonRepository.getForPrintGifticons(limitFrom, limitTake);
         }
     }
 

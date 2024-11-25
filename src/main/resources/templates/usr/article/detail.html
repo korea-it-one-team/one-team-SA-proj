@@ -2,9 +2,258 @@
 <html xmlns:th="http://www.thymeleaf.org" data-theme="light" lang="ko">
 <head th:replace="~{common/head :: head}">
     <title>DETAIL</title>
-<!--    <th:block th:with="toastUi=true"></th:block>-->
 </head>
+<style>
+    .article-detail-section-1 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+        position: relative;
+        width: calc(1440 * var(--rpx-vw)); /* 가로 기준 비율 */
+        min-height: calc(1024 * var(--rpx-vh)); /* 세로 기준 비율 */
+        margin: 0 auto;
+        padding: calc(50 * var(--rpx-vh)) 0;
+        overflow: hidden;
+        gap: calc(50 * var(--rpx-vw));
+    }
+
+    .main-content {
+        display: flex;
+        flex-direction: column;
+        gap: calc(20 * var(--rpx-vw));
+        width: 70%;
+        background-color: #252525;
+        border-radius: calc(10 * var(--rpx-vw));
+        padding: calc(20 * var(--rpx-vw));
+    }
+
+    .detail-top-btn-group {
+        display: flex;
+        width: 100%;
+    }
+
+    .btn-always-show {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        gap: calc(10 * var(--rpx-vw));
+    }
+
+    .detail-container {
+        display: flex;
+        flex-direction: column;
+        gap: calc(10 * var(--rpx-vw));
+    }
+
+    .article-title {
+        font-size: calc(24 * var(--rpx-vw));
+        font-weight: bold;
+    }
+
+    .article-author-line {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .article-author {
+        font-size: calc(14 * var(--rpx-vw));
+    }
+
+    .regDate-and-hit {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .btn-usr-equal-author {
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: row;
+        gap: calc(10 * var(--rpx-vw));
+    }
+
+    .article-regDate, .article-hit {
+        font-size: calc(14 * var(--rpx-vw));
+        color: #aaaaaa;
+    }
+
+    .divider {
+        border: 0;
+        border-top: 1px solid #444;
+        margin: calc(20 * var(--rpx-vw)) 0;
+    }
+
+    .article-content {
+        display: flex;
+        flex-direction: column;
+        gap: calc(20 * var(--rpx-vw));
+    }
+
+    .article-video {
+        width: 100%;
+        border-radius: calc(10 * var(--rpx-vw));
+        background: #000;
+    }
+
+    .article-body {
+        font-size: calc(16 * var(--rpx-vw));
+        color: #fff;
+    }
+
+    .reaction-buttons {
+        display: flex;
+        justify-content: center;
+        gap: calc(10 * var(--rpx-vw));
+    }
+
+    .reaction-buttons button {
+        display: flex;
+        align-items: center;
+        gap: calc(5 * var(--rpx-vw));
+        background-color: #333333;
+        color: #ffffff;
+        border: none;
+        border-radius: calc(5 * var(--rpx-vw));
+        padding: calc(10 * var(--rpx-vw)) calc(20 * var(--rpx-vw));
+        cursor: pointer;
+        font-size: calc(14 * var(--rpx-vw));
+    }
+
+    .reply-container {
+        width: 70%;
+        display: flex;
+        flex-direction: column;
+        gap: calc(20 * var(--rpx-vw));
+    }
+
+    .reply-form {
+        display: flex;
+        flex-direction: column;
+        gap: calc(10 * var(--rpx-vw));
+    }
+
+    .reply-input {
+        width: 100%;
+        min-height: 100px;
+        border: 1px solid #444;
+        background-color: #1e1e1e;
+        color: #ffffff;
+        padding: calc(10 * var(--rpx-vw));
+        border-radius: calc(5 * var(--rpx-vw));
+    }
+
+    .reply-input::placeholder {
+        font-size: calc(14 * var(--rpx-vw));
+        color: #aaaaaa;
+    }
+
+    .login-reminder {
+        font-size: calc(16 * var(--rpx-vw));
+        text-align: center;
+        color: #ffffff;
+    }
+
+    .reply-submit-btn {
+        width: 100%;
+        background: var(--primary-color);
+        color: #1e1e1e;
+        padding: calc(10 * var(--rpx-vw));
+        font-size: calc(16 * var(--rpx-vw));
+        border: none;
+        border-radius: calc(8 * var(--rpx-vw));
+        margin-top: calc(8 * var(--rpx-vw));
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .reply-submit-btn:hover {
+        background: #b0e040;
+    }
+
+    .reply-list-container {
+        width: 70%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: calc(20 * var(--rpx-vw));
+    }
+
+    .empty-replies {
+        width: 100%;
+        text-align: center;
+        color: #aaaaaa;
+        font-size: calc(14 * var(--rpx-vw));
+    }
+
+    .reply-item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: calc(10 * var(--rpx-vw));
+        padding: calc(15 * var(--rpx-vw));
+        border: 1px solid #444;
+        border-radius: calc(8 * var(--rpx-vw));
+        background-color: #252525;
+        position: relative; /* 버튼 유무와 상관없이 body가 중앙에 위치하도록 설정 */
+    }
+
+    .reply-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: calc(20 * var(--rpx-vw));
+        color: #bbbbbb;
+        flex-shrink: 0; /* 제목 크기가 본문에 영향을 주지 않도록 설정 */
+    }
+
+    .reply-author {
+        font-size: calc(14 * var(--rpx-vw));
+        font-weight: bold;
+        min-width: calc(110 * var(--rpx-vw));
+        color: #ffffff;
+    }
+
+    .reply-date {
+        font-size: calc(14 * var(--rpx-vw));
+        color: #aaaaaa;
+    }
+
+    .reply-body {
+        flex: 1; /* 남은 공간을 차지 */
+        text-align: left; /* 본문을 수평 가운데 정렬 */
+        font-size: calc(14 * var(--rpx-vw));
+        padding-left: calc(20 * var(--rpx-vw));
+    }
+
+    .reply-body-text {
+        font-size: calc(14 * var(--rpx-vw));
+    }
+
+    .reply-modify-input {
+        width: 100%;
+        padding: calc(10 * var(--rpx-vw));
+        border: 1px solid #444;
+        border-radius: calc(4 * var(--rpx-vw));
+        background-color: #1e1e1e;
+        color: #ffffff;
+    }
+
+    .reply-actions {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        gap: calc(5 * var(--rpx-vw));
+        flex-shrink: 0; /* 버튼 크기가 본문 위치에 영향을 주지 않도록 설정 */
+    }
+</style>
+
 <body>
+<header th:replace="~{common/header-2 :: header-2}"></header>
+<div class="make-header-margin"></div>
 
 <!--변수-->
 <script th:inline="javascript">
@@ -23,6 +272,7 @@
     console.log("isAlreadyAddGoodRp : " + isAlreadyAddGoodRp);
 </script>
 
+<!--조회수-->
 <script th:inline="javascript">
     function ArticleDetail__doIncreaseHitCount() {
         const localStorageKey = 'article__' + params.id + '__alreadyOnView';
@@ -32,7 +282,7 @@
         $.get('../article/doIncreaseHitCountRd', {
             id: params.id,
             ajaxMode: 'Y'
-        }, function(data) {
+        }, function (data) {
             if (data.resultCode === 'S-1') { // 서버 응답이 성공했을 때만 저장
                 localStorage.setItem(localStorageKey, true);
                 $('.article-detail__hit-count').empty().html(data.data1);
@@ -42,8 +292,8 @@
         }, 'json');
     }
 
-    $(function() {
-        setTimeout(ArticleDetail__doIncreaseHitCount, 2000);
+    $(function () {
+        setTimeout(ArticleDetail__doIncreaseHitCount, 200);
         console.log("doIncreaseHitCount 실행")
     });
 </script>
@@ -60,9 +310,10 @@
             return;
         }
     }
+
     function doGoodReaction(articleId) {
-        if(isNaN(params.memberId) == true) {
-            if(confirm('로그인 페이지로 이동하겠습니까?')) {
+        if (params.memberId === 0) {
+            if (confirm('로그인 페이지로 이동하겠습니까?')) {
 // 				console.log(window.location.href);
 // 				console.log(encodeURIComponent(window.location.href));
                 var currentUri = encodeURIComponent(window.location.href);
@@ -77,50 +328,59 @@
             type: 'POST',
             data: {relTypeCode: 'article', relId: articleId},
             dataType: 'json',
-            success: function(data){
+            success: function (data) {
                 console.log(data);
                 console.log('data.data1Name : ' + data.data1Name);
                 console.log('data.data1 : ' + data.data1);
                 console.log('data.data2Name : ' + data.data2Name);
                 console.log('data.data2 : ' + data.data2);
-                if(data.resultCode.startsWith('S-')){
+                if (data.resultCode.startsWith('S-')) {
                     var likeButton = $('#likeButton');
-                    var likeCount = $('#likeCount');
-                    var likeCountC = $('.likeCount');
+                    var likeCount = $('good-reaction-point');
+                    var likeCountBtn = likeButton.find('.likeCount');
                     var DislikeButton = $('#DislikeButton');
                     var DislikeCount = $('#DislikeCount');
-                    var DislikeCountC = $('.DislikeCount');
+                    var DislikeCountBtn = DislikeButton.find('.DislikeCount');
 
-                    if(data.resultCode == 'S-1'){
+                    // 모든 좋아요 카운트 업데이트
+                    likeCount.text(data.data1);
+                    likeCountBtn.text(data.data1);
+
+                    // 모든 싫어요 카운트 업데이트
+                    DislikeCount.text(data.data2);
+                    DislikeCountBtn.text(data.data2);
+
+                    if (data.resultCode == 'S-1') {
                         likeButton.toggleClass('btn-outline');
                         likeCount.text(data.data1);
-                        likeCountC.text(data.data1);
-                    }else if(data.resultCode == 'S-2'){
+                    } else if (data.resultCode == 'S-2') {
                         DislikeButton.toggleClass('btn-outline');
                         DislikeCount.text(data.data2);
-                        DislikeCountC.text(data.data2);
                         likeButton.toggleClass('btn-outline');
                         likeCount.text(data.data1);
-                    }else {
+                    } else {
                         likeButton.toggleClass('btn-outline');
                         likeCount.text(data.data1);
-                        likeCountC.text(data.data1);
                     }
 
-                }else {
+                } else {
                     alert(data.msg);
                 }
 
             },
-            error: function(jqXHR,textStatus,errorThrown) {
+            error: function (jqXHR, textStatus, errorThrown) {
                 alert('좋아요 오류 발생 : ' + textStatus);
             }
 
         });
     }
+
     function doBadReaction(articleId) {
-        if(isNaN(params.memberId) == true) {
-            if(confirm('로그인 페이지로 이동하겠습니까?')) {
+
+        console.log("params.memberId : " + params.memberId);
+
+        if (params.memberId === 0) {
+            if (confirm('로그인 페이지로 이동하겠습니까?')) {
 //				console.log(window.location.href);
 //				console.log(encodeURIComponent(window.location.href));
                 var currentUri = encodeURIComponent(window.location.href);
@@ -133,92 +393,106 @@
             type: 'POST',
             data: {relTypeCode: 'article', relId: articleId},
             dataType: 'json',
-            success: function(data){
+            success: function (data) {
                 console.log(data);
                 console.log('data.data1Name : ' + data.data1Name);
                 console.log('data.data1 : ' + data.data1);
                 console.log('data.data2Name : ' + data.data2Name);
                 console.log('data.data2 : ' + data.data2);
-                if(data.resultCode.startsWith('S-')){
+                if (data.resultCode.startsWith('S-')) {
                     var likeButton = $('#likeButton');
                     var likeCount = $('#likeCount');
-                    var likeCountC = $('.likeCount');
+                    var likeCountBtn = likeButton.find('.likeCount');
                     var DislikeButton = $('#DislikeButton');
                     var DislikeCount = $('#DislikeCount');
-                    var DislikeCountC = $('.DislikeCount');
+                    var DislikeCountBtn = DislikeButton.find('.DislikeCount');
 
-                    if(data.resultCode == 'S-1'){
+                    // 모든 좋아요 카운트 업데이트
+                    likeCount.text(data.data1);
+                    likeCountBtn.text(data.data1);
+
+                    // 모든 싫어요 카운트 업데이트
+                    DislikeCount.text(data.data2);
+                    DislikeCountBtn.text(data.data2);
+
+                    if (data.resultCode == 'S-1') {
                         DislikeButton.toggleClass('btn-outline');
                         DislikeCount.text(data.data2);
-                        DislikeCountC.text(data.data2);
-                    }else if(data.resultCode == 'S-2'){
+                    } else if (data.resultCode == 'S-2') {
                         likeButton.toggleClass('btn-outline');
                         likeCount.text(data.data1);
-                        likeCountC.text(data.data1);
                         DislikeButton.toggleClass('btn-outline');
                         DislikeCount.text(data.data2);
-                        DislikeCountC.text(data.data2);
 
-                    }else {
+                    } else {
                         DislikeButton.toggleClass('btn-outline');
                         DislikeCount.text(data.data2);
-                        DislikeCountC.text(data.data2);
                     }
 
-                }else {
+                } else {
                     alert(data.msg);
                 }
             },
-            error: function(jqXHR,textStatus,errorThrown) {
+            error: function (jqXHR, textStatus, errorThrown) {
                 alert('싫어요 오류 발생 : ' + textStatus);
             }
 
         });
     }
-    $(function() {
+
+    $(function () {
         checkRP();
     });
 </script>
 
 <!-- 댓글 수정 -->
 <script th:inline="javascript">
+    // 댓글 수정 버튼 토글
     function toggleModifybtn(replyId) {
+        console.log("toggleModifybtn 실행, replyId: ", replyId);
 
-        console.log(replyId);
+        // 수정 버튼 숨김, 저장 버튼 표시
+        $('#modify-btn-' + replyId).addClass('hidden');
+        $('#save-btn-' + replyId).removeClass('hidden');
 
-        $('#modify-btn-'+replyId).hide();
-        $('#save-btn-'+replyId).show();
-        $('#reply-'+replyId).hide();
-        $('#modify-form-'+replyId).show();
+        // 기존 댓글 숨김, 수정 폼 표시
+        $('#reply-' + replyId).addClass('hidden');
+        $('#modify-form-' + replyId).removeClass('hidden');
     }
-    function doModifyReply(replyId) {
-        console.log(replyId); // 디버깅을 위해 replyId를 콘솔에 출력
 
-        // form 요소를 정확하게 선택
+    // 댓글 수정 요청
+    function doModifyReply(replyId) {
+        console.log("doModifyReply 실행, replyId: ", replyId);
+
         var form = $('#modify-form-' + replyId);
-        console.log(form); // 디버깅을 위해 form을 콘솔에 출력
-        // form 내의 input 요소의 값을 가져옵니다
-        var text = form.find('input[name="reply-text-' + replyId + '"]').val();
-        console.log(text); // 디버깅을 위해 text를 콘솔에 출력
-        // form의 action 속성 값을 가져옵니다
+        console.log("Form: ", form);
+
+        var text = form.find('input').val();
+        console.log("Text: ", text);
+
         var action = form.attr('action');
-        console.log(action); // 디버깅을 위해 action을 콘솔에 출력
+        console.log("Action URL: ", action);
 
         $.post({
-            url: '/usr/reply/doModify', // 수정된 URL
-            type: 'POST', // GET에서 POST로 변경
-            data: { id: replyId, body: text }, // 서버에 전송할 데이터
-            success: function(data) {
-                $('#modify-form-'+replyId).hide();
-                $('#reply-'+replyId).text(data);
-                $('#reply-'+replyId).show();
-                $('#save-btn-'+replyId).hide();
-                $('#modify-btn-'+replyId).show();
+            url: action,
+            type: 'POST',
+            data: {id: replyId, body: text},
+            success: function (data) {
+                console.log("수정 성공:", data);
+
+                // 수정 폼 숨김, 기존 댓글 표시
+                $('#modify-form-' + replyId).addClass('hidden');
+                $('#reply-' + replyId).removeClass('hidden').text(data);
+
+                // 저장 버튼 숨김, 수정 버튼 표시
+                $('#save-btn-' + replyId).addClass('hidden');
+                $('#modify-btn-' + replyId).removeClass('hidden');
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
+                console.error("댓글 수정 실패:", error);
                 alert('댓글 수정에 실패했습니다: ' + error);
             }
-        })
+        });
     }
 </script>
 
@@ -228,7 +502,7 @@
 
         form.body.value = form.body.value.trim();
 
-        if(form.body.value.length < 3){
+        if (form.body.value.length < 3) {
             alert('3글자 이상 입력해');
             form.body.focus();
             return;
@@ -238,168 +512,155 @@
     }
 </script>
 
-<header th:replace="~{common/header :: header}"></header>
-<hr />
-
-<section class="mt-24 text-xl px-4">
-    <div class="mx-auto">
-        <table class="table" border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
-            <tbody>
-            <tr>
-                <th style="text-align: center;">ID</th>
-                <td style="text-align: center;" th:text="${article.id}"></td>
-            </tr>
-            <tr>
-                <th style="text-align: center;">Registration Date</th>
-                <td style="text-align: center;" th:text="${#strings.substring(article.regDate, 0, 10)}"></td>
-            </tr>
-            <tr>
-                <th style="text-align: center;">Modified date</th>
-                <td style="text-align: center;" th:text="${article.updateDate}"></td>
-            </tr>
-            <tr>
-                <th style="text-align: center;">BoardId</th>
-                <td style="text-align: center;" th:text="${article.boardId}"></td>
-            </tr>
-            <tr>
-                <th style="text-align: center;">Writer</th>
-                <td style="text-align: center;" th:text="${article.extra__writer}"></td>
-            </tr>
-            <tr>
-                <th class="reaction" style="text-align: center;">Like</th>
-                <td id="likeCount" style="text-align: center;" th:text="${article.goodReactionPoint}"></td>
-            </tr>
-            <tr>
-                <th style="text-align: center;">Dislike</th>
-                <td id="DislikeCount" style="text-align: center;" th:text="${article.badReactionPoint}"></td>
-            </tr>
-            <tr>
-                <th style="text-align: center;">Like / Dislike</th>
-                <td style="text-align: center;">
-                    <button id="likeButton" class="btn btn-outline btn-success"
-                            data-id="${param.id}" th:articleId="${article.id}" th:onclick="doGoodReaction(this.getAttribute('articleId'))">
-                        👍 LIKE
-                        <span class="likeCount" th:text="${article.goodReactionPoint}"></span>
-                    </button>
-                    <button id="DislikeButton" class="btn btn-outline btn-error"
-                            data-id="${param.id}" th:articleId="${article.id}" th:onclick="doBadReaction(this.getAttribute('articleId'))">
-                        👎 DISLIKE
-                        <span class="DislikeCount" th:text="${article.badReactionPoint}"></span>
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <th style="text-align: center;">Views</th>
-                <td style="text-align: center;">
-                    <span class="article-detail__hit-count" th:text="${article.hitCount}"></span>
-                </td>
-            </tr>
-            <tr>
-                <th style="text-align: center;">Title</th>
-                <td style="text-align: center;" th:text="${article.title}"></td>
-            </tr>
-            <tr>
-                <th style="text-align: center;">Attached Image</th>
-                <td style="text-align: center;">
-                    <div style="text-align: center;">
-                        <img class="mx-auto rounded-xl" th:src="${rq.getImgUri(article.id)}" th:attr="onerror=${rq.profileFallbackImgOnErrorHtml}" alt="" />
+<div class="article-detail-section-1">
+    <!-- 디테일 주요 컨텐츠 -->
+    <div class="main-content">
+        <!-- 상단 버튼 -->
+        <div class="detail-top-btn-group">
+            <div class="btn-always-show">
+                <button class="btn btn-sm btn-back" type="button" onclick="history.back()">뒤로가기</button>
+                <button class="btn btn-sm btn-to-list" type="button">
+                    <a th:href="@{../article/list}">목록</a>
+                </button>
+            </div>
+        </div>
+        <!-- 디테일 -->
+        <div class="detail-container">
+            <div class="article-title" th:text="${article.title}"></div>
+            <div class="article-author-line">
+                <div class="article-author" th:text="${article.extra__writer}"></div>
+                <div class="btn-usr-equal-author">
+                    <div th:if="${article.userCanModify}">
+                        <button class="btn btn-sm btn-modify">
+                            <a th:href="@{../article/modify(id=${article.id})}">수정</a>
+                        </button>
                     </div>
-                    <div th:text="${rq.getImgUri(article.id)}"></div>
-                </td>
-            </tr>
-            <tr>
-                <th style="text-align: center;">Body</th>
-                <td>
-                    <div class="toast-ui-viewer">
-                        <script type="text/x-template" th:text="${article.body}"></script>
+                    <div th:if="${article.userCanDelete}">
+                        <button class="btn btn-red btn-sm btn-delete">
+                            <a th:href="@{../article/doDelete(id=${article.id})}">삭제</a>
+                        </button>
                     </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                </div>
+            </div>
+            <div class="regDate-and-hit">
+                <div class="article-regDate" th:text="${article.regDate}"></div>
+                <div class="article-hit">조회수 <span class="article-detail__hit-count"
+                                                   th:text="${article.hitCount}"></span></div>
+            </div>
+            <hr class="divider"/>
+            <div class="article-content">
+                <!-- 동영상 파일, 없으면 안뜨게 -->
+                <div style="margin-bottom: 10px;" th:if="${videoFileCount > 0}">
+                    <video class="mx-auto rounded-xl" th:src="${rq.getVideoUri(article.id)}" controls>
+                        <source th:src="${rq.getVideoUri(article.id)}" type="video/mp4"
+                                th:attr="onerror=${rq.profileFallbackImgOnErrorHtml}">
+                    </video>
+                </div>
+                <!-- 이미지 파일, 없으면 안뜨게 -->
+                <div style="margin-bottom: 10px;" th:if="${imageFileCount > 0}">
+                    <img class="mx-auto rounded-xl" th:src="${rq.getImgUri(article.id)}" controls>
+                    <source th:src="${rq.getImgUri(article.id)}" type="Img/"
+                            th:attr="onerror=${rq.profileFallbackImgOnErrorHtml}" />
+                </div>
+                <div class="toast-ui-viewer">
+                    <script type="text/x-template" class="article-body" th:text="${article.body}"></script>
+                </div>
+            </div>
+        </div>
 
-        <div class="btns">
-            <button class="btn" type="button" onclick="history.back()">뒤로가기</button>
-            <a class="btn" th:if="${article.userCanModify}" th:href="@{/usr/article/modify(id=${article.id})}">수정</a>
-            <a class="btn" th:if="${article.userCanDelete}" th:href="@{/usr/article/doDelete(id=${article.id})}">삭제</a>
+        <!-- 좋아요, 싫어요 버튼 -->
+        <div class="reaction-buttons">
+            <button id="likeButton" data-id="${param.id}" th:articleId="${article.id}"
+                    th:onclick="doGoodReaction(this.getAttribute('articleId'))">
+                <svg style="display: inline-block;" xmlns="http://www.w3.org/2000/svg" fill="none"
+                     viewBox="-0.715 -0.715 20 20" id="Heart--Streamline-Core" height="20" width="20">
+                    <desc>Heart Streamline Icon: https://streamlinehq.com</desc>
+                    <g id="heart--reward-social-rating-media-heart-it-like-favorite-love">
+                        <path id="Vector" stroke="#f3063f" stroke-linecap="round" stroke-linejoin="round"
+                              d="M9.290438357142857 16.42463442857143 2.0290775785714286 9.847365921428572c-3.9464035500000003 -3.9464035500000003 1.8547981285714286 -11.523480857142857 7.261360778571429 -5.393417742857143 5.406522857142857 -6.130063114285715 11.181527571428573 1.4733305357142856 7.261400571428572 5.393417742857143L9.290438357142857 16.42463442857143Z"
+                              stroke-width="1.43"></path>
+                    </g>
+                </svg>
+                좋아요 <span class="likeCount" th:text="${article.goodReactionPoint}"></span>
+            </button>
+            <button id="DislikeButton" data-id="${param.id}" th:articleId="${article.id}"
+                    th:onclick="doBadReaction(this.getAttribute('articleId'))">
+                <svg style="display: inline-block;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+                     height="20" width="20">
+                    <path fill="#ffffff"
+                          d="M323.8 477.2c-38.2 10.9-78.1-11.2-89-49.4l-5.7-20c-3.7-13-10.4-25-19.5-35l-51.3-56.4c-8.9-9.8-8.2-25 1.6-33.9s25-8.2 33.9 1.6l51.3 56.4c14.1 15.5 24.4 34 30.1 54.1l5.7 20c3.6 12.7 16.9 20.1 29.7 16.5s20.1-16.9 16.5-29.7l-5.7-20c-5.7-19.9-14.7-38.7-26.6-55.5c-5.2-7.3-5.8-16.9-1.7-24.9s12.3-13 21.3-13L448 288c8.8 0 16-7.2 16-16c0-6.8-4.3-12.7-10.4-15c-7.4-2.8-13-9-14.9-16.7s.1-15.8 5.3-21.7c2.5-2.8 4-6.5 4-10.6c0-7.8-5.6-14.3-13-15.7c-8.2-1.6-15.1-7.3-18-15.2s-1.6-16.7 3.6-23.3c2.1-2.7 3.4-6.1 3.4-9.9c0-6.7-4.2-12.6-10.2-14.9c-11.5-4.5-17.7-16.9-14.4-28.8c.4-1.3 .6-2.8 .6-4.3c0-8.8-7.2-16-16-16l-97.5 0c-12.6 0-25 3.7-35.5 10.7l-61.7 41.1c-11 7.4-25.9 4.4-33.3-6.7s-4.4-25.9 6.7-33.3l61.7-41.1c18.4-12.3 40-18.8 62.1-18.8L384 32c34.7 0 62.9 27.6 64 62c14.6 11.7 24 29.7 24 50c0 4.5-.5 8.8-1.3 13c15.4 11.7 25.3 30.2 25.3 51c0 6.5-1 12.8-2.8 18.7C504.8 238.3 512 254.3 512 272c0 35.3-28.6 64-64 64l-92.3 0c4.7 10.4 8.7 21.2 11.8 32.2l5.7 20c10.9 38.2-11.2 78.1-49.4 89zM32 384c-17.7 0-32-14.3-32-32L0 128c0-17.7 14.3-32 32-32l64 0c17.7 0 32 14.3 32 32l0 224c0 17.7-14.3 32-32 32l-64 0z"/>
+                </svg>
+                싫어요 <span class="DislikeCount" th:text="${article.badReactionPoint}"></span>
+            </button>
         </div>
     </div>
-</section>
 
-<!-- 댓글 -->
-<section class="mt-24 text-xl px-4">
-    <div th:if="${rq.isLogined()}">
-        <form action="../reply/doWrite" method="POST" onsubmit="ReplyWrite__submit(this); return false;">
-            <table class="table" border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
-                <input type="hidden" name="relTypeCode" value="article" />
-                <input type="hidden" name="relId" th:value="${article.id}" />
-                <tbody>
-                <tr>
-                    <th>댓글 내용 입력</th>
-                    <td style="text-align: center;">
-                        <textarea class="input input-bordered input-sm w-full max-w-xs" name="body" autocomplete="off" placeholder="내용을 입력해"></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <th></th>
-                    <td style="text-align: center;">
-                        <button class="btn btn-outline">작성</button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </form>
+    <!-- 댓글 섹션 -->
+    <div class="reply-container">
+        <div th:if="${rq.isLogined()}">
+            <form class="reply-form" action="../reply/doWrite" method="POST"
+                  onsubmit="ReplyWrite__submit(this); return false;">
+                <input type="hidden" name="relTypeCode" value="article"/>
+                <input type="hidden" name="relId" th:value="${article.id}"/>
+                <textarea class="input reply-input" name="body" autocomplete="off" placeholder="내용을 입력하세요."></textarea>
+                <button class="reply-submit-btn">등록</button>
+            </form>
+        </div>
+
+        <div th:if="${!rq.isLogined()}">
+            <div class="login-reminder">
+                댓글 작성을 위해 <a class="btn btn-sm login-link" th:href="${rq.loginUri}">로그인</a> 이 필요합니다.
+            </div>
+        </div>
     </div>
 
-    <div th:if="${!rq.isLogined()}">
-        댓글 작성을 위해 <a class="btn btn-outline btn-primary" th:href="${rq.loginUri}">로그인</a>이 필요합니다
-    </div>
-
-    <!-- 댓글 리스트 -->
-    <div class="mx-auto">
-        <table class="table" border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
-            <thead>
-            <tr>
-                <th style="text-align: center;">Registration Date</th>
-                <th style="text-align: center;">Writer</th>
-                <th style="text-align: center;">Body</th>
-                <th style="text-align: center;">Like</th>
-                <th style="text-align: center;">Dislike</th>
-                <th style="text-align: center;">Edit</th>
-                <th style="text-align: center;">Delete</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="reply : ${replies}" class="hover">
-                <td style="text-align: center;" th:text="${#strings.substring(reply.regDate, 0, 10)}"></td>
-                <td style="text-align: center;" th:text="${reply.extra__writer}"></td>
-                <td style="text-align: center;">
-                    <span th:text="${reply.body}" th:id="'reply-' + ${reply.id}"></span>
-                    <form method="POST" th:id="'modify-form-' + ${reply.id}" style="display: none;" action="/usr/reply/doModify">
-                        <input type="text" th:value="${reply.body}" th:name="'reply-text-' + ${reply.id}" />
+    <div class="reply-list-container">
+        <div th:if="${#lists.isEmpty(replies)}" class="reply-item">
+            <div class="empty-replies">
+                아직 댓글이 없습니다.
+            </div>
+        </div>
+        <div th:unless="${#lists.isEmpty(replies)}">
+            <div th:each="reply : ${replies}" class="reply-item">
+                <div class="reply-header">
+                    <span class="reply-date" th:text="${reply.regDate.substring(0,10)}"></span>
+                    <span class="reply-author" th:text="${reply.extra__writer}"></span>
+                </div>
+                <div class="reply-body">
+                    <span class="reply-body-text" th:id="'reply-' + ${reply.id}" th:text="${reply.body}"></span>
+                    <form method="POST" th:id="'modify-form-' + ${reply.id}" class="hidden modify-form"
+                          action="/usr/reply/doModify">
+                        <input type="text" th:name="'reply-text-' + ${reply.id}" th:value="${reply.body}"
+                               class="reply-modify-input"/>
                     </form>
-                </td>
-                <td style="text-align: center;" th:text="${reply.goodReactionPoint}"></td>
-                <td style="text-align: center;" th:text="${reply.badReactionPoint}"></td>
-                <td style="text-align: center;">
-                    <button th:if="${reply.userCanModify}" th:onclick="'toggleModifybtn(' + ${reply.id} + ');'"
-                            th:id="'modify-btn-' + ${reply.id}" style="white-space: nowrap;" class="btn btn-outline btn-xs btn-success">수정</button>
-                    <button th:if="${reply.userCanModify}" th:onclick="'doModifyReply(' + ${reply.id} + ');'"
-                            th:id="'save-btn-' + ${reply.id}" style="white-space: nowrap; display: none;" class="btn btn-outline btn-xs">저장</button>
-                </td>
-                <td style="text-align: center;">
-                    <a th:if="${reply.userCanDelete}" class="btn btn-outline btn-xs btn-error" onclick="if(confirm('정말 삭제?') == false) return false;"
-                       th:href="@{/usr/reply/doDelete(id=${reply.id})}">삭제</a>
-                </td>
-            </tr>
-
-            <tr th:if="${#lists.isEmpty(replies)}">
-                <td colspan="7" style="text-align: center;">댓글이 없습니다</td>
-            </tr>
-            </tbody>
-        </table>
+                </div>
+                <div class="reply-actions" th:if="${reply.userCanModify}">
+                    <button
+                            th:id="'modify-btn-' + ${reply.id}"
+                            class="btn btn-sm"
+                            th:replyId="${reply.id}"
+                            th:onclick="toggleModifybtn(this.getAttribute('replyId'))">
+                        수정
+                    </button>
+                    <button
+                            th:id="'save-btn-' + ${reply.id}"
+                            class="hidden btn btn-sm"
+                            th:replyId="${reply.id}"
+                            th:onclick="doModifyReply(this.getAttribute('replyId'))">
+                        저장
+                    </button>
+                    <div class="reply-delete" th:if="${reply.userCanDelete}">
+                    </div>
+                    <a class="btn btn-red btn-sm"
+                       onclick="if(confirm('정말 삭제하시겠습니까?') == false) return false;"
+                       th:href="@{../reply/doDelete(id=${reply.id})}">삭제</a>
+                </div>
+            </div>
+        </div>
     </div>
-</section>
+</div>
+
+<footer th:replace="~{common/footer :: footer}"></footer>
+
 </body>
 </html>
-

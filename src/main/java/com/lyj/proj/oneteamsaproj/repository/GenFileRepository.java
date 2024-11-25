@@ -10,6 +10,7 @@ import java.util.Map;
 
 @Mapper
 public interface GenFileRepository {
+
     void saveMeta(Map<String, Object> param);
 
     GenFile getGenFile(@Param("relTypeCode") String relTypeCode, @Param("relId") int relId,
@@ -31,5 +32,7 @@ public interface GenFileRepository {
     List<GenFile> getGenFilesRelTypeCodeAndRelIdsAndTypeCodeAndType2Code(@Param("relTypeCode") String relTypeCode,
                                                                          @Param("relIds") List<Integer> relIds, @Param("typeCode") String typeCode,
                                                                          @Param("type2Code") String type2Code);
+
+    int getFileCountByType2CodeAndRelId(@Param("type2Code")String type2Code, @Param("relId") int relId);
 
 }

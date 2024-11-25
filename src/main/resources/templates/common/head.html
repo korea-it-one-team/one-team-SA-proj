@@ -149,15 +149,13 @@
         // 		  // ...
         // 		  // 직접 입력하면서 커스터마이징 가능
         // 		  // toolbarItems 뻬면 기본적인 툴바 다 사용하는 것
-        // 		  toolbarItems: [
-        // 		    ['heading', 'bold', 'italic', 'strike'],
-        // 		    ['hr', 'quote'],
-        // 		    ['ul', 'ol', 'task', 'indent', 'outdent'],
-        // 		    ['table', 'image', 'link'],
-        // 		    ['code', 'codeblock'],
-        // 		    ['scrollSync'],
-        // 		  ],
-        // 		};
+        //     	  toolbarItems: [
+        //             'heading', 'bold', 'italic', 'strike', 'divider',
+        //             'ul', 'ol', 'task', 'indent', 'outdent', 'divider',
+        //             'table', 'image', 'link', 'divider',
+        //             'code', 'codeblock', 'scrollSync'
+        //             ],
+        // 	};
 
         function getUriParams(uri) {
             uri = uri.trim();
@@ -378,7 +376,7 @@
         };
 
         function ToastEditor__init() {
-            $(".toast-ui-editor").each(function (index, node) {
+            $('.toast-ui-editor').each(function (index, node) {
                 const $node = $(node);
                 const $initialValueEl = $node.find(" > script");
                 const initialValue =
@@ -391,7 +389,7 @@
                     previewStyle: "vertical",
                     initialValue: initialValue,
                     height: "600px",
-                    theme : theme,
+                    theme: theme,
                     plugins: [
                         [toastui.Editor.plugin.chart, ToastEditor__chartOptions],
                         [toastui.Editor.plugin.codeSyntaxHighlight, { highlighter: Prism }],
@@ -403,24 +401,20 @@
                         codepenPlugin,
                         replPlugin
                     ],
-                    customHTMLSanitizer: (html) => {
-                        return (
-                            DOMPurify.sanitize(html, {
-                                ADD_TAGS: ["iframe"],
-                                ADD_ATTR: [
-                                    "width",
-                                    "height",
-                                    "allow",
-                                    "allowfullscreen",
-                                    "frameborder",
-                                    "scrolling",
-                                    "style",
-                                    "title",
-                                    "loading",
-                                    "allowtransparency"
-                                ]
-                            }) || ""
-                        );
+                    customHTMLRenderer: {
+                        paragraph(node, context) {
+                            const { entering } = context;
+                            return entering
+                                ? { type: "openTag", tagName: "p", attributes: { style: "text-align: left;" } }
+                                : { type: "closeTag", tagName: "p" };
+                        },
+                        heading(node, context) {
+                            const { entering } = context;
+                            const level = node.level;
+                            return entering
+                                ? { type: "openTag", tagName: `h${level}`, attributes: { style: "text-align: left;" } }
+                                : { type: "closeTag", tagName: `h${level}` };
+                        }
                     }
                 });
 
@@ -428,12 +422,15 @@
             });
         }
 
+
+
         function ToastEditorView__init() {
             $(".toast-ui-viewer").each(function (index, node) {
                 const $node = $(node);
                 const $initialValueEl = $node.find(" > script");
                 const initialValue =
                     $initialValueEl.length == 0 ? "" : $initialValueEl.html().trim();
+
                 $node.empty();
 
                 const theme = localStorage.getItem('theme') ?? "light";
@@ -473,6 +470,8 @@
                         );
                     }
                 });
+                // 상위 요소의 정렬 문제 방지
+                node.style.textAlign = "inherit";
 
                 $node.data("data-toast-editor", viewer);
             });
