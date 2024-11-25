@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +56,6 @@ public class UsrArticleController {
         Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
 
 //        // -1 싫어요, 0 표현 x, 1 좋아요
-//		int usersReaction = (int) reactionPointService.usersReaction(rq.getLoginedMemberId(), "article", id).getData1();
 //        model.addAttribute("usersReaction", usersReaction);
 
         ResultData usersReactionRd = reactionPointService.usersReaction(rq.getLoginedMemberId(), "article", id);
@@ -70,13 +70,14 @@ public class UsrArticleController {
         // 이미지 파일 여러개 첨부했을 때
         List<GenFile> files = genFileService.getFilesByRelTypeCodeAndRelId("article", id);
 
+        int videoFileCount = genFileService.getFileCountByType2CodeAndRelId("video", id);
+
         int repliesCount = replies.size();
 
         int videoFileCount = genFileService.getFileCountByType2CodeAndRelId("video", id);
         int imageFileCount = genFileService.getFileCountByType2CodeAndRelId("Img", id);
 
         model.addAttribute("article", article);
-//		model.addAttribute("usersReaction", usersReaction);
 
         model.addAttribute("replies", replies);
         model.addAttribute("repliesCount", repliesCount);
@@ -204,28 +205,21 @@ public class UsrArticleController {
 
         Rq rq = (Rq) req.getAttribute("rq");
 
-
         if (Ut.isEmptyOrNull(title)) {
             return Ut.jsHistoryBack("F-1", "제목을 입력해주세요.");
         }
         if (Ut.isEmptyOrNull(body)) {
             return Ut.jsHistoryBack("F-2", "내용을 입력해주세요.");
         }
-//        if (Ut.isEmptyOrNull(boardId)) {
-//            return Ut.jsHistoryBack("F-3", "게시판을 선택해주세요");
-//        }
+
         if (Ut.isEmptyOrNull(boardId)) {
-            // 게시판 선택이 안 된 경우, 입력한 내용을 가지고 다시 글 작성 페이지로 이동
             String alertMsg = "게시판을 선택해주세요.";
             return Ut.jsReplace(alertMsg, "../article/write?title=%s&body=%s",
                     Ut.getEncodedUriComponent(title), Ut.getEncodedUriComponent(body));
         }
 
-        System.err.println(boardId);
-
         ResultData writeArticleRd = articleService.writeArticle(rq.getLoginedMemberId(), title, body, boardId);
-
-        int id = (int) writeArticleRd.getData1();
+        int id = (int) writeArticleRd.getData1();  // 게시물 ID
 
         Article article = articleService.getArticleById(id);
 
@@ -254,41 +248,73 @@ public class UsrArticleController {
 
             for (MultipartFile multipartFile : multipartFiles) {
                 if (!multipartFile.isEmpty()) {
-                    genFileService.save(multipartFile, id);
+                    // 파일 확장자 확인
+                    String fileExtension = getFileExtension(multipartFile.getOriginalFilename());
+                    if (isValidVideoExtension(fileExtension) || isValidImageExtension(fileExtension)) {
+                        ResultData fileResult = genFileService.save(multipartFile, id);
+                        if (!fileResult.getResultCode().startsWith("S-")) {
+                            return Ut.jsHistoryBack("F-3", "파일 저장에 실패하였습니다.");
+                        }
+                    } else {
+                        return Ut.jsHistoryBack("F-4", "허용되지 않은 파일 형식입니다.");
+                    }
                 }
             }
         }
 
         return Ut.jsReplace(writeArticleRd.getResultCode(), writeArticleRd.getMsg(), "../article/detail?id=" + id);
+    }
 
+    // 파일 확장자 추출 메서드
+    private String getFileExtension(String filename) {
+        int lastDotIndex = filename.lastIndexOf('.');
+        if (lastDotIndex != -1) {
+            return filename.substring(lastDotIndex + 1).toLowerCase();
+        }
+        return "";
+    }
+
+    // 동영상 확장자 유효성 검사
+    private boolean isValidVideoExtension(String extension) {
+        List<String> validVideoExtensions = Arrays.asList("mp4", "avi", "mov", "mkv", "flv");
+        return validVideoExtensions.contains(extension);
+    }
+
+    // 이미지 확장자 유효성 검사
+    private boolean isValidImageExtension(String extension) {
+        List<String> validImageExtensions = Arrays.asList("jpg", "jpeg", "png", "gif", "bmp");
+        return validImageExtensions.contains(extension);
     }
 
     @RequestMapping("/usr/article/list")
-    public String showList(HttpServletRequest req, Model model, @RequestParam(defaultValue = "1") int boardId,
+    public String showList(HttpServletRequest req, Model model,
+                           @RequestParam(defaultValue = "1") Integer boardId,
                            @RequestParam(defaultValue = "1") int page,
                            @RequestParam(defaultValue = "title,body") String searchKeywordTypeCode,
                            @RequestParam(defaultValue = "") String searchKeyword) throws IOException {
 
         Rq rq = (Rq) req.getAttribute("rq");
 
+        // boardId 유효성 검사
+        if (boardId == null || boardId <= 0) {
+            return rq.historyBackOnView("잘못된 게시판 ID입니다.");
+        }
+
         Board board = boardService.getBoardById(boardId);
+
+        if (board == null) {
+            return rq.historyBackOnView("없는 게시판입니다.");
+        }
 
         // 페이지네이션
         int articlesCount = articleService.getArticlesCount(boardId, searchKeywordTypeCode, searchKeyword);
 
-        // 한 페이지에 글 10개
-        // 글 20개 -> 2page
-        // 글 25개 -> 3page
         int itemsInAPage = 10;
 
         int pagesCount = (int) Math.ceil(articlesCount / (double) itemsInAPage);
 
         List<Article> articles = articleService.getForPrintArticles(boardId, itemsInAPage, page, searchKeywordTypeCode,
                 searchKeyword);
-
-        if (board == null) {
-            return rq.historyBackOnView("없는 게시판입니다.");
-        }
 
         model.addAttribute("articles", articles);
         model.addAttribute("articlesCount", articlesCount);
