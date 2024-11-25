@@ -24,7 +24,7 @@ public class CustomerSupportController {
     @Autowired
     private Rq rq;
 
-    @RequestMapping("/usr/customer-support")
+    @RequestMapping("/customer-support")
     public String showCustomerSupport(HttpServletRequest req, Model model) {
         Rq rq = (Rq) req.getAttribute("rq");
         int member_id = 0;
@@ -39,9 +39,9 @@ public class CustomerSupportController {
         List<Faq> faqs = customerSupportService.getFaqs();
         List<Consultation> consultations = customerSupportService.getHistory(member_id, member_status);
 
-        model.addAttribute("categories",categories);
-        model.addAttribute("faqs",faqs);
-        model.addAttribute("consultations",consultations);
+        model.addAttribute("categories", categories);
+        model.addAttribute("faqs", faqs);
+        model.addAttribute("consultations", consultations);
         if (member_status.equals("관리자")){
             model.addAttribute("isAdmin",true);
         }else {
@@ -56,7 +56,6 @@ public class CustomerSupportController {
 
         Rq rq = (Rq) req.getAttribute("rq");
         // 상담 저장 로직
-
         Consultation consultation = customerSupportService.addConsultation(title,content,rq.getLoginedMemberId());
 
         // 저장된 상담 객체 반환

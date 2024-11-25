@@ -21,12 +21,16 @@ public class WinDrawLoseService {
         WinDrawLose existingPrediction = winDrawLoseRepository.findByGameIdAndMemberId(
                 winDrawLose.getGameId(), winDrawLose.getMemberId());
 
-        // 이미 존재한다면 DB에 추가 못하게
+        // 이미 존재하는 경우의 처리
         if (existingPrediction != null) {
-            throw new IllegalStateException("이미 해당 경기에 예측이 저장되어 있습니다.");
+            if(existingPrediction.getPrediction().equals(winDrawLose.getPrediction())) {
+                throw new IllegalStateException("이미 해당 경기에 예측이 저장되어 있습니다.");
+            } else {
+                winDrawLoseRepository.updatePrediction(winDrawLose.getGameId(), winDrawLose.getMemberId(), winDrawLose.getPrediction());
+            }
+        } else {
+            winDrawLoseRepository.insertPrediction(winDrawLose);
         }
-
-        winDrawLoseRepository.insertPrediction(winDrawLose);
     }
 
     public List<WinDrawLose> getPrediction(int memberId) {

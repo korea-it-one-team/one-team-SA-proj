@@ -24,7 +24,6 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css" rel="stylesheet" />
 
     <!-- 토스트 UI -->
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.0/purify.min.js"></script>
 
     <!-- 토스트 UI 에디터 코어 -->
@@ -63,8 +62,6 @@
 
     <!-- 토스트 UI 에디터 플러그인, UML -->
     <script src="https://uicdn.toast.com/editor-plugin-uml/latest/toastui-editor-plugin-uml.min.js"></script>
-
-
 
     <style>
         /* 토스트 UI */
@@ -121,19 +118,6 @@
     </style>
 
     <script>
-
-        // const options = {
-        // 		  // ...
-        // 		  // 직접 입력하면서 커스터마이징 가능
-        // 		  // toolbarItems 뻬면 기본적인 툴바 다 사용하는 것
-        //     	  toolbarItems: [
-        //             'heading', 'bold', 'italic', 'strike', 'divider',
-        //             'ul', 'ol', 'task', 'indent', 'outdent', 'divider',
-        //             'table', 'image', 'link', 'divider',
-        //             'code', 'codeblock', 'scrollSync'
-        //             ],
-        // 	};
-
         function getUriParams(uri) {
             uri = uri.trim();
             uri = uri.replaceAll("&amp;", "&");
@@ -353,19 +337,19 @@
         };
 
         function ToastEditor__init() {
-            $('.toast-ui-editor').each(function (index, node) {
+            $(".toast-ui-editor").each(function (index, node) {
                 const $node = $(node);
                 const $initialValueEl = $node.find(" > script");
                 const initialValue =
                     $initialValueEl.length == 0 ? "" : $initialValueEl.html().trim();
 
-                const theme = localStorage.getItem('theme') ?? "dark";
+                const theme = localStorage.getItem('theme') ?? "light";
 
                 const editor = new toastui.Editor({
                     el: node,
                     previewStyle: "vertical",
                     initialValue: initialValue,
-                    height: "600px",
+                    height: `calc(600 * var(--rpx-vw))`, // 반응형 height
                     theme: theme,
                     plugins: [
                         [toastui.Editor.plugin.chart, ToastEditor__chartOptions],
@@ -395,11 +379,12 @@
                     }
                 });
 
+                // 에디터의 width는 부모 요소로 설정
+                node.style.width = "100%";
+
                 $node.data("data-toast-editor", editor);
             });
         }
-
-
 
         function ToastEditorView__init() {
             $(".toast-ui-viewer").each(function (index, node) {
@@ -407,9 +392,7 @@
                 const $initialValueEl = $node.find(" > script");
                 const initialValue =
                     $initialValueEl.length == 0 ? "" : $initialValueEl.html().trim();
-
-                $node.empty();
-
+                node.innerHTML = ""; // 기존 내용을 비우기
                 const theme = localStorage.getItem('theme') ?? "dark";
 
                 let viewer = new toastui.Editor.factory({
@@ -447,10 +430,14 @@
                         );
                     }
                 });
-                // 상위 요소의 정렬 문제 방지
-                node.style.textAlign = "inherit";
 
-                $node.data("data-toast-editor", viewer);
+                node.style.textAlign = "left"; // 상위 요소의 정렬 설정
+
+                // 내부 요소 강제 좌측 정렬
+                const contentNode = node.querySelector(".toastui-editor-contents");
+                if (contentNode) {
+                    contentNode.style.textAlign = "left";
+                }
             });
         }
 
@@ -461,3 +448,4 @@
 
     </script>
 </head>
+

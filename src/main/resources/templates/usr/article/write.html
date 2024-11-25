@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head th:replace="~{common/head :: head}">
     <title>DETAIL</title>
-    <!--    <th:block th:with="toastUi=true"></th:block>-->
+<!--    <th:block th:with="toastUi=true"></th:block>-->
 </head>
 
 <style>
@@ -174,6 +174,7 @@
 </style>
 
 <body>
+
 <script th:inline="javascript">
     function ArticleWrite__submit(form) {
         form.title.value = form.title.value.trim();
@@ -189,7 +190,6 @@
         });
 
         const markdown = editor.getMarkdown().trim();
-
         if (markdown.length === 0) {
             alert('내용을 써주세요.');
             return;
@@ -261,6 +261,27 @@
         form.body.value = markdown;
         form.submit();
     }
+
+    function updateFileName(input) {
+        const fileNameEl = document.getElementById('fileName');
+        if (input.files.length > 0) {
+            fileNameEl.textContent = input.files[0].name; // 파일명 표시
+            fileNameEl.style.color = '#ffffff'; // 파일 선택 시 텍스트 색상 흰색으로 변경
+        } else {
+            fileNameEl.textContent = '선택된 파일 없음'; // 기본 메시지
+            fileNameEl.style.color = '#aaaaaa'; // 파일 미선택 시 기본 색상 적용
+        }
+    }
+
+    function updateSelectColor(selectElement) {
+        if (selectElement.value === "") {
+            // 기본 선택 상태: 텍스트 색상 회색
+            selectElement.style.color = "#aaaaaa";
+        } else {
+            // 다른 옵션 선택: 텍스트 색상 흰색
+            selectElement.style.color = "#ffffff";
+        }
+    }
 </script>
 
 <section class="article-write-section">
@@ -268,13 +289,13 @@
         <form onsubmit="ArticleWrite__submit(this); return false;" th:action="@{/usr/article/doWrite}" method="POST"
               enctype="multipart/form-data" class="article-write-form">
             <input type="hidden" name="body"/>
-            <input type="hidden" name="id" th:value="${currentId}" id="currentId">
+            <input type="hidden" name="id" th:value="${currentId}">
             <input type="hidden" name="imageUrls"/> <!-- 이미지 URL들을 전송할 hidden 필드 추가 -->
             <div class="write-form-line">
                 <label class="write-form-label">게시판</label>
                 <select class="input write-form-select" name="boardId" onchange="updateSelectColor(this)">
                     <option value="" selected disabled>게시판을 선택해주세요.</option>
-                    <option value="1">NOTICE</option>
+                    <option th:if="${rq.isAdmin()}" value="1">NOTICE</option>
                     <option value="2">ANALYSIS</option>
                     <option value="3">FREE</option>
                 </select>
@@ -299,7 +320,7 @@
                 </div>
             </div>
             <div class="write-btns">
-                <button class="article-submit-btn">등록</button>
+                <button class="article-submit-btn" type="submit">등록</button>
                 <button class="back-button" type="button" onclick="history.back()">뒤로가기</button>
             </div>
         </form>

@@ -77,7 +77,7 @@
     <!--        ORDER BY typeCode, type2Code, fileNo-->
     <!--    </select>-->
     <!-- relTypeCode와 relId에 따른 파일 목록 가져오기 -->
-  
+
     <select id="getGenFilesByRelTypeCodeAndRelId" resultType="com.lyj.proj.oneteamsaproj.vo.GenFile">
         SELECT *
         FROM genFile
@@ -111,6 +111,14 @@
         WHERE type2Code = #{type2Code}
         AND relId = #{relId}
     </select>
+
+    <select id="getFileCountByType2CodeAndRelId" resultType="int">
+        SELECT COUNT(*)
+        FROM genFile
+        WHERE type2Code = #{type2Code}
+        AND relId = #{relId}
+    </select>
+
 
     <update id="changeRelId">
         UPDATE genFile

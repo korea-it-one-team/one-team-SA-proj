@@ -1,8 +1,112 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head th:replace="~{common/head :: head}">
-  <title>LOGIN</title>
+  <title>Find Login Pw</title>
 </head>
+<style>
+  :root {
+    --primary-color: #cdf256;
+  }
+
+  .login-section-1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    position: relative;
+    width: calc(1440 * var(--rpx-vw)); /* 가로 기준 비율 */
+    min-height: calc(1024 * var(--rpx-vh)); /* 세로 기준 비율 */
+    margin: 0 auto;
+    padding: calc(60 * var(--rpx-vh)) 0;
+    overflow: hidden;
+    gap: calc(80 * var(--rpx-vw));
+  }
+
+  .login-card {
+    background: #252525;
+    padding: calc(32 * var(--rpx-vw));
+    border-radius: calc(16 * var(--rpx-vw));
+    box-shadow: 0 calc(8 * var(--rpx-vw)) calc(16 * var(--rpx-vw)) rgba(0, 0, 0, 0.1);
+    width: calc(480 * var(--rpx-vw));
+  }
+
+  .login-title {
+    font-size: calc(32 * var(--rpx-vw));
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: calc(24 * var(--rpx-vw));
+    font-family: Audiowide, sans-serif;
+  }
+
+  .login-input {
+    width: 100%;
+    padding: calc(12 * var(--rpx-vw)) calc(12 * var(--rpx-vw)) calc(8 * var(--rpx-vw)) calc(12 * var(--rpx-vw));
+    border: 1px solid #ddd;
+    border-radius: calc(8 * var(--rpx-vw));
+    font-size: calc(16 * var(--rpx-vw));
+    color: #333;
+    margin: 0 0 calc(16 * var(--rpx-vw)) 0;
+  }
+
+  .login-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 calc(4 * var(--rpx-vw)) rgba(205, 242, 86, 0.3);
+  }
+
+  .label-login {
+    font-size: calc(14 * var(--rpx-vw));
+    margin-bottom: calc(4 * var(--rpx-vw));
+    color: #fff;
+  }
+
+  .login-button {
+    width: 100%;
+    background: var(--primary-color);
+    color: #1e1e1e;
+    padding: calc(10 * var(--rpx-vw));
+    font-size: calc(16 * var(--rpx-vw));
+    border: none;
+    border-radius: calc(8 * var(--rpx-vw));
+    margin-top: calc(8 * var(--rpx-vw));
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .login-button:hover {
+    background: #b0e040;
+  }
+
+  .login-links {
+    font-size: calc(14 * var(--rpx-vw));
+    color: #fff;
+    text-align: center;
+    margin-top: calc(20 * var(--rpx-vw));
+  }
+
+  .login-links a {
+    color: var(--primary-color);
+    text-decoration: none;
+    margin: 0 calc(8 * var(--rpx-vw));
+  }
+
+  .login-links a:hover {
+    text-decoration: underline;
+  }
+
+  .back-button {
+    font-size: calc(16 * var(--rpx-vw));
+    color: var(--primary-color);
+    text-align: center;
+    margin-top: calc(24 * var(--rpx-vw));
+    cursor: pointer;
+  }
+
+  .back-button:hover {
+    text-decoration: underline;
+  }
+</style>
 <body>
 
 <script th:inline="javascript">
@@ -28,50 +132,29 @@
     form.submit();
   }
 </script>
-
 <header th:replace="~{common/header-2 :: header-2}"></header>
-<hr />
-
-<section class="mt-8 text-xl px-4">
-  <div class="mx-auto">
+<div class="make-header-margin"></div>
+<section class="login-section-1">
+  <div class="login-card">
+    <h1 class="login-title">FIND PASSWORD</h1>
     <form th:action="@{/usr/member/doFindLoginPw}" method="POST" onsubmit="MemberFindLoginPw__submit(this);">
       <input type="hidden" name="afterFindLoginPwUri" th:value="${param.afterFindLoginPwUri}" />
-      <table class="table" border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
-        <tbody>
-        <tr>
-          <th>아이디</th>
-          <td style="text-align: center;">
-            <input class="input input-bordered w-full max-w-xs" autocomplete="off" type="text" placeholder="아이디를 입력해주세요"
-                   name="loginId" />
-          </td>
-        </tr>
-        <tr>
-          <th>이메일</th>
-          <td style="text-align: center;">
-            <input class="input input-bordered w-full max-w-xs" autocomplete="off" type="text" placeholder="이메일을 입력해주세요"
-                   name="email" />
-          </td>
-        </tr>
-        <tr>
-          <th></th>
-          <td style="text-align: center;">
-            <button class="btn btn-success" type="submit">비밀번호 찾기</button>
-          </td>
-        </tr>
-        <tr>
-          <th></th>
-          <td style="text-align: center;">
-            <a class="btn btn-active btn-primary" th:href="@{/usr/member/login}">로그인</a>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+      <div>
+        <label for="loginId" class="block label-login">아이디</label>
+        <input id="loginId" name="loginId" type="text" placeholder="YOUR ID" class="login-input" />
+      </div>
+      <div>
+        <label for="email" class="block label-login">이메일</label>
+        <input id="email" name="email" type="text" placeholder="YOUR EMAIL" class="login-input" />
+      </div>
+      <button type="submit" class="login-button">비밀번호 찾기</button>
     </form>
-    <div class="btns">
-      <button class="btn" type="button" onclick="history.back();">뒤로가기</button>
+    <div class="login-links">
+      <a th:href="@{/usr/member/login}">로그인</a>
     </div>
+    <div class="back-button" onclick="history.back()">뒤로가기</div>
   </div>
 </section>
-
+<footer th:replace="~{common/footer :: footer}"></footer>
 </body>
 </html>
