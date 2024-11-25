@@ -543,8 +543,6 @@
             </div>
             <hr class="divider"/>
             <div class="article-content">
-                <p th:text="${imageFileCount}"></p>
-                <p th:text="${videoFileCount}"></p>
                 <!-- 동영상 파일, 없으면 안뜨게 -->
                 <div style="margin-bottom: 10px;" th:if="${videoFileCount > 0}">
                     <video class="mx-auto rounded-xl" th:src="${rq.getVideoUri(article.id)}" controls>

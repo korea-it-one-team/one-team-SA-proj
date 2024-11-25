@@ -26,7 +26,10 @@ public class GameResultService {
 
         List<WinDrawLose> predictions = winDrawLoseRepository.findByGameId(gameId);
 
+        System.out.println("예측 데이터 개수: " + predictions.size());  // 예측 데이터 개수 출력
+
         for (WinDrawLose prediction : predictions) {
+            System.out.println("예측값: " + prediction.getPrediction() + ", 실제 결과: " + actualResult);
             if (prediction.getPrediction().equals(actualResult)) {
                 memberService.addPoints(prediction.getMemberId(), 5); // 포인트 부여
             }

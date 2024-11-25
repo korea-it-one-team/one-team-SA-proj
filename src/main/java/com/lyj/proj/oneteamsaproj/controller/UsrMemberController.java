@@ -52,12 +52,12 @@ public class UsrMemberController {
         Member member = memberService.getMemberByLoginId(loginId);
 
         if (member == null) {
-            return Ut.jsHistoryBack("F-3", Ut.f("%s는(은) 존재하지 않는 아아디 입니다.", loginId));
+            return Ut.jsHistoryBack("F-3", Ut.f("%s는(은) 존재하지 않는 아이디 입니다.", loginId));
         }
         System.err.println(Ut.sha256(loginPw));
 
         if (member.getLoginPw().equals(Ut.sha256(loginPw)) == false) {
-            return Ut.jsHistoryBack("F-4", Ut.f("비밀번호가 일치하지 않습니다!!!!!"));
+            return Ut.jsHistoryBack("F-4", Ut.f("비밀번호가 일치하지 않습니다."));
         }
 
         if (member.getDelStatus() == 2) {

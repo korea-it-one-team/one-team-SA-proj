@@ -557,6 +557,8 @@ SET points = 100;
 # 승무패 예측결과에 따라 points가 올라가는지 테스트 하기 위해 승무패 테이블을 삭제했다 다시 만들어야한다.
 DROP TABLE winDrawLose;
 
+DROP TABLE gameSchedule;
+
 SELECT * FROM `member`;
 
 SELECT * FROM winDrawLose;
