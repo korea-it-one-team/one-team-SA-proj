@@ -1,7 +1,7 @@
 package com.lyj.proj.oneteamsaproj.service;
 
 import com.lyj.proj.oneteamsaproj.repository.MemberRepository;
-import com.lyj.proj.oneteamsaproj.util.Ut;
+import com.lyj.proj.oneteamsaproj.utils.Ut;
 import com.lyj.proj.oneteamsaproj.vo.Member;
 import com.lyj.proj.oneteamsaproj.vo.ResultData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,5 +141,9 @@ public class MemberService {
 
     private void setTempPassword(Member actor, String tempPassword) {
         memberRepository.modify(actor.getId(), Ut.sha256(tempPassword), null, null, null, null);
+    }
+
+    public void addPoints(int memberId, int points) {
+        memberRepository.addPoints(memberId, points); // 승부 예측 성공시 포인트 +5 추가 메서드
     }
 }

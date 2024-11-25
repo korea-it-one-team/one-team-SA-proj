@@ -1,5 +1,19 @@
 @charset "UTF-8";
 
+:root {
+	--default-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+	Ubuntu, "Helvetica Neue", Helvetica, Arial, "PingFang SC",
+	"Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei",
+	"Source Han Sans CN", sans-serif;
+	--rpx-vw: 100vw / 1440;
+	--rpx-vh: 100vh / 1024;
+}
+
+body {
+	background-color: #1e1e1e;
+	color: white;
+}
+
 /* 노멀라이즈 시작 */
 body, ul, li {
     margin: 0;
@@ -12,46 +26,11 @@ a {
     text-decoration: none;
 }
 
-/* 노멀라이즈 끝 */
 @font-face {
-	font-family: 'LotteMartDream';
-	font-style: normal;
-	font-weight: 400;
-	src:
-		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamMedium.woff2')
-		format('woff2'),
-		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamMedium.woff')
-		format('woff');
-}
-
-@font-face {
-	font-family: 'LotteMartDream';
-	font-style: normal;
+	font-family: 'NEXON Football Gothic B';
+	src: url('https://gcore.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXONFootballGothicBA1.woff') format('woff');
 	font-weight: 700;
-	src:
-		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamBold.woff2')
-		format('woff2'),
-		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamBold.woff')
-		format('woff');
-}
-
-@font-face {
-	font-family: 'LotteMartDream';
 	font-style: normal;
-	font-weight: 300;
-	src:
-		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamLight.woff2')
-		format('woff2'),
-		url('//fastly.jsdelivr.net/korean-webfonts/1/corps/lottemart/LotteMartDream/LotteMartDreamLight.woff')
-		format('woff');
-}
-
-.lottemartdream * {
-	font-family: 'LotteMartDream', sans-serif;
-}
-
-html>body {
-	font-family: 'LotteMartDream', sans-serif;
 }
 
 header>div>ul>li {
@@ -63,7 +42,6 @@ header>div>ul>li {
 }
 
 /*테마*/
-/* 테마 */
 .btn-theme-toggle>span:first-child {
 	display: none;
 }
@@ -88,4 +66,194 @@ html[data-theme="dark"] .toastui-editor-contents * {
 
 html[data-theme="dark"] .btn-theme-toggle>span:last-child {
 	display: none;
+}
+
+/* header */
+.make-header-margin {
+	height: calc(86 * var(--rpx-vw));
+	background-color: #1e1e1e;
+}
+
+.header {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	align-self: stretch;
+	flex-wrap: nowrap;
+	flex-shrink: 1;
+	gap: calc(10 * var(--rpx-vw));
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	min-width: 0;
+	padding: calc(20 * var(--rpx-vw)) calc(15 * var(--rpx-vw));
+	background: #1e1e1e;
+	border-bottom: 1px solid white;
+	z-index: 1000;
+}
+
+.header-items {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	align-self: stretch;
+	flex-wrap: nowrap;
+	flex-shrink: 1;
+	gap: calc(135 * var(--rpx-vw));
+	position: relative;
+	z-index: 1;
+}
+
+.logo {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: nowrap;
+	flex-shrink: 1;
+	gap: calc(12 * var(--rpx-vw));
+	position: relative;
+	width: calc(271 * var(--rpx-vw));
+	z-index: 2;
+}
+
+.icon-box {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: calc(45 * var(--rpx-vw));
+	height: calc(45 * var(--rpx-vw));
+}
+
+.header-icon {
+	/* align-self: center; */
+	width: 100%;
+	height: 100%;
+	object-fit: cover; /* 이미지가 컨테이너에 맞게 조절됩니다 */
+	z-index: 3;
+	display: block;
+}
+
+.kick-analysis {
+	flex-shrink: 1;
+	flex-basis: auto;
+	position: relative;
+	color: #ffffff;
+	font-family: Audiowide, var(--default-font-family);
+	font-size: calc(28 * var(--rpx-vw));
+	font-weight: 400;
+	text-align: left;
+	white-space: nowrap;
+	z-index: 4;
+	cursor: pointer;
+}
+
+.header-menu {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: nowrap;
+	flex-shrink: 1;
+	gap: calc(80 * var(--rpx-vw));
+	position: relative;
+	width: calc(695 * var(--rpx-vw));
+	z-index: 5;
+}
+
+.game-schedule-prediction {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 1;
+	flex-basis: auto;
+	position: relative;
+	width: calc(152 * var(--rpx-vw));
+	height: calc(27 * var(--rpx-vh));
+	color: #ffffff;
+	font-family: NEXON Football Gothic B, var(--default-font-family);
+	font-size: calc(24 * var(--rpx-vw));
+	font-weight: 700;
+	text-align: center;
+	white-space: nowrap;
+	z-index: 6;
+	cursor: pointer;
+}
+
+.analysis-community {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 1;
+	flex-basis: auto;
+	position: relative;
+	width: calc(125 * var(--rpx-vw));
+	height: calc(27 * var(--rpx-vh));
+	color: #ffffff;
+	font-family: NEXON Football Gothic B, var(--default-font-family);
+	font-size: calc(24 * var(--rpx-vw));
+	font-weight: 700;
+	text-align: center;
+	white-space: nowrap;
+	z-index: 7;
+	cursor: pointer;
+}
+
+.product-exchange {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 1;
+	flex-basis: auto;
+	position: relative;
+	width: calc(82 * var(--rpx-vw));
+	height: calc(27 * var(--rpx-vh));
+	color: #ffffff;
+	font-family: NEXON Football Gothic B, var(--default-font-family);
+	font-size: calc(24 * var(--rpx-vw));
+	font-weight: 700;
+	text-align: center;
+	white-space: nowrap;
+	z-index: 8;
+	cursor: pointer;
+}
+
+.customer-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 1;
+	flex-basis: auto;
+	position: relative;
+	width: calc(81 * var(--rpx-vw));
+	height: calc(27 * var(--rpx-vh));
+	color: #ffffff;
+	font-family: NEXON Football Gothic B, var(--default-font-family);
+	font-size: calc(24 * var(--rpx-vw));
+	font-weight: 700;
+	text-align: center;
+	white-space: nowrap;
+	z-index: 9;
+	cursor: pointer;
+}
+
+.login-button {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	flex-shrink: 1;
+	flex-basis: auto;
+	position: relative;
+	width: calc(99 * var(--rpx-vw));
+	height: calc(36 * var(--rpx-vh));
+	color: #ffffff;
+	font-family: Audiowide, var(--default-font-family);
+	font-size: calc(28 * var(--rpx-vw));
+	font-weight: 400;
+	text-align: right;
+	white-space: nowrap;
+	z-index: 10;
+	cursor: pointer;
 }

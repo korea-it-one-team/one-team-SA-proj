@@ -3,7 +3,7 @@ package com.lyj.proj.oneteamsaproj.service;
 
 import com.google.common.base.Joiner;
 import com.lyj.proj.oneteamsaproj.repository.GenFileRepository;
-import com.lyj.proj.oneteamsaproj.util.Ut;
+import com.lyj.proj.oneteamsaproj.utils.Ut;
 import com.lyj.proj.oneteamsaproj.vo.GenFile;
 import com.lyj.proj.oneteamsaproj.vo.ResultData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -236,5 +236,10 @@ public class GenFileService {
                 changeRelId(genFileId, id);
             }
         }
+    }
+
+    public List<GenFile> getFilesByRelTypeCodeAndRelId(String relTypeCode, int relId) {
+        // relTypeCode와 relId에 해당하는 파일 목록을 반환하도록 repository 메서드 호출
+        return genFileRepository.getGenFilesByRelTypeCodeAndRelId(relTypeCode, relId);
     }
 }

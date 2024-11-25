@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <title>변환된 미디어</title>
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            var mediaElement = document.querySelector('.media-element');
+
+            if (mediaElement.tagName === 'IMG') {
+                mediaElement.onload = function() {
+                    console.log('이미지 로드 완료:', mediaElement.src);
+                };
+                mediaElement.onerror = function(event) {
+                    console.error('이미지 로드 실패:', mediaElement.src);
+                    console.error('에러 코드:', event);
+                };
+            } else if (mediaElement.tagName === 'VIDEO') {
+                mediaElement.onloadeddata = function() {
+                    console.log('동영상 로드 완료:', mediaElement.src);
+                };
+                mediaElement.onerror = function(event) {
+                    console.error('동영상 로드 실패:', mediaElement.src);
+                    console.error('에러 코드:', event);
+                };
+            }
+        });
+    </script>
+</head>
+<body>
+<h1>변환된 미디어</h1>
+
+<div th:if="${imageSrc != null}">
+    <img class="media-element" th:src="${imageSrc}" alt="변환된 이미지" />
+</div>
+
+<div th:if="${videoSrc != null}">
+    <video class="media-element" controls preload="auto">
+        <source th:src="${videoSrc}" type="video/mp4">
+        브라우저에서 동영상을 지원하지 않습니다.
+    </video>
+</div>
+
+<div th:if="${imageSrc == null && videoSrc == null}">
+    <p>미디어 파일이 없습니다.</p>
+</div>
+</body>
+</html>

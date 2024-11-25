@@ -35,7 +35,7 @@ public class AdminGifticonController {
     private final String UPLOAD_DIR = "/uploads/";
 
 
-    @PostMapping("gifticon/{getGifticonId}/upload")
+    @PostMapping("adm/exchange/gifticon/{getGifticonId}/upload")
     @PatchMapping("")
     public ResponseEntity<Map<String, Object>> uploadStockAndImage(
             @PathVariable("getGifticonId") int gifticonId,
@@ -65,7 +65,7 @@ public class AdminGifticonController {
     }
 
     // 교환 신청 목록 조회
-    @RequestMapping("/exchange/list")
+    @RequestMapping("/adm/exchange/list")
     public String list(@RequestParam(required = false) String search,
                        @RequestParam(required = false) String status,
                        Model model) {
@@ -73,10 +73,10 @@ public class AdminGifticonController {
         List<Exchange_History> exchangeList = exchangeService.getExchangeList(search, status);
 
         model.addAttribute("exchangeList", exchangeList);
-        return "/adm/exchange/exchangeList";
+        return "adm/exchange/exchangeList";
     }
 
-    @GetMapping("/exchange/detatil")
+    @GetMapping("adm/exchange/detail")
     public ResponseEntity<Map<String, Object>> getExchangeDetails(HttpServletRequest req, int id) {
         // 교환 상세 정보 가져오기 (DB에서 조회)
         Rq rq = (Rq) req.getAttribute("rq");
@@ -96,7 +96,7 @@ public class AdminGifticonController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/exchange/{id}/complete")
+    @PostMapping("adm/exchange/{id}/complete")
     public ResponseEntity<Void> completeExchange(@PathVariable int id) {
         // 교환 상태를 "COMPLETED"로 변경
         boolean updated = exchangeService.completeExchange(id);
@@ -106,7 +106,7 @@ public class AdminGifticonController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    @RequestMapping("/exchange/gifticonList")
+    @RequestMapping("/adm/exchange/gifticonList")
     public String admGifticonList(Model model, @RequestParam(defaultValue = "1") int page,
                                   @RequestParam(defaultValue = "") String searchKeyword) {
 
@@ -120,7 +120,7 @@ public class AdminGifticonController {
         model.addAttribute("pagesCount", pagesCount);
         model.addAttribute("page", page);
         model.addAttribute("gifticons", gifticons);
-        return "/adm/article/admGifticonList"; // JSP 파일 이름
+        return "adm/article/admGifticonList"; // JSP 파일 이름
     }
 
 }

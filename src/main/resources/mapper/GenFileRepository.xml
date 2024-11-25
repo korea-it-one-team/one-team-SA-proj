@@ -67,14 +67,22 @@
         ORDER BY typeCode, type2Code, fileNo
     </select>
 
-    <select id="getGenFilesByRelTypeCodeAndRelId"
-            resultType="com.lyj.proj.oneteamsaproj.vo.GenFile">
+<!--    <select id="getGenFilesByRelTypeCodeAndRelId"-->
+<!--            resultType="com.lyj.proj.oneteamsaproj.vo.GenFile">-->
+<!--        SELECT *-->
+<!--        FROM genFile-->
+<!--        WHERE 1-->
+<!--        AND relTypeCode = #{relTypeCode}-->
+<!--        AND relId = #{relId}-->
+<!--        ORDER BY typeCode, type2Code, fileNo-->
+<!--    </select>-->
+
+    <!-- relTypeCode와 relId에 따른 파일 목록 가져오기 -->
+    <select id="getGenFilesByRelTypeCodeAndRelId" resultType="com.lyj.proj.oneteamsaproj.vo.GenFile">
         SELECT *
-        FROM genFile
-        WHERE 1
-        AND relTypeCode = #{relTypeCode}
+        FROM gen_file
+        WHERE relTypeCode = #{relTypeCode}
         AND relId = #{relId}
-        ORDER BY typeCode, type2Code, fileNo
     </select>
 
     <select

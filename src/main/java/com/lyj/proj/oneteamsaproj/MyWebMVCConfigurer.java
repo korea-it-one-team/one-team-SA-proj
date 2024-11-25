@@ -62,7 +62,6 @@ public class MyWebMVCConfigurer implements WebMvcConfigurer {
         ir.addPathPatterns("/usr/article/doDelete");
 
         // 상품 관련
-        ir.addPathPatterns("/usr/article/doGifticon");
         ir.addPathPatterns("/usr/gifticons/**/application");
 
         // 회원 관련
@@ -81,7 +80,6 @@ public class MyWebMVCConfigurer implements WebMvcConfigurer {
         ir.addPathPatterns("/adm/member/doFindLoginId");
         ir.addPathPatterns("/adm/member/findLoginPw");
         ir.addPathPatterns("/adm/member/doFindLoginPw");
-        ir.addPathPatterns("/adm/exchange/list");
 
         // 댓글 관련
         ir.addPathPatterns("/usr/reply/doWrite");
@@ -89,6 +87,9 @@ public class MyWebMVCConfigurer implements WebMvcConfigurer {
         // 좋아요 싫어요
         ir.addPathPatterns("/usr/reactionPoint/doGoodReaction");
         ir.addPathPatterns("/usr/reactionPoint/doBadReaction");
+
+        // 승부 예측
+        ir.addPathPatterns("/predict");
 
         // 로그아웃 필요
         ir = registry.addInterceptor(needLogoutInterceptor);

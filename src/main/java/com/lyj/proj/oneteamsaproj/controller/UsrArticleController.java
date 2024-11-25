@@ -2,10 +2,9 @@ package com.lyj.proj.oneteamsaproj.controller;
 
 
 import com.lyj.proj.oneteamsaproj.service.*;
-import com.lyj.proj.oneteamsaproj.util.Ut;
+import com.lyj.proj.oneteamsaproj.utils.Ut;
 import com.lyj.proj.oneteamsaproj.vo.*;
 import jakarta.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,8 +48,9 @@ public class UsrArticleController {
 
         Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
 
-        // -1 싫어요, 0 표현 x, 1 좋아요
-//		int usersReaction = reactionPointService.usersReaction(rq.getLoginedMemberId(), "article", id);
+//        // -1 싫어요, 0 표현 x, 1 좋아요
+//		int usersReaction = (int) reactionPointService.usersReaction(rq.getLoginedMemberId(), "article", id).getData1();
+//        model.addAttribute("usersReaction", usersReaction);
 
         ResultData usersReactionRd = reactionPointService.usersReaction(rq.getLoginedMemberId(), "article", id);
 
@@ -61,6 +61,9 @@ public class UsrArticleController {
 
         List<Reply> replies = replyService.getForPrintReplies(rq.getLoginedMemberId(), "article", id);
 
+        // 이미지 파일 여러개 첨부했을 때
+        List<GenFile> files = genFileService.getFilesByRelTypeCodeAndRelId("article", id);
+
         int repliesCount = replies.size();
 
         model.addAttribute("article", article);
@@ -69,6 +72,7 @@ public class UsrArticleController {
         model.addAttribute("replies", replies);
         model.addAttribute("repliesCount", repliesCount);
 
+        model.addAttribute("files", files);
 
         model.addAttribute("isAlreadyAddGoodRp",
 
@@ -77,6 +81,8 @@ public class UsrArticleController {
         model.addAttribute("isAlreadyAddBadRp",
 
                 reactionPointService.isAlreadyAddBadRp(rq.getLoginedMemberId(), id, "article"));
+
+        model.addAttribute("loginedMemberId", rq.getLoginedMemberId());
 
         return "usr/article/detail";
     }
@@ -111,7 +117,7 @@ public class UsrArticleController {
 
         model.addAttribute("article", article);
 
-        return "/usr/article/modify";
+        return "usr/article/modify";
     }
 
     // 로그인 체크 -> 유무 체크 -> 권한 체크 -> 수정
@@ -138,10 +144,6 @@ public class UsrArticleController {
 
         }
 
-        // getter, setter 잘 알아보자... ㅠㅠ
-//		article.setTitle(title);
-//		article.setBody(body);
-
         article = articleService.getArticleById(id);
 
         return Ut.jsReplace(userCanModifyRd.getResultCode(), userCanModifyRd.getMsg(), "../article/detail?id=" + id);
@@ -157,7 +159,6 @@ public class UsrArticleController {
         Article article = articleService.getArticleById(id);
 
         if (article == null) {
-//			return ResultData.from("F-11", Ut.f("%d번 게시글은 없습니다.", id),"입력한 id", id);
             return Ut.jsHistoryBack("F-1", Ut.f("%d번 게시글은 없습니다", id));
         }
 
@@ -191,14 +192,21 @@ public class UsrArticleController {
 
         Rq rq = (Rq) req.getAttribute("rq");
 
+
         if (Ut.isEmptyOrNull(title)) {
             return Ut.jsHistoryBack("F-1", "제목을 입력해주세요.");
         }
         if (Ut.isEmptyOrNull(body)) {
             return Ut.jsHistoryBack("F-2", "내용을 입력해주세요.");
         }
+//        if (Ut.isEmptyOrNull(boardId)) {
+//            return Ut.jsHistoryBack("F-3", "게시판을 선택해주세요");
+//        }
         if (Ut.isEmptyOrNull(boardId)) {
-            return Ut.jsHistoryBack("F-3", "게시판을 선택해주세요");
+            // 게시판 선택이 안 된 경우, 입력한 내용을 가지고 다시 글 작성 페이지로 이동
+            String alertMsg = "게시판을 선택해주세요.";
+            return Ut.jsReplace(alertMsg, "../article/write?title=%s&body=%s",
+                    Ut.getEncodedUriComponent(title), Ut.getEncodedUriComponent(body));
         }
 
         System.err.println(boardId);
@@ -209,13 +217,16 @@ public class UsrArticleController {
 
         Article article = articleService.getArticleById(id);
 
-        Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
+        // 파일 처리
+        Map<String, List<MultipartFile>> fileMap = multipartRequest.getMultiFileMap();
 
         for (String fileInputName : fileMap.keySet()) {
-            MultipartFile multipartFile = fileMap.get(fileInputName);
+            List<MultipartFile> multipartFiles = fileMap.get(fileInputName);
 
-            if (multipartFile.isEmpty() == false) {
-                genFileService.save(multipartFile, id);
+            for (MultipartFile multipartFile : multipartFiles) {
+                if (!multipartFile.isEmpty()) {
+                    genFileService.save(multipartFile, id);
+                }
             }
         }
 

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head th:replace="~{common/head :: head}">
+    <title>MAIN</title>
+</head>
+<style>
+    .main-container-section-1 {
+        overflow: hidden;
+    }
+
+    .main-container-section-1,
+    .main-container-section-1 * {
+        box-sizing: border-box;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+        outline: 0;
+    }
+
+    body {
+        background: url('/assets/home-main-bg.png') no-repeat center;
+        background-size: cover;
+    }
+
+    .transparent-black {
+        background: rgba(0, 0, 0, 0.4);
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .main-container-section-1 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: nowrap;
+        position: relative;
+        width: calc(1440 * var(--rpx-vw)); /* 가로 기준 비율 */
+        height: calc(1024 * var(--rpx-vh)); /* 세로 기준 비율 */
+        margin: 0 auto;
+        overflow: hidden;
+    }
+
+
+
+    .transparent-flex-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        align-self: stretch;
+        flex-wrap: nowrap;
+        flex-grow: 1;
+        flex-shrink: 1;
+        flex-basis: 0;
+        gap: calc(10 * var(--rpx-vw));
+        position: relative;
+        min-width: 0;
+        min-height: 0;
+        padding: calc(10 * var(--rpx-vh)) calc(10 * var(--rpx-vw));
+        background: rgba(0, 0, 0, 0);
+        z-index: 11;
+    }
+
+    .banners {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+        flex-shrink: 1;
+        gap: calc(10 * var(--rpx-vw));
+        position: absolute;
+        width: calc(1440 * var(--rpx-vw));
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%, 0);
+        z-index: 12;
+    }
+
+    .banner-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        align-self: stretch;
+        flex-wrap: nowrap;
+        flex-grow: 1;
+        flex-shrink: 1;
+        flex-basis: 0;
+        gap: calc(53 * var(--rpx-vw));
+        position: relative;
+        min-width: 0;
+        min-height: 0;
+        z-index: 13;
+    }
+
+    .left-rectangle {
+        align-self: stretch;
+        flex-grow: 1;
+        flex-shrink: 0;
+        flex-basis: 0;
+        position: relative;
+        background: #cdf256;
+        z-index: 14;
+        max-width: calc(72 * var(--rpx-vw));
+        box-shadow: calc(8 * var(--rpx-vw)) 0 0 0 #7a9d0b;
+    }
+
+    .banner-text {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex-shrink: 1;
+        position: relative;
+        width: calc(987 * var(--rpx-vw));
+        color: #cdf256;
+        font-family: Audiowide, var(--default-font-family);
+        font-size: calc(86 * var(--rpx-vw));
+        font-weight: 400;
+        text-align: left;
+        text-overflow: ellipsis;
+        z-index: 15;
+        overflow: hidden;
+        text-shadow: calc(4 * var(--rpx-vw)) calc(4 * var(--rpx-vw)) 0 #7a9d0b;
+        top: calc(70 * var(--rpx-vh));
+    }
+</style>
+
+<body>
+<div class="transparent-black"></div>
+<header th:replace="~{common/header-2 :: header-2}"></header>
+<div class="main-container-section-1">
+    <div class="transparent-flex-container"></div>
+    <div class="banners">
+        <div class="banner-container">
+            <div class="left-rectangle"></div>
+            <span class="banner-text">MAKE YOUR<br/>ANALYSIS PERFECT<br/>WITH KICKNALYSIS</span>
+        </div>
+    </div>
+</div>
+</body>
+</html>

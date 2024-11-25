@@ -2,7 +2,7 @@ package com.lyj.proj.oneteamsaproj.service;
 
 
 import com.lyj.proj.oneteamsaproj.repository.ReplyRepository;
-import com.lyj.proj.oneteamsaproj.util.Ut;
+import com.lyj.proj.oneteamsaproj.utils.Ut;
 import com.lyj.proj.oneteamsaproj.vo.Reply;
 import com.lyj.proj.oneteamsaproj.vo.ResultData;
 import org.springframework.beans.factory.annotation.Autowired;

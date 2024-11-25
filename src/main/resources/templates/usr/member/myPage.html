@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head th:replace="~{common/head :: head}">
+    <title th:text="${pageTitle}">MYPAGE</title>
+</head>
+<body>
+<header th:replace="common/header :: header"></header>
+<hr />
+<section class="mt-24 text-xl px-4">
+    <div class="mx-auto">
+        <table class="table" border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
+            <tbody>
+            <tr>
+                <th>가입일</th>
+                <td style="text-align: center;" th:text="${rq.loginedMember.regDate}">가입일</td>
+            </tr>
+            <tr>
+                <th>아이디</th>
+                <td style="text-align: center;" th:text="${rq.loginedMember.loginId}">아이디</td>
+            </tr>
+            <tr>
+                <th>이름</th>
+                <td style="text-align: center;" th:text="${rq.loginedMember.name}">이름</td>
+            </tr>
+            <tr>
+                <th>닉네임</th>
+                <td style="text-align: center;" th:text="${rq.loginedMember.nickname}">닉네임</td>
+            </tr>
+            <tr>
+                <th>이메일</th>
+                <td style="text-align: center;" th:text="${rq.loginedMember.email}">이메일</td>
+            </tr>
+            <tr>
+                <th>전화번호</th>
+                <td style="text-align: center;" th:text="${rq.loginedMember.cellphoneNum}">전화번호</td>
+            </tr>
+            <tr>
+                <th>회원정보 수정</th>
+                <td style="text-align: center;">
+                    <a th:href="@{/usr/member/checkPw}" class="btn btn-primary">수정</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="btns">
+            <button class="btn" type="button" onclick="history.back()">뒤로가기</button>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>
