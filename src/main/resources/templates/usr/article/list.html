@@ -19,10 +19,10 @@
                 <input type="hidden" name="boardId" th:value="${param.boardId}" />
                 <div class="flex">
                     <select class="select select-sm select-bordered max-w-xs" name="searchKeywordTypeCode" th:value="${param.searchKeywordTypeCode}">
-                        <option value="title">title</option>
-                        <option value="body">body</option>
-                        <option value="title,body">title+body</option>
-                        <option value="writer">writer</option>
+                        <option value="title">제목</option>
+                        <option value="body">내용</option>
+                        <option value="title,body">제목+내용</option>
+                        <option value="writer">작성자</option>
                     </select>
                     <label class="ml-3 input input-bordered input-sm flex items-center gap-2">
                         <input type="text" name="searchKeyword" placeholder="Search" th:value="${param.searchKeyword}" />
@@ -39,18 +39,19 @@
         <table class="table" border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
             <thead>
             <tr>
-                <th style="text-align: center;">ID</th>
-                <th style="text-align: center;">Registration Date</th>
-                <th style="text-align: center;">Title</th>
-                <th style="text-align: center;">Writer</th>
-                <th style="text-align: center;">Like</th>
-                <th style="text-align: center;">Dislike</th>
+                <th style="text-align: center;">No.</th>
+                <th style="text-align: center;">작성일</th>
+                <th style="text-align: center;">제목</th>
+                <th style="text-align: center;">작성자</th>
+                <th style="text-align: center;">좋아요</th>
+                <th style="text-align: center;">싫어요</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="article : ${articles}" class="hover">
                 <td style="text-align: center;" th:text="${article.id}"></td>
-                <td style="text-align: center;" th:text="${#strings.substring(article.regDate, 0, 10)}"></td>
+                <!-- 날짜/시간 표현 구간 수정 -->
+                <td style="text-align: center;" th:text="${article.formattedDate}"></td>
                 <td style="text-align: center;">
                     <a class="hover:underline" th:href="@{/usr/article/detail(id=${article.id})}" th:text="${article.title}">
                         <span th:if="${article.extra__repliesCount > 0}" style="color: red;" th:text="'[' + ${article.extra__repliesCount} + ']'"></span>
@@ -68,32 +69,44 @@
     </div>
 
     <!-- 동적 페이징 -->
-    <div th:with="paginationLen=3, startPage=${page - paginationLen >= 1 ? page - paginationLen : 1}, endPage=${page + paginationLen <= pagesCount ? page + paginationLen : pagesCount}" class="pagination flex justify-center mt-3">
+    <div th:with="paginationLen=3,
+              startPage=${page - paginationLen >= 1 ? page - paginationLen : 1},
+              endPage=${page + paginationLen <= pagesCount ? page + paginationLen : pagesCount},
+              baseUri='?boardId=' + ${boardId} + '&searchKeywordTypeCode=' + ${searchKeywordTypeCode} + '&searchKeyword=' + ${searchKeyword}"
+         class="pagination flex justify-center mt-3">
+
+        <!-- 첫 번째 페이지로 이동 -->
         <div th:if="${startPage > 1}">
             <a class="btn btn-sm" th:href="${baseUri + '&page=1'}">1</a>
         </div>
+
+        <!-- 생략 표시 (앞부분) -->
         <div th:if="${startPage > 2}">
             <button class="btn btn-sm btn-disabled">...</button>
         </div>
 
-        <div th:each="i : ${#numbers.sequence(startPage, endPage)}">
-            <a class="btn btn-sm" th:classappend="${param.page == i ? 'btn-active' : ''}" th:href="${baseUri + '&page=' + i}" th:text="${i}"></a>
+        <!-- 페이지 번호 반복 -->
+        <div th:each="i : ${#numbers.sequence(startPage, endPage)}"
+             th:if="${i > 0}">
+            <a class="btn btn-sm"
+               th:classappend="${param.page == i ? 'btn-active' : ''}"
+               th:href="${baseUri + '&page=' + i}"
+               th:text="${i}"></a>
         </div>
 
+
+        <!-- 생략 표시 (뒷부분) -->
         <div th:if="${endPage < pagesCount - 1}">
             <button class="btn btn-sm btn-disabled">...</button>
         </div>
 
+        <!-- 마지막 페이지로 이동 -->
         <div th:if="${endPage < pagesCount}">
             <a class="btn btn-sm" th:href="${baseUri + '&page=' + pagesCount}" th:text="${pagesCount}"></a>
         </div>
     </div>
-
-    <!-- 직관적인 페이징 -->
-    <div class="pagination flex justify-center mt-3">
-        <div class="btn-group">
-            <a th:each="i : ${#numbers.sequence(1, pagesCount)}" class="btn btn-sm" th:classappend="${param.page == i ? 'btn-active' : ''}" th:href="${baseUri + '&page=' + i}" th:text="${i}"></a>
-        </div>
+    <div class="btn">
+        <a href="/usr/article/write">글쓰기</a>
     </div>
 </section>
 

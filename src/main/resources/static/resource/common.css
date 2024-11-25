@@ -73,7 +73,53 @@ html[data-theme="dark"] .btn-theme-toggle>span:last-child {
 	height: calc(86 * var(--rpx-vw));
 	background-color: #1e1e1e;
 }
-
+/*2*/
+.header {
+	padding: calc(10 * var(--rpx-vw)) calc(20 * var(--rpx-vw)); /* 패딩 조정 */
+	display: flex;
+	flex-direction: row; /* 수평 정렬 */
+	justify-content: space-between; /* 로고와 버튼 간 간격 자동 정렬 */
+	align-items: center; /* 수직 가운데 정렬 */
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	background: #1e1e1e;
+	border-bottom: 1px solid white;
+	z-index: 1000;
+}
+/*1*/
+.header-items {
+	display: flex;
+	align-items: center;
+	justify-content: space-between; /* 로고와 메뉴, 버튼 간 여백 자동 조정 */
+	align-self: stretch;
+	flex-wrap: nowrap;
+	flex-shrink: 1;
+	position: relative;
+	z-index: 1;
+	padding: 0 calc(15 * var(--rpx-vw)); /* 양쪽 여백 추가 */
+}
+/*2*/
+.logo {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: calc(12 * var(--rpx-vw));
+	width: auto; /* 가변 너비 */
+	z-index: 2;
+	margin-left: calc(10 * var(--rpx-vw)); /* 브라우저 왼쪽 경계에서 간격 */
+	padding-right: calc(10 * var(--rpx-vw)); /* 로고 텍스트와 여백 유지 */
+}
+/*2*/
+.icon-box {
+	width: calc(50 * var(--rpx-vw)); /* 로고 크기 증가 */
+	height: calc(50 * var(--rpx-vw));
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+/*1*/
 .header {
 	display: flex;
 	flex-direction: column;
@@ -88,52 +134,10 @@ html[data-theme="dark"] .btn-theme-toggle>span:last-child {
 	right: 0;
 	top: 0;
 	min-width: 0;
-	padding: calc(20 * var(--rpx-vw)) calc(15 * var(--rpx-vw));
+	padding: calc(15 * var(--rpx-vw)); /* 상하좌우 패딩 통일 */
 	background: #1e1e1e;
 	border-bottom: 1px solid white;
 	z-index: 1000;
-}
-
-.header-items {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	align-self: stretch;
-	flex-wrap: nowrap;
-	flex-shrink: 1;
-	gap: calc(135 * var(--rpx-vw));
-	position: relative;
-	z-index: 1;
-}
-
-.logo {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-wrap: nowrap;
-	flex-shrink: 1;
-	gap: calc(12 * var(--rpx-vw));
-	position: relative;
-	width: calc(271 * var(--rpx-vw));
-	z-index: 2;
-}
-
-.icon-box {
-	position: relative;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: calc(45 * var(--rpx-vw));
-	height: calc(45 * var(--rpx-vw));
-}
-
-.header-icon {
-	/* align-self: center; */
-	width: 100%;
-	height: 100%;
-	object-fit: cover; /* 이미지가 컨테이너에 맞게 조절됩니다 */
-	z-index: 3;
-	display: block;
 }
 
 .kick-analysis {
@@ -149,7 +153,7 @@ html[data-theme="dark"] .btn-theme-toggle>span:last-child {
 	z-index: 4;
 	cursor: pointer;
 }
-
+/*1*/
 .header-menu {
 	display: flex;
 	flex-direction: row;
@@ -157,9 +161,9 @@ html[data-theme="dark"] .btn-theme-toggle>span:last-child {
 	justify-content: center;
 	flex-wrap: nowrap;
 	flex-shrink: 1;
-	gap: calc(80 * var(--rpx-vw));
+	gap: calc(60 * var(--rpx-vw)); /* 메뉴 간 간격 유지 */
 	position: relative;
-	width: calc(695 * var(--rpx-vw));
+	width: auto; /* 가변 너비 */
 	z-index: 5;
 }
 
@@ -239,21 +243,34 @@ html[data-theme="dark"] .btn-theme-toggle>span:last-child {
 	cursor: pointer;
 }
 
-.login-button {
+.auth-buttons {
+	display: flex;
+	flex-direction: row; /* 수평 배치 */
+	align-items: center; /* 수직 가운데 정렬 */
+	justify-content: flex-end; /* 오른쪽 정렬 */
+	gap: calc(24 * var(--rpx-vw)); /* 버튼 간 충분한 간격 설정 */
+	margin-right: calc(15 * var(--rpx-vw)); /* 브라우저 오른쪽 경계와 간격 유지 */
+}
+
+.login-button,
+.join-button,
+.myPage-button,
+.logout-button {
 	display: flex;
 	align-items: center;
-	justify-content: flex-end;
-	flex-shrink: 1;
-	flex-basis: auto;
+	justify-content: center;
+	flex-shrink: 0; /* 크기 축소 방지 */
 	position: relative;
-	width: calc(99 * var(--rpx-vw));
-	height: calc(36 * var(--rpx-vh));
+	width: calc(100 * var(--rpx-vw)); /* 버튼 너비 */
+	height: calc(36 * var(--rpx-vh)); /* 버튼 높이 */
 	color: #ffffff;
 	font-family: Audiowide, var(--default-font-family);
-	font-size: calc(28 * var(--rpx-vw));
+	font-size: calc(22 * var(--rpx-vw)); /* 텍스트 크기 통일 */
 	font-weight: 400;
-	text-align: right;
+	text-align: center;
 	white-space: nowrap;
 	z-index: 10;
 	cursor: pointer;
+	padding: 0; /* 내부 여백 제거 */
+	box-sizing: border-box; /* 경계 포함 크기 계산 */
 }

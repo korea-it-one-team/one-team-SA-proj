@@ -5,6 +5,9 @@
 </head>
 <body>
 
+<header th:replace="~{common/header-2 :: header-2}"></header>
+<div class="make-header-margin"></div>
+
 <script th:inline="javascript">
   function MemberModify__submit(form) {
     form.loginPw.value = form.loginPw.value.trim();
@@ -22,8 +25,7 @@
     form.submit();
   }
 </script>
-<header th:replace="common/header :: header"></header>
-<hr />
+
 <section class="mt-24 text-xl px-4">
   <div class="mx-auto">
     <form onsubmit="MemberModify__submit(this); return false;" th:action="@{/usr/member/doModify}" method="POST">
