@@ -220,6 +220,110 @@
     .hover\:shadow-lg:hover {
         box-shadow: 0 calc(4 * var(--rpx-vw)) calc(8 * var(--rpx-vw)) rgba(0, 0, 0, 0.15);
     }
+
+    /* 상담 섹션 컨테이너 */
+    .consultation-section {
+        background-color: #252525;
+        padding: calc(24 * var(--rpx-vw));
+        border-radius: calc(8 * var(--rpx-vw));
+    }
+
+    /* 상담 리스트 */
+    .consultation-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    /* 상담 항목 */
+    .consultation-item {
+        background-color: #252525;
+        padding: calc(16 * var(--rpx-vw));
+        border-radius: calc(8 * var(--rpx-vw));
+        margin-bottom: calc(12 * var(--rpx-vw));
+        box-shadow: 0 calc(4 * var(--rpx-vw)) calc(8 * var(--rpx-vw)) rgba(0, 0, 0, 0.2);
+    }
+
+    /* 상담 링크 */
+    .consultation-link {
+        color: #ffffff;
+        font-size: calc(16 * var(--rpx-vw));
+        font-weight: bold;
+        text-decoration: none;
+        display: block;
+        margin-bottom: calc(8 * var(--rpx-vw));
+    }
+
+    .consultation-link:hover {
+        text-decoration: underline;
+    }
+
+    /* 답변 및 내용 박스 */
+    .consultation-box {
+        background-color: #383838;
+        padding: calc(12 * var(--rpx-vw));
+        border-radius: calc(8 * var(--rpx-vw));
+        margin-top: calc(8 * var(--rpx-vw));
+    }
+
+    /* 라벨 스타일 */
+    .consultation-label {
+        color: #cdf256;
+        font-size: calc(14 * var(--rpx-vw));
+    }
+
+    .consultation-label-admin,
+    .consultation-label-user {
+        color: #cdf256;
+        font-size: calc(14 * var(--rpx-vw));
+    }
+
+    /* 텍스트 스타일 */
+    .consultation-text {
+        color: #ffffff;
+        font-size: calc(14 * var(--rpx-vw));
+        margin-top: calc(4 * var(--rpx-vw));
+    }
+
+    /* 입력 필드 스타일 */
+    .consultation-input {
+        background-color: #383838;
+        color: #ffffff;
+        border: calc(1 * var(--rpx-vw)) solid #ffffff;
+        width: 100%;
+        margin-top: calc(8 * var(--rpx-vw));
+        padding: calc(8 * var(--rpx-vw));
+        border-radius: calc(4 * var(--rpx-vw));
+    }
+
+    /* 저장 버튼 스타일 */
+    .consultation-save-btn {
+        background-color: #10b981;
+        color: #ffffff;
+        padding: calc(8 * var(--rpx-vw)) calc(16 * var(--rpx-vw));
+        border: none;
+        border-radius: calc(4 * var(--rpx-vw));
+        margin-top: calc(8 * var(--rpx-vw));
+        cursor: pointer;
+        font-weight: bold;
+        font-size: calc(14 * var(--rpx-vw));
+        transition: background-color 0.3s;
+    }
+
+    .consultation-save-btn:hover {
+        background-color: #0e9869;
+    }
+
+    /* 상담 내역 없음 메시지 */
+    .consultation-empty-message {
+        color: #ffffff;
+        text-align: center;
+        background-color: #252525;
+        padding: calc(16 * var(--rpx-vw));
+        border-radius: calc(8 * var(--rpx-vw));
+        font-size: calc(16 * var(--rpx-vw));
+    }
+
 </style>
 <body>
 <header th:replace="~{common/header-2 :: header-2}"></header>
@@ -239,14 +343,14 @@
             <h2 class="mb-6" style="font-size: calc(24 * var(--rpx-vw)); font-weight: bold;">자주 묻는 질문 Q&A</h2>
             <div id="faq-list" class="faq-list">
                 <div class="category-title-box">
-                    <th:block th:each="category : ${categorys}">
+                    <th:block th:each="category : ${categories}">
                         <!-- 버튼: 항상 표시 -->
                         <button class="category-title btn" th:text="${category.category_name}"
                                 th:id="'data-category-id-' + ${category.id}"></button>
                     </th:block>
                 </div>
 
-                <th:block th:each="category : ${categorys}">
+                <th:block th:each="category : ${categories}">
                     <!-- FAQ 리스트: 초기 숨김 -->
                     <div class="faq-items" style="display: none;" th:id="'data-category-id-' + ${category.id}">
                         <th:block th:each="faq : ${faqs}">
@@ -279,39 +383,39 @@
 
         <div id="history" class="content-section hidden">
             <h2 class="mb-6" style="font-size: calc(24 * var(--rpx-vw)); font-weight: bold;">상담내역</h2>
-            <ul class="space-y-4">
-                <th:block th:each="consultation : ${consultations}">
-                    <li class="p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-                        style="background-color: #3a3a3a;">
-                        <a href="#" th:onclick="'showConsultationDetails(' + ${consultation.id} + ')'"
-                           style="color: var(--primary-color); text-decoration: none; font-weight: bold;"
-                           th:text="${consultation.title}"></a>
+            <ul class="consultation-list">
+                <th:block th:if="${#lists.size(consultations) > 0}">
+                    <th:block th:each="consultation : ${consultations}">
+                        <li class="consultation-item">
+                            <a href="#" th:onclick="'showConsultationDetails(' + ${consultation.id} + ')'"
+                               class="consultation-link" th:text="${consultation.title}"></a>
 
-                        <div class="hidden content_answer mt-2" th:class="'content_answer' + ${consultation.id}">
-                            <div class="p-3 rounded-lg border-l-4"
-                                 style="background-color: #252525; border-color: var(--primary-color);">
-                                <span style="font-weight: bold; color: var(--primary-color);">내용</span>
-                                <p style="color: white;" th:text="${consultation.content}"></p>
+                            <div class="consultation-answer hidden" th:class="'consultation-answer-' + ${consultation.id}">
+                                <div class="consultation-box consultation-details">
+                                    <span class="consultation-label">내용</span>
+                                    <p class="consultation-text" th:text="${consultation.content}"></p>
+                                </div>
+                                <th:block th:if="${isAdmin}">
+                                    <div class="consultation-box consultation-admin-answer">
+                                        <span class="consultation-label-admin">답변</span>
+                                        <input type="text" class="consultation-input"
+                                               th:value="${consultation.answer}"/>
+                                        <button class="consultation-save-btn"
+                                                th:onclick="'saveAnswer(' + ${consultation.id} + ')'">저장</button>
+                                    </div>
+                                </th:block>
+                                <th:block th:if="${!isAdmin}">
+                                    <div class="consultation-box consultation-user-answer">
+                                        <span class="consultation-label-user">답변</span>
+                                        <p class="consultation-text" th:text="${consultation.answer}"></p>
+                                    </div>
+                                </th:block>
                             </div>
-                            <th:block th:if="${isAdmin}">
-                                <div class="p-3 rounded-lg border-l-4 mt-2"
-                                     style="background-color: #252525; border-color: #10b981;">
-                                    <span style="font-weight: bold; color: #10b981;">답변</span>
-                                    <input type="text" class="input-bordered" th:value="${consultation.answer}"/>
-                                    <button class="btn btn-success mt-2"
-                                            th:onclick="'saveAnswer(' + ${consultation.id} + ')'">저장
-                                    </button>
-                                </div>
-                            </th:block>
-                            <th:block th:if="${!isAdmin}">
-                                <div class="p-3 rounded-lg border-l-4 mt-2"
-                                     style="background-color: #252525; border-color: #10b981;">
-                                    <span style="font-weight: bold; color: #10b981;">답변:</span>
-                                    <p style="color: white;" th:text="${consultation.answer}"></p>
-                                </div>
-                            </th:block>
-                        </div>
-                    </li>
+                        </li>
+                    </th:block>
+                </th:block>
+                <th:block th:if="${#lists.size(consultations) == 0}">
+                    <p class="consultation-empty-message">상담내역이 없습니다.</p>
                 </th:block>
             </ul>
         </div>

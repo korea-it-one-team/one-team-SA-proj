@@ -380,21 +380,39 @@
             let predictionButtons = $('<div class="prediction-buttons"></div>');
             ['승', '무', '패'].forEach(function (prediction) {
                 let button = $(`<button class="prediction-button" data-prediction="${prediction}" data-game-id="${gameSchedule.id}" ${loginedMember ? `data-member-id="${loginedMember.id}"` : ''}></button>`)
-                    .text(prediction)
-                    .css({
-                        "background-color": userPrediction === prediction ?
-                            (prediction === '승' ? '#cdf256' : (prediction === '무' ? 'yellow' : 'red')) : 'white',
-                        "color": userPrediction === prediction ?
-                            (prediction === '승' ? '#1e1e1e' : (prediction === '패' ? 'white' : '#1e1e1e')) : '#1e1e1e'
-                    });
+                    .text(prediction);
 
-                // 미래 경기일 경우 버튼 활성화, 과거 경기일 경우 비활성화
                 if (!isFutureGame) {
-                    button.prop('disabled', true).css({
-                        "background-color": "#1e1e1e",
-                        "color": "#dfdfdf"
+                    // 과거 경기일 경우, 예측에 맞는 것만 스타일 변경
+                    if (userPrediction === prediction) {
+                        // 예측이 맞을 경우 해당 버튼에 색상 적용
+                        button.css({
+                            "background-color": prediction === '승' ? '#cdf256' :
+                                (prediction === '무' ? 'yellow' : 'red'),
+                            "color": prediction === '승' ? '#1e1e1e' :
+                                (prediction === '패' ? 'white' : '#1e1e1e')
+                        });
+                    } else {
+                        // 예측이 틀린 버튼은 비활성화된 스타일 적용
+                        button.css({
+                            "background-color": "#1e1e1e",
+                            "color": "#dfdfdf"
+                        });
+                    }
+                    button.prop('disabled', true); // 과거 경기에서는 모든 버튼 비활성화
+                } else {
+                    // 미래 경기일 경우, 예측 정보에 맞는 스타일을 활성화
+                    button.css({
+                        "background-color": userPrediction === prediction ?
+                            (prediction === '승' ? '#cdf256' :
+                                (prediction === '무' ? 'yellow' : 'red')) : 'white',
+                        "color": userPrediction === prediction ?
+                            (prediction === '승' ? '#1e1e1e' :
+                                (prediction === '패' ? 'white' : '#1e1e1e')) : '#1e1e1e'
                     });
+                    button.prop('disabled', false); // 미래 경기는 활성화
                 }
+
                 predictionButtons.append(button);
             });
             listItem.append(predictionButtons);
