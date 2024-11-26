@@ -8,14 +8,9 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.net.URLEncoder;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
 
 public class Ut {
 
@@ -338,26 +333,6 @@ public class Ut {
 			return URLEncoder.encode(str, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			return str;
-		}
-	}
-
-	public static String sha256(String input) {
-		try {
-			MessageDigest md = MessageDigest.getInstance("SHA-256");
-			byte[] hash = md.digest(input.getBytes("UTF-8"));
-			StringBuffer hexString = new StringBuffer();
-
-			for (int i = 0; i < hash.length; i++) {
-				String hex = Integer.toHexString(0xff & hash[i]);
-				if (hex.length() == 1)
-					hexString.append('0');
-				hexString.append(hex);
-			}
-
-			return hexString.toString();
-		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return null;
 		}
 	}
 

@@ -50,6 +50,11 @@ dependencies {
     // 파일 업로드를 위한
     implementation 'com.google.guava:guava:31.1-jre'
 
+    //시큐리티
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    testImplementation 'org.springframework.security:spring-security-test'
+
 //    //Web Driver Manager
 //    implementation 'io.github.bonigarcia:webdrivermanager:4.4.3'
 

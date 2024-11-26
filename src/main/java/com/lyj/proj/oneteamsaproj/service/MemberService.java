@@ -1,6 +1,7 @@
 package com.lyj.proj.oneteamsaproj.service;
 
 import com.lyj.proj.oneteamsaproj.repository.MemberRepository;
+import com.lyj.proj.oneteamsaproj.utils.PasswordHelper;
 import com.lyj.proj.oneteamsaproj.utils.Ut;
 import com.lyj.proj.oneteamsaproj.vo.Member;
 import com.lyj.proj.oneteamsaproj.vo.ResultData;
@@ -26,6 +27,9 @@ public class MemberService {
     @Autowired
     private MailService mailService;
 
+    @Autowired
+    private PasswordHelper passwordHelper;
+
     public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
@@ -44,7 +48,7 @@ public class MemberService {
             return ResultData.from("F-8", Ut.f("이미 사용중인 이름(%s)과 이메일(%s)입니다.", name, email));
         }
 
-        loginPw = Ut.sha256(loginPw);
+        loginPw = passwordHelper.encryptPassword(loginPw);
 
         memberRepository.doJoin(loginId, loginPw, name, nickname, cellphoneNum, email);
 
@@ -66,7 +70,7 @@ public class MemberService {
             return ResultData.from("F-8", Ut.f("이미 사용중인 이름(%s)과 이메일(%s)입니다.", name, email));
         }
 
-        loginPw = Ut.sha256(loginPw);
+        loginPw = passwordHelper.encryptPassword(loginPw);
         memberRepository.doSign(loginId, loginPw, name, cellphoneNum, email);
 
         int id = memberRepository.getLastInsertId();
@@ -98,7 +102,7 @@ public class MemberService {
     }
 
     public ResultData modify(int loginedMemberId, String loginPw, String name, String nickname, String cellphoneNum, String email) {
-        loginPw = Ut.sha256(loginPw);
+        loginPw = passwordHelper.encryptPassword(loginPw);
         memberRepository.modify(loginedMemberId, loginPw, name, nickname, cellphoneNum, email);
 
         return ResultData.from("S-1", "회원정보 수정 완료");
@@ -142,7 +146,7 @@ public class MemberService {
     }
 
     private void setTempPassword(Member actor, String tempPassword) {
-        memberRepository.modify(actor.getId(), Ut.sha256(tempPassword), null, null, null, null);
+        memberRepository.modify(actor.getId(), passwordHelper.encryptPassword(tempPassword), null, null, null, null);
     }
 
     public void addPoints(int memberId, int points) {
