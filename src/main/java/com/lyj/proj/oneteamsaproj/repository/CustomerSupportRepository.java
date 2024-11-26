@@ -42,7 +42,9 @@ public interface CustomerSupportRepository {
 
     @Update("""
             UPDATE consultations
-            SET answer = ${answer}
+            SET answer = #{answer},
+            status = '답변완료',
+            updated_at = NOW()
             WHERE id = #{id}
             """)
     void updateAnswer(int id, String answer);

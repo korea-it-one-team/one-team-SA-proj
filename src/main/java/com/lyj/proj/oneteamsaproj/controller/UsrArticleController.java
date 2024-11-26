@@ -6,8 +6,10 @@ import com.lyj.proj.oneteamsaproj.utils.Ut;
 import com.lyj.proj.oneteamsaproj.vo.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -40,6 +42,10 @@ public class UsrArticleController {
 
     @Autowired
     private ReplyService replyService;
+
+    @Autowired
+    private ImageService imageService;
+
 
     // 액션 메서드, 컨트롤 메서드
     @RequestMapping("/usr/article/detail")
@@ -130,7 +136,9 @@ public class UsrArticleController {
     // 로그인 체크 -> 유무 체크 -> 권한 체크 -> 수정
     @RequestMapping("/usr/article/doModify")
     @ResponseBody
-    public String doModify(HttpServletRequest req, int id, String title, String body, MultipartRequest multipartRequest) {
+    public String doModify(HttpServletRequest req, int id, String title, String body,
+                           @RequestParam("imageUrls") String imageUrls,
+                           MultipartRequest multipartRequest) {
 
         Rq rq = (Rq) req.getAttribute("rq");
 
@@ -151,6 +159,21 @@ public class UsrArticleController {
         }
 
         article = articleService.getArticleById(id);
+
+        // 이미지 URL들을 처리 (쉼표로 구분된 URL들)
+        String[] images = imageUrls.split(",");
+
+        if (imageUrls.length() >= 2) {
+            try {
+                // images 배열을 순차적으로 처리
+                for (String imageUrl : images) {
+                    // 각 이미지 URL을 처리 (예: DB에 저장하거나, 다른 서비스에 저장)
+                    imageService.saveImage(imageUrl, article.getId(), article.getBoardId());  // 이미지 업로드
+                }
+            } catch (IOException e) {
+                return Ut.jsHistoryBack("F-4", "이미지 업로드 중 오류 발생.");
+            }
+        }
 
         // 파일 처리
         Map<String, List<MultipartFile>> fileMap = multipartRequest.getMultiFileMap();
@@ -192,7 +215,7 @@ public class UsrArticleController {
             articleService.deleteArticle(id);
         }
 
-        return Ut.jsReplace(userCanDeleteRd.getResultCode(), userCanDeleteRd.getMsg(), "../article/list");
+        return Ut.jsReplace(userCanDeleteRd.getResultCode(), userCanDeleteRd.getMsg(), "../article/list?boardId=2&page=1");
     }
 
     @RequestMapping("/usr/article/write")
@@ -208,6 +231,7 @@ public class UsrArticleController {
     @RequestMapping("/usr/article/doWrite")
     @ResponseBody
     public String doWrite(HttpServletRequest req, String boardId, String title, String body, String replaceUri,
+                          @RequestParam("imageUrls") String imageUrls,
                           MultipartRequest multipartRequest) {
 
         Rq rq = (Rq) req.getAttribute("rq");
@@ -229,6 +253,26 @@ public class UsrArticleController {
         int id = (int) writeArticleRd.getData1();  // 게시물 ID
 
         Article article = articleService.getArticleById(id);
+
+        // 이미지 URL들을 처리 (쉼표로 구분된 URL들)
+        String[] images = imageUrls.split(",");
+        System.out.println("imageUrls : " + imageUrls);
+        System.out.println("imageUrls : " + imageUrls.length());
+
+        // images 배열을 사용하여 처리
+        // 파일 업로드
+
+        if (imageUrls.length() >= 2) {
+            try {
+                // images 배열을 순차적으로 처리
+                for (String imageUrl : images) {
+                    // 각 이미지 URL을 처리 (예: DB에 저장하거나, 다른 서비스에 저장)
+                    imageService.saveImage(imageUrl, article.getId(), article.getBoardId());  // 이미지 업로드
+                }
+            } catch (IOException e) {
+                return Ut.jsHistoryBack("F-4", "이미지 업로드 중 오류 발생.");
+            }
+        }
 
         // 파일 처리
         Map<String, List<MultipartFile>> fileMap = multipartRequest.getMultiFileMap();
@@ -277,31 +321,34 @@ public class UsrArticleController {
     }
 
     @RequestMapping("/usr/article/list")
-    public String showList(HttpServletRequest req, Model model, @RequestParam(defaultValue = "1") int boardId,
+    public String showList(HttpServletRequest req, Model model,
+                           @RequestParam(defaultValue = "1") Integer boardId,
                            @RequestParam(defaultValue = "1") int page,
                            @RequestParam(defaultValue = "title,body") String searchKeywordTypeCode,
                            @RequestParam(defaultValue = "") String searchKeyword) throws IOException {
 
         Rq rq = (Rq) req.getAttribute("rq");
 
+        // boardId 유효성 검사
+        if (boardId == null || boardId <= 0) {
+            return rq.historyBackOnView("잘못된 게시판 ID입니다.");
+        }
+
         Board board = boardService.getBoardById(boardId);
+
+        if (board == null) {
+            return rq.historyBackOnView("없는 게시판입니다.");
+        }
 
         // 페이지네이션
         int articlesCount = articleService.getArticlesCount(boardId, searchKeywordTypeCode, searchKeyword);
 
-        // 한 페이지에 글 10개
-        // 글 20개 -> 2page
-        // 글 25개 -> 3page
         int itemsInAPage = 10;
 
         int pagesCount = (int) Math.ceil(articlesCount / (double) itemsInAPage);
 
         List<Article> articles = articleService.getForPrintArticles(boardId, itemsInAPage, page, searchKeywordTypeCode,
                 searchKeyword);
-
-        if (board == null) {
-            return rq.historyBackOnView("없는 게시판입니다.");
-        }
 
         model.addAttribute("articles", articles);
         model.addAttribute("articlesCount", articlesCount);

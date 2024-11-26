@@ -185,25 +185,34 @@
 
 <body>
 <script th:inline="javascript">
-    function ArticleWrite__submit(form) {
+        function ArticleModify__submit(form) {
         form.title.value = form.title.value.trim();
 
-        if (form.title.value.length === 0) {
-            alert("제목을 써주세요.");
-            return;
-        }
+        if (form.title.value.length == 0) {
+        alert('제목을 입력하세요.');
+        return;
+    }
 
-        // 에디터 객체 가져오기
         toastui.Editor.factory({
-            el: document.querySelector('#editor')
-        });
+        el: document.querySelector('#editor')
+    });
 
         const markdown = editor.getMarkdown().trim();
 
-        if (markdown.length === 0) {
-            alert('내용을 써주세요.');
-            return;
-        }
+        if (markdown.length == 0) {
+        alert('내용을 입력하세요.');
+        return;
+    }
+
+            // 이미지 URL들을 Markdown에서 추출
+            const imageUrls = [];
+            const imageRegex = /!\[.*?\]\((.*?)\)/g; // Markdown 이미지 패턴
+            let match;
+            while ((match = imageRegex.exec(markdown)) !== null) {
+                imageUrls.push(match[1]); // 이미지 URL만 추출
+            }
+            // 이미지 URL들을 hidden input 필드에 저장
+            form.imageUrls.value = imageUrls.join(','); // 쉼표로 구분하여 전송
 
         $('#fileInput').attr('name', 'file__article__' + [[${currentId}]] + '__extra__Img__1');
 
@@ -211,23 +220,23 @@
         form.submit();
     }
 
-    function updateFileName(input) {
-        const fileNameEl = document.getElementById('fileName');
-        if (input.files.length > 0) {
-            fileNameEl.textContent = input.files[0].name; // 파일명 표시
-            fileNameEl.style.color = '#ffffff'; // 파일 선택 시 텍스트 색상 흰색으로 변경
-        } else {
-            fileNameEl.textContent = '선택된 파일 없음'; // 기본 메시지
-            fileNameEl.style.color = '#aaaaaa'; // 파일 미선택 시 기본 색상 적용
-        }
-    }
+function updateFileName(input) {
+const fileNameEl = document.getElementById('fileName');
+if (input.files.length > 0) {
+fileNameEl.textContent = input.files[0].name; // 파일명 표시
+fileNameEl.style.color = '#ffffff'; // 파일 선택 시 텍스트 색상 흰색으로 변경
+} else {
+fileNameEl.textContent = '선택된 파일 없음'; // 기본 메시지
+fileNameEl.style.color = '#aaaaaa'; // 파일 미선택 시 기본 색상 적용
+}
+}
 
-    function updateSelectColor(selectElement) {
-        if (selectElement.value === "") {
-            // 기본 선택 상태: 텍스트 색상 회색
-            selectElement.style.color = "#aaaaaa";
-        } else {
-            // 다른 옵션 선택: 텍스트 색상 흰색
+function updateSelectColor(selectElement) {
+if (selectElement.value === "") {
+// 기본 선택 상태: 텍스트 색상 회색
+selectElement.style.color = "#aaaaaa";
+} else {
+// 다른 옵션 선택: 텍스트 색상 흰색
             selectElement.style.color = "#ffffff";
         }
     }
@@ -235,37 +244,13 @@
 
 <header th:replace="~{common/header-2 :: header-2}"></header>
 <div class="make-header-margin"></div>
-<script type="text/javascript">
-    function ArticleModify__submit(form) {
-        form.title.value = form.title.value.trim();
-
-        if (form.title.value.length == 0) {
-            alert('제목을 입력하세요.');
-            return;
-        }
-
-        const editor = $(form).find('#editor').data(
-            'data-toast-editor');
-        const markdown = editor.getMarkdown().trim();
-
-        if (markdown.length == 0) {
-            alert('내용을 입력하세요.');
-            return;
-        }
-
-        $('#fileInput').attr('name', 'file__article__' + [[${article.Id}]] + '__extra__Img__1');
-
-        form.body.value = markdown;
-        form.submit();
-    }
-</script>
-
 <section class="article-write-section">
     <div class="write-container">
         <form onsubmit="ArticleModify__submit(this); return false;" th:action="@{/usr/article/doModify}" method="POST"
               enctype="multipart/form-data" class="article-write-form">
             <input type="hidden" name="body"/>
-            <input type="hidden" name="id" th:value="${article.id}">
+            <input type="hidden" name="id" th:value="${article.id}" id="currentId">
+            <input type="hidden" name="imageUrls"/> <!-- 이미지 URL들을 전송할 hidden 필드 추가 -->
             <div class="write-form-line">
                 <label class="write-form-label">게시판</label>
                 <select class="input write-form-select" name="boardId" onchange="updateSelectColor(this)">
@@ -292,8 +277,8 @@
                 </div>
             </div>
             <div class="write-editor-container">
-                <div id="editor" class="toast-ui-editor">
-                    <script type="text/x-template" th:text="${article.body}"></script>
+                <div id="editor">
+                    <textarea th:text="${article.body}"></textarea>
                 </div>
             </div>
             <div class="write-btns">
@@ -312,6 +297,87 @@
             </div>
         </form>
     </div>
+
+    <script>
+        const currentId = document.querySelector('#currentId').value; // currentId 가져오기 (hidden input or element에서)
+
+
+        const editor = new toastui.Editor({
+            el: document.querySelector('#editor'),
+            height: `calc(600 * var(--rpx-vw))`, // 반응형 height
+            initialEditType: 'markdown',
+            previewStyle: 'vertical',
+            initialValue: '', // 초기 마크다운 값
+            hooks: {
+                addImageBlobHook: function (blob, callback) {
+                    // 이미지 파일을 업로드하는 FormData 생성
+                    const formData = new FormData();
+                    formData.append('file', blob);
+                    formData.append('currentId', currentId); // currentId 추가
+
+                    // 서버로 이미지를 업로드 (여러 이미지를 처리할 수 있도록 변경)
+                    fetch('/api/images/upload', {
+                        method: 'POST',
+                        body: formData,
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.url) {
+                                // 업로드된 이미지 URL을 에디터에 삽입
+                                callback(data.url, '');
+                            } else {
+                                console.error('Image upload failed: ', data);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error uploading image:', error);
+                        });
+
+                    return false;  // 기본 이미지 업로드 동작 방지
+                }
+            }
+        });
+
+        // 이미지 업로드 기능을 활성화하기 위해 클릭 시 파일 선택
+        document.querySelector(".image")
+            .addEventListener("click", function () {
+                const imageInput = document.createElement('input');
+                imageInput.type = 'file';
+                imageInput.accept = 'image/*';
+                imageInput.multiple = true;  // 여러 개의 이미지 파일 선택 가능
+
+                imageInput.addEventListener('change', function (event) {
+                    const files = event.target.files;
+                    if (files && files.length > 0) {
+                        Array.from(files).forEach(file => {
+                            const formData = new FormData();
+                            formData.append('file', file);
+                            formData.append('currentId', currentId); // currentId 추가
+
+                            fetch('/api/images/upload', {
+                                method: 'POST',
+                                body: formData,
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.url) {
+                                        // 업로드된 이미지 URL을 에디터에 삽입
+                                        editor.insertText('![](' + data.url + ')');
+                                    } else {
+                                        console.error('Image upload failed: ', data);
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error uploading image:', error);
+                                });
+                        });
+                    }
+                });
+
+                imageInput.click();  // 파일 선택 창 강제 팝업
+            });
+    </script>
+
 </section>
 
 <footer th:replace="~{common/footer :: footer}"></footer>

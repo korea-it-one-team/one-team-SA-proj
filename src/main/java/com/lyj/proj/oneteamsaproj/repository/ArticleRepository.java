@@ -197,4 +197,11 @@ public interface ArticleRepository {
 			""")
     public int getCurrentArticleId();
 
+	@Update("""
+			UPDATE article
+			SET updateDate = NOW(),
+    		`body` = #{updatedBody}
+			WHERE id = #{id}
+			""")
+	void bodyUpdate(String updatedBody, int id);
 }

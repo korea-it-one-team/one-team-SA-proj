@@ -2,7 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org" data-theme="light" lang="ko">
 <head th:replace="~{common/head :: head}">
     <title>DETAIL</title>
-    <!--    <th:block th:with="toastUi=true"></th:block>-->
 </head>
 <style>
     .article-detail-section-1 {
@@ -147,6 +146,11 @@
         border-radius: calc(5 * var(--rpx-vw));
     }
 
+    .reply-input::placeholder {
+        font-size: calc(14 * var(--rpx-vw));
+        color: #aaaaaa;
+    }
+
     .login-reminder {
         font-size: calc(16 * var(--rpx-vw));
         text-align: center;
@@ -179,8 +183,10 @@
     }
 
     .empty-replies {
+        width: 100%;
         text-align: center;
-        color: #9ca3af;
+        color: #aaaaaa;
+        font-size: calc(14 * var(--rpx-vw));
     }
 
     .reply-item {
@@ -553,10 +559,12 @@
                 <!-- 이미지 파일, 없으면 안뜨게 -->
                 <div style="margin-bottom: 10px;" th:if="${imageFileCount > 0}">
                     <img class="mx-auto rounded-xl" th:src="${rq.getImgUri(article.id)}" controls>
-                        <source th:src="${rq.getImgUri(article.id)}" type="Img/"
-                                th:attr="onerror=${rq.profileFallbackImgOnErrorHtml}" />
+                    <source th:src="${rq.getImgUri(article.id)}" type="Img/"
+                            th:attr="onerror=${rq.profileFallbackImgOnErrorHtml}" />
                 </div>
-                <div class="article-body" th:utext="${article.body}"></div>
+                <div class="toast-ui-viewer">
+                    <script type="text/x-template" class="article-body" th:text="${article.body}"></script>
+                </div>
             </div>
         </div>
 
@@ -656,3 +664,4 @@
 
 </body>
 </html>
+

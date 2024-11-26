@@ -187,16 +187,16 @@ public class UsrMemberController {
     public ResultData getLoginIdDup(String loginId) {
 
         if (Ut.isEmpty(loginId)) {
-            return ResultData.from("F-1", "아이디를 입력해주세요");
+            return ResultData.from("F-1", "아이디를 입력해주세요.");
         }
 
         Member existsMember = memberService.getMemberByLoginId(loginId);
 
         if (existsMember != null) {
-            return ResultData.from("F-2", "해당 아이디는 이미 사용중이야", "loginId", loginId);
+            return ResultData.from("F-2", "이미 사용중인 아이디입니다.", "loginId", loginId);
         }
 
-        return ResultData.from("S-1", "사용 가능!", "loginId", loginId);
+        return ResultData.from("S-1", "사용 가능한 아이디입니다.", "loginId", loginId);
     }
 
     @RequestMapping("/usr/member/findLoginId")
@@ -213,10 +213,10 @@ public class UsrMemberController {
         Member member = memberService.getMemberByNameAndEmail(name, email);
 
         if (member == null) {
-            return Ut.jsHistoryBack("F-1", "너는 없는 사람이야");
+            return Ut.jsHistoryBack("F-1", "존재하지 않는 유저 정보입니다.");
         }
 
-        return Ut.jsReplace("S-1", Ut.f("너의 아이디는 [ %s ] 야", member.getLoginId()), afterFindLoginIdUri);
+        return Ut.jsReplace("S-1", Ut.f("회원님의 아이디는 [ %s ] 입니다.", member.getLoginId()), afterFindLoginIdUri);
     }
 
     @RequestMapping("/usr/member/findLoginPw")
@@ -233,11 +233,11 @@ public class UsrMemberController {
         Member member = memberService.getMemberByLoginId(loginId);
 
         if (member == null) {
-            return Ut.jsHistoryBack("F-1", "너는 없는 사람이야");
+            return Ut.jsHistoryBack("F-1", "존재하지 않는 유저 정보입니다.");
         }
 
         if (member.getEmail().equals(email) == false) {
-            return Ut.jsHistoryBack("F-2", "일치하는 이메일이 없는데?");
+            return Ut.jsHistoryBack("F-2", "일치하는 이메일이 없습니다.");
         }
 
         ResultData notifyTempLoginPwByEmailRd = memberService.notifyTempLoginPwByEmail(member);

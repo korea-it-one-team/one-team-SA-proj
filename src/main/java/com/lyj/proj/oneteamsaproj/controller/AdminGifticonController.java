@@ -107,15 +107,14 @@ public class AdminGifticonController {
     }
 
     @RequestMapping("/adm/exchange/gifticonList")
-    public String admGifticonList(Model model, @RequestParam(defaultValue = "1") int page,
-                                  @RequestParam(defaultValue = "") String searchKeyword) {
+    public String admGifticonList(Model model, @RequestParam(defaultValue = "1") int page) {
 
-        int gifticonsCount = gifticonService.getAllGifticonCount(searchKeyword);
+        int gifticonsCount = gifticonService.getAllGifticonCount();
 
         int itemsInAPage = 12;
         int pagesCount = gifticonsCount > 0 ? (int) Math.ceil(gifticonsCount / (double) itemsInAPage) : 1; // 최소 1 페이지
 
-        List<Gifticon> gifticons = gifticonService.getForPrintGifticons(itemsInAPage, page, searchKeyword);
+        List<Gifticon> gifticons = gifticonService.getForPrintGifticons(itemsInAPage, page);
 
         model.addAttribute("pagesCount", pagesCount);
         model.addAttribute("page", page);

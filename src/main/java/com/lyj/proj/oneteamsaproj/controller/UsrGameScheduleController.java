@@ -42,7 +42,15 @@ public class UsrGameScheduleController {
     // JSP 접근 메서드
     @GetMapping("usr/home/gameSchedule")
     public String getGameSchedulePage(Model model) {
+
         List<GameSchedule> gameSchedules = gameScheduleService.getAllGameSchedules();
+
+        //비어있으면 DB에 다시 넣고 다시 가져오기
+        if(gameSchedules.isEmpty()) {
+            insertGameSchedule();
+            gameSchedules = gameScheduleService.getAllGameSchedules();
+        }
+
         // 현재 날짜와 시간 가져오기
         LocalDateTime now = LocalDateTime.now();
         // 포맷 설정 (예: "yyyy-MM-dd'T'HH:mm")
@@ -61,7 +69,7 @@ public class UsrGameScheduleController {
         model.addAttribute("currentDateTime", formattedDateTime);
         model.addAttribute("gameSchedules", gameSchedules);
 
-        return "usr/home/gameSchedule"; // JSP 파일 경로
+        return "usr/home/gameSchedule"; // 타임리프 파일 경로
     }
 
     // 승/무/패 예측 AJAX POST 요청 메서드
@@ -123,7 +131,6 @@ public class UsrGameScheduleController {
 
         return response;
     }
-
 
     // DB에 저장할 메서드
     @GetMapping("/getGameSchedule")

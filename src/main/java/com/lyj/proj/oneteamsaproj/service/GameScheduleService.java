@@ -146,6 +146,5 @@ public class GameScheduleService {
         System.out.println("scheduleData : " + scheduleData); // 크롤링한 데이터 출력
         return scheduleData; // 크롤링한 데이터 반환
     }
-
 }
 
