@@ -280,7 +280,7 @@
                     <div class="article-info">
                         <span class="article-writer" th:text="${article.extra__writer}">작성자</span>
                         <span class="article-date"
-                              th:text="${#strings.substring(article.regDate, 0, 10)}">2024-11-22</span>
+                              th:text="${article.formattedDate}">2024-11-22</span>
                     </div>
                 </div>
                 <div class="no-articles" th:if="${#lists.isEmpty(articles)}">게시글이 없습니다</div>
