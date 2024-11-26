@@ -179,7 +179,7 @@ public class Rq {
     }
 
     private String getAfterFindLoginIdUri() {
-        return getEncodedCurrentUri();
+        return "../member/login";
     }
 
     public String getFindLoginPwUri() {
@@ -187,7 +187,7 @@ public class Rq {
     }
 
     private String getAfterFindLoginPwUri() {
-        return getEncodedCurrentUri();
+        return "../member/login";
     }
 
     public boolean isAdmin() {
