@@ -117,6 +117,11 @@ public class UsrArticleController {
             return Ut.jsHistoryBack("F-1", Ut.f("%d번 게시글은 없습니다", id));
         }
 
+        GenFile existingFile = genFileService.getGenFileByRelId("article", id);
+        if(existingFile != null) {
+            model.addAttribute("file", existingFile);
+        }
+
         model.addAttribute("article", article);
 
         return "usr/article/modify";
@@ -125,7 +130,7 @@ public class UsrArticleController {
     // 로그인 체크 -> 유무 체크 -> 권한 체크 -> 수정
     @RequestMapping("/usr/article/doModify")
     @ResponseBody
-    public String doModify(HttpServletRequest req, int id, String title, String body) {
+    public String doModify(HttpServletRequest req, int id, String title, String body, MultipartRequest multipartRequest) {
 
         Rq rq = (Rq) req.getAttribute("rq");
 
@@ -143,10 +148,23 @@ public class UsrArticleController {
         }
         if (userCanModifyRd.isSuccess()) {
             articleService.modifyArticle(id, title, body);
-
         }
 
         article = articleService.getArticleById(id);
+
+        // 파일 처리
+        Map<String, List<MultipartFile>> fileMap = multipartRequest.getMultiFileMap();
+
+        for (String fileInputName : fileMap.keySet()) {
+            List<MultipartFile> multipartFiles = fileMap.get(fileInputName);
+
+            for (MultipartFile multipartFile : multipartFiles) {
+                if (!multipartFile.isEmpty()) {
+                    // 기존 파일이 있다면 업데이트, 없으면 새로 추가
+                    genFileService.updateOrSave(multipartFile, id);
+                }
+            }
+        }
 
         return Ut.jsReplace(userCanModifyRd.getResultCode(), userCanModifyRd.getMsg(), "../article/detail?id=" + id);
     }
