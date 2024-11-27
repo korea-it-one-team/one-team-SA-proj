@@ -3,10 +3,11 @@ package com.lyj.proj.oneteamsaproj.controller;
 import com.lyj.proj.oneteamsaproj.service.AdmGifticonService;
 import com.lyj.proj.oneteamsaproj.service.ExchangeService;
 import com.lyj.proj.oneteamsaproj.service.GifticonService;
+import com.lyj.proj.oneteamsaproj.service.LoginService;
 import com.lyj.proj.oneteamsaproj.vo.Exchange_Detail;
 import com.lyj.proj.oneteamsaproj.vo.Exchange_History;
 import com.lyj.proj.oneteamsaproj.vo.Gifticon;
-import com.lyj.proj.oneteamsaproj.vo.Rq;
+import com.lyj.proj.oneteamsaproj.utils.RqUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -31,6 +32,9 @@ public class AdminGifticonController {
 
     @Autowired
     private GifticonService gifticonService;
+
+    @Autowired
+    private LoginService loginService;
 
     private final String UPLOAD_DIR = "/uploads/";
 
@@ -79,9 +83,9 @@ public class AdminGifticonController {
     @GetMapping("adm/exchange/detail")
     public ResponseEntity<Map<String, Object>> getExchangeDetails(HttpServletRequest req, int id) {
         // 교환 상세 정보 가져오기 (DB에서 조회)
-        Rq rq = (Rq) req.getAttribute("rq");
+        RqUtil rq = (RqUtil) req.getAttribute("rq");
 
-        List<Exchange_Detail> exchange = exchangeService.findById(id, rq.getLoginedMemberId());
+        List<Exchange_Detail> exchange = exchangeService.findById(id, loginService.getLoginedMemberId());
         if (exchange == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

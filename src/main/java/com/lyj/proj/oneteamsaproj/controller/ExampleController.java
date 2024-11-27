@@ -2,7 +2,7 @@ package com.lyj.proj.oneteamsaproj.controller;
 
 import com.lyj.proj.oneteamsaproj.service.ExchangeService;
 import com.lyj.proj.oneteamsaproj.service.GifticonService;
-import com.lyj.proj.oneteamsaproj.vo.Rq;
+import com.lyj.proj.oneteamsaproj.utils.RqUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
@@ -15,7 +15,6 @@ import net.nurigo.sdk.message.response.MessageListResponse;
 import net.nurigo.sdk.message.response.MultipleDetailMessageSentResponse;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -134,7 +133,7 @@ public class ExampleController {
      */
     @PostMapping("adm/exchange/{id}/application")
     public SingleMessageSentResponse sendMmsByResourcePath(HttpServletRequest req, @PathVariable int id) throws IOException {
-        Rq rq = (Rq) req.getAttribute("rq");
+        RqUtil rq = (RqUtil) req.getAttribute("rq");
 
         // 1. 수신자 전화번호 가져오기 및 형식 정리
         String memberPhone = exchangeService.getPhoneNum(id);

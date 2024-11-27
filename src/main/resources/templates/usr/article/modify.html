@@ -256,7 +256,7 @@ selectElement.style.color = "#aaaaaa";
                 <select class="input write-form-select" name="boardId" onchange="updateSelectColor(this)">
                     <option value="" disabled th:selected="${article.boardId == null}">게시판을 선택해주세요.</option>
                     <!-- NOTICE: Admin일 때만 표시 -->
-                    <option value="1" th:if="${rq.isAdmin()}" th:selected="${article.boardId == 1}">NOTICE</option>
+                    <option value="1" th:if="${loginedMember.isAdmin()}" th:selected="${article.boardId == 1}">NOTICE</option>
                     <option value="2" th:selected="${article.boardId == 2}">ANALYSIS</option>
                     <option value="3" th:selected="${article.boardId == 3}">FREE</option>
                 </select>

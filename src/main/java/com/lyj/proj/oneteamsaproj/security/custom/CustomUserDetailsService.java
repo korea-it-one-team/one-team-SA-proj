@@ -1,8 +1,7 @@
-package com.lyj.proj.oneteamsaproj.security;
+package com.lyj.proj.oneteamsaproj.security.custom;
 
 import com.lyj.proj.oneteamsaproj.service.MemberService;
 import com.lyj.proj.oneteamsaproj.vo.Member;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,11 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + loginId);
         }
 
-        // Spring Security의 UserDetails 객체 반환
-        return User.builder()
-                .username(member.getLoginId())
-                .password(member.getLoginPw()) // 이미 암호화된 비밀번호
-                .roles(member.isAdmin() ? "ADMIN" : "USER") // 권한 설정
-                .build();
+        // CustomUserDetails 객체를 반환
+        return new CustomUserDetails(member);
     }
 }

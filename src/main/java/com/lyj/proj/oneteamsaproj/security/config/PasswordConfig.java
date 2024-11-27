@@ -1,4 +1,4 @@
-package com.lyj.proj.oneteamsaproj.security;
+package com.lyj.proj.oneteamsaproj.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

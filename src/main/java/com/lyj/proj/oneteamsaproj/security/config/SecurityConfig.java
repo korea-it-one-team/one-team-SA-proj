@@ -1,7 +1,9 @@
-package com.lyj.proj.oneteamsaproj.security;
+package com.lyj.proj.oneteamsaproj.security.config;
 
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.lyj.proj.oneteamsaproj.security.custom.CustomAuthenticationFilter;
+import com.lyj.proj.oneteamsaproj.security.custom.CustomUserDetailsService;
+import com.lyj.proj.oneteamsaproj.security.handler.CustomAccessDeniedHandler;
+import com.lyj.proj.oneteamsaproj.security.handler.CustomAuthenticationEntryPoint;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -11,8 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -22,12 +23,19 @@ public class SecurityConfig implements WebMvcConfigurer {
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
     private final CustomAccessDeniedHandler accessDeniedHandler;
+    private final CustomAuthenticationFilter customAuthenticationFilter;
 
-    public SecurityConfig(CustomUserDetailsService userDetailsService, PasswordEncoder passwordEncoder, CustomAuthenticationEntryPoint authenticationEntryPoint, CustomAccessDeniedHandler accessDeniedHandler) {
+    public SecurityConfig(
+            CustomUserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder,
+            CustomAuthenticationEntryPoint authenticationEntryPoint,
+            CustomAccessDeniedHandler accessDeniedHandler,
+            CustomAuthenticationFilter customAuthenticationFilter) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
         this.authenticationEntryPoint = authenticationEntryPoint;
         this.accessDeniedHandler = accessDeniedHandler;
+        this.customAuthenticationFilter = customAuthenticationFilter;
     }
 
     @Bean
@@ -39,7 +47,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                         .requestMatchers(
                                 "/usr/article/write", "/usr/article/doWrite",
                                 "/usr/article/modify", "/usr/article/doModify",
-                                "/usr/article/doDelete", "/usr/gifticons/**",
+                                "/usr/article/doDelete", "/usr/gifticons/*/application",
                                 "/usr/member/myPage", "/usr/member/checkPw",
                                 "/usr/member/doCheckPw", "/usr/member/doLogout",
                                 "/usr/member/modify", "/usr/member/doModify",
@@ -80,7 +88,8 @@ public class SecurityConfig implements WebMvcConfigurer {
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                         .maximumSessions(1)
                         .expiredUrl("/usr/member/login?error=sessionExpired")
-                );
+                )
+                .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // 사용자 정의 필터 추가;
 
         return http.build();
     }

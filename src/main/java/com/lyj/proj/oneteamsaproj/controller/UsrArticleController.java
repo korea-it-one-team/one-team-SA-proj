@@ -2,14 +2,13 @@ package com.lyj.proj.oneteamsaproj.controller;
 
 
 import com.lyj.proj.oneteamsaproj.service.*;
+import com.lyj.proj.oneteamsaproj.utils.RqUtil;
 import com.lyj.proj.oneteamsaproj.utils.Ut;
 import com.lyj.proj.oneteamsaproj.vo.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,7 +24,7 @@ import java.util.Map;
 public class UsrArticleController {
 
     @Autowired
-    private Rq rq;
+    private RqUtil rq;
 
     // 서비스의 생성자가 없는데도 사용할수 있다.
     @Autowired
@@ -46,26 +45,29 @@ public class UsrArticleController {
     @Autowired
     private ImageService imageService;
 
+    @Autowired
+    private LoginService loginService;
+
 
     // 액션 메서드, 컨트롤 메서드
     @RequestMapping("/usr/article/detail")
     public String showDetail(HttpServletRequest req, Model model, int id) {
 
-        Rq rq = (Rq) req.getAttribute("rq");
+        RqUtil rq = (RqUtil) req.getAttribute("rq");
 
-        Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
+        Article article = articleService.getForPrintArticle(loginService.getLoginedMemberId(), id);
 
 //        // -1 싫어요, 0 표현 x, 1 좋아요
 //        model.addAttribute("usersReaction", usersReaction);
 
-        ResultData usersReactionRd = reactionPointService.usersReaction(rq.getLoginedMemberId(), "article", id);
+        ResultData usersReactionRd = reactionPointService.usersReaction(loginService.getLoginedMemberId(), "article", id);
 
         if (usersReactionRd.isSuccess()) {
 
             model.addAttribute("userCanMakeReaction", usersReactionRd.isSuccess());
         }
 
-        List<Reply> replies = replyService.getForPrintReplies(rq.getLoginedMemberId(), "article", id);
+        List<Reply> replies = replyService.getForPrintReplies(loginService.getLoginedMemberId(), "article", id);
 
         // 이미지 파일 여러개 첨부했을 때
         List<GenFile> files = genFileService.getFilesByRelTypeCodeAndRelId("article", id);
@@ -84,13 +86,13 @@ public class UsrArticleController {
 
         model.addAttribute("isAlreadyAddGoodRp",
 
-                reactionPointService.isAlreadyAddGoodRp(rq.getLoginedMemberId(), id, "article"));
+                reactionPointService.isAlreadyAddGoodRp(loginService.getLoginedMemberId(), id, "article"));
 
         model.addAttribute("isAlreadyAddBadRp",
 
-                reactionPointService.isAlreadyAddBadRp(rq.getLoginedMemberId(), id, "article"));
+                reactionPointService.isAlreadyAddBadRp(loginService.getLoginedMemberId(), id, "article"));
 
-        model.addAttribute("loginedMemberId", rq.getLoginedMemberId());
+        model.addAttribute("loginedMemberId", loginService.getLoginedMemberId());
 
         return "usr/article/detail";
     }
@@ -115,9 +117,9 @@ public class UsrArticleController {
     @RequestMapping("/usr/article/modify")
     public String showModify(HttpServletRequest req, Model model, int id) {
 
-        Rq rq = (Rq) req.getAttribute("rq");
+        RqUtil rq = (RqUtil) req.getAttribute("rq");
 
-        Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
+        Article article = articleService.getForPrintArticle(loginService.getLoginedMemberId(), id);
 
         if (article == null) {
             return Ut.jsHistoryBack("F-1", Ut.f("%d번 게시글은 없습니다", id));
@@ -140,7 +142,7 @@ public class UsrArticleController {
                            @RequestParam("imageUrls") String imageUrls,
                            MultipartRequest multipartRequest) {
 
-        Rq rq = (Rq) req.getAttribute("rq");
+        RqUtil rq = (RqUtil) req.getAttribute("rq");
 
         Article article = articleService.getArticleById(id);
 
@@ -149,7 +151,7 @@ public class UsrArticleController {
         }
 
         // -3- 권한 체크
-        ResultData userCanModifyRd = articleService.userCanModify(rq.getLoginedMemberId(), article);
+        ResultData userCanModifyRd = articleService.userCanModify(loginService.getLoginedMemberId(), article);
 
         if (userCanModifyRd.isFail()) {
             return Ut.jsHistoryBack(userCanModifyRd.getResultCode(), userCanModifyRd.getMsg());
@@ -196,7 +198,7 @@ public class UsrArticleController {
     @ResponseBody
     public String doDelete(HttpServletRequest req, int id) {
 
-        Rq rq = (Rq) req.getAttribute("rq");
+        RqUtil rq = (RqUtil) req.getAttribute("rq");
 
         // id가 있는지부터 알아야 함.
         Article article = articleService.getArticleById(id);
@@ -205,7 +207,7 @@ public class UsrArticleController {
             return Ut.jsHistoryBack("F-1", Ut.f("%d번 게시글은 없습니다", id));
         }
 
-        ResultData userCanDeleteRd = articleService.userCanDelete(rq.getLoginedMemberId(), article);
+        ResultData userCanDeleteRd = articleService.userCanDelete(loginService.getLoginedMemberId(), article);
 
         if (userCanDeleteRd.isFail()) {
             return Ut.jsHistoryBack(userCanDeleteRd.getResultCode(), userCanDeleteRd.getMsg());
@@ -234,7 +236,7 @@ public class UsrArticleController {
                           @RequestParam("imageUrls") String imageUrls,
                           MultipartRequest multipartRequest) {
 
-        Rq rq = (Rq) req.getAttribute("rq");
+        RqUtil rq = (RqUtil) req.getAttribute("rq");
 
         if (Ut.isEmptyOrNull(title)) {
             return Ut.jsHistoryBack("F-1", "제목을 입력해주세요.");
@@ -249,7 +251,7 @@ public class UsrArticleController {
                     Ut.getEncodedUriComponent(title), Ut.getEncodedUriComponent(body));
         }
 
-        ResultData writeArticleRd = articleService.writeArticle(rq.getLoginedMemberId(), title, body, boardId);
+        ResultData writeArticleRd = articleService.writeArticle(loginService.getLoginedMemberId(), title, body, boardId);
         int id = (int) writeArticleRd.getData1();  // 게시물 ID
 
         Article article = articleService.getArticleById(id);
@@ -327,7 +329,7 @@ public class UsrArticleController {
                            @RequestParam(defaultValue = "title,body") String searchKeywordTypeCode,
                            @RequestParam(defaultValue = "") String searchKeyword) throws IOException {
 
-        Rq rq = (Rq) req.getAttribute("rq");
+        RqUtil rq = (RqUtil) req.getAttribute("rq");
 
         // boardId 유효성 검사
         if (boardId == null || boardId <= 0) {

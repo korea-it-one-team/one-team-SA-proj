@@ -259,7 +259,7 @@
 <script th:inline="javascript">
     const params = {};
     params.id = parseInt([[${param.id}]]);
-    params.memberId = parseInt([[${loginedMemberId}]]);
+    params.memberId = parseInt([[${loginedMemberId ?: '0'}]]);
 
     console.log(params);
     console.log(params.id);
@@ -553,14 +553,14 @@
                 <div style="margin-bottom: 10px;" th:if="${videoFileCount > 0}">
                     <video class="mx-auto rounded-xl" th:src="${rq.getVideoUri(article.id)}" controls>
                         <source th:src="${rq.getVideoUri(article.id)}" type="video/mp4"
-                                th:attr="onerror=${rq.profileFallbackImgOnErrorHtml}">
+                                th:attr="onerror=${rq.getProfileFallbackImgOnErrorHtml()}">
                     </video>
                 </div>
                 <!-- 이미지 파일, 없으면 안뜨게 -->
                 <div style="margin-bottom: 10px;" th:if="${imageFileCount > 0}">
                     <img class="mx-auto rounded-xl" th:src="${rq.getImgUri(article.id)}" controls>
                     <source th:src="${rq.getImgUri(article.id)}" type="Img/"
-                            th:attr="onerror=${rq.profileFallbackImgOnErrorHtml}" />
+                            th:attr="onerror=${rq.getProfileFallbackImgOnErrorHtml()}" />
                 </div>
                 <div class="toast-ui-viewer">
                     <script type="text/x-template" class="article-body" th:text="${article.body}"></script>
@@ -597,7 +597,7 @@
 
     <!-- 댓글 섹션 -->
     <div class="reply-container">
-        <div th:if="${rq.isLogined()}">
+        <div th:if="${isLogined}">
             <form class="reply-form" action="../reply/doWrite" method="POST"
                   onsubmit="ReplyWrite__submit(this); return false;">
                 <input type="hidden" name="relTypeCode" value="article"/>
@@ -607,9 +607,9 @@
             </form>
         </div>
 
-        <div th:if="${!rq.isLogined()}">
+        <div th:if="${!isLogined}">
             <div class="login-reminder">
-                댓글 작성을 위해 <a class="btn btn-sm login-link" th:href="${rq.loginUri}">로그인</a> 이 필요합니다.
+                댓글 작성을 위해 <a class="btn btn-sm login-link" th:href="${rq.getLoginUri()}">로그인</a> 이 필요합니다.
             </div>
         </div>
     </div>

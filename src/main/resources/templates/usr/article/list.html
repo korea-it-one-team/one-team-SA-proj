@@ -261,7 +261,7 @@
             <div class="article-header">
                 <div class="article-count" th:text="${'총 ' + articlesCount + '개의 게시글이 있습니다.'}">0</div>
                 <!-- 공지사항 게시판이 아니면 로그인한 모든 회원 글쓰기 버튼 보이게, 공지사항 게시판이면 관리자만 보이게 -->
-                <div class="btn btn-sm" th:if="${rq.loginedMember != null and (rq.isAdmin() or (boardId != 1 and !rq.isAdmin()))}">
+                <div class="btn btn-sm" th:if="${loginedMember != null and (loginedMember.isAdmin() or (boardId != 1 and !loginedMember.isAdmin()))}">
                     <a href="/usr/article/write">글쓰기</a>
                 </div>
             </div>

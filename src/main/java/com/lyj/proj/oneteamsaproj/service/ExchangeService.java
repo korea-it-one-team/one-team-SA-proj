@@ -5,7 +5,6 @@ import com.lyj.proj.oneteamsaproj.repository.GifticonRepository;
 import com.lyj.proj.oneteamsaproj.repository.MemberRepository;
 import com.lyj.proj.oneteamsaproj.vo.Exchange_Detail;
 import com.lyj.proj.oneteamsaproj.vo.Exchange_History;
-import com.lyj.proj.oneteamsaproj.vo.Rq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
