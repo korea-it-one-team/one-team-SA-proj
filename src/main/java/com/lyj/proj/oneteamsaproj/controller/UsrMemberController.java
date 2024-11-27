@@ -1,6 +1,7 @@
 package com.lyj.proj.oneteamsaproj.controller;
 
 import com.lyj.proj.oneteamsaproj.service.MemberService;
+import com.lyj.proj.oneteamsaproj.utils.PasswordHelper;
 import com.lyj.proj.oneteamsaproj.utils.Ut;
 import com.lyj.proj.oneteamsaproj.vo.Member;
 import com.lyj.proj.oneteamsaproj.vo.ResultData;
@@ -21,6 +22,9 @@ public class UsrMemberController {
     @Autowired
     private MemberService memberService;
 
+    @Autowired
+    private PasswordHelper passwordHelper;
+
     @RequestMapping("/usr/member/doLogout")
     @ResponseBody
     public String doLogout(HttpServletRequest req) {
@@ -39,7 +43,6 @@ public class UsrMemberController {
     @RequestMapping("/usr/member/doLogin")
     @ResponseBody
     public String doLogin(HttpServletRequest req, String loginId, String loginPw, String afterLoginUri) {
-
         Rq rq = (Rq) req.getAttribute("rq");
 
         if (Ut.isEmptyOrNull(loginId)) {
@@ -55,18 +58,19 @@ public class UsrMemberController {
             return Ut.jsHistoryBack("F-3", Ut.f("%s는(은) 존재하지 않는 아이디 입니다.", loginId));
         }
 
-        if (member.getLoginPw().equals(Ut.sha256(loginPw)) == false) {
-            return Ut.jsHistoryBack("F-4", Ut.f("비밀번호가 일치하지 않습니다."));
+        if (!passwordHelper.isPasswordMatch(loginPw, member.getLoginPw())) {
+            return Ut.jsHistoryBack("F-4", "비밀번호가 일치하지 않습니다.");
         }
 
         if (member.getDelStatus() == 2) {
-            return Ut.jsReplace("사용정지된 계정이야", "/");
+            return Ut.jsReplace("사용정지된 계정입니다.", "/");
         }
 
+        // 로그인 처리
         rq.login(member);
 
-        if (afterLoginUri.length() > 0) {
-
+        // 로그인 후 이동할 URL 처리
+        if (!Ut.isEmptyOrNull(afterLoginUri)) {
             return Ut.jsReplace("S-1", Ut.f("%s님 환영합니다", member.getNickname()), afterLoginUri);
         }
 
@@ -133,7 +137,7 @@ public class UsrMemberController {
             return Ut.jsHistoryBack("F-1", "비밀번호를 입력해주세요.");
         }
 
-        if (rq.getLoginedMember().getLoginPw().equals(Ut.sha256(loginPw)) == false) {
+        if (!rq.getLoginedMember().getLoginPw().equals(passwordHelper.encryptPassword(loginPw))) {
             return Ut.jsHistoryBack("F-2", "비밀번호가 틀렸습니다.");
         }
 

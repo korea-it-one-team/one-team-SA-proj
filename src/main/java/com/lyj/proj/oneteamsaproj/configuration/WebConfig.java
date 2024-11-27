@@ -1,7 +1,10 @@
-package com.lyj.proj.oneteamsaproj;
+package com.lyj.proj.oneteamsaproj.configuration;
 
+import com.lyj.proj.oneteamsaproj.interceptor.RqHandlerInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -15,6 +18,15 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Value("${custom.genFileDirPath}")
     private String genFileDirPath;
+
+    @Autowired
+    private RqHandlerInterceptor rqHandlerInterceptor;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(rqHandlerInterceptor)
+                .addPathPatterns("/**"); // 모든 경로에 Interceptor 적용
+    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
