@@ -133,7 +133,7 @@
 <section class="login-section-1">
     <div class="login-card">
         <h1 class="login-title">FIND LOGIN ID</h1>
-        <form th:action="@{/usr/member/doFindLoginId}" method="POST" onsubmit="MemberFindLoginId__submit(this);">
+        <form th:action="@{/usr/member/doFindLoginId}" method="POST" onsubmit="MemberFindLoginId__submit(this); return false;">
             <input type="hidden" name="afterFindLoginIdUri" th:value="${param.afterFindLoginIdUri}" />
             <div>
                 <label for="name" class="block label-login">이름</label>

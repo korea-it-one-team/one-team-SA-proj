@@ -236,7 +236,7 @@ public class UsrMemberController {
             return Ut.jsHistoryBack("F-1", "존재하지 않는 유저 정보입니다.");
         }
 
-        if (member.getEmail().equals(email) == false) {
+        if (!member.getEmail().equals(email)) {
             return Ut.jsHistoryBack("F-2", "일치하는 이메일이 없습니다.");
         }
 
