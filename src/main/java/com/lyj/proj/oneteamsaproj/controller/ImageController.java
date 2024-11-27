@@ -20,10 +20,11 @@ public class ImageController {
 
     @PostMapping("/upload")
     public ResponseEntity<ImageUploadResponse> uploadImage(@RequestParam("file") MultipartFile file,
-                                                           @RequestParam("currentId") String currentId) {
+                                                           @RequestParam("currentId") String currentId,
+                                                           @RequestParam(defaultValue = "0") int piccount) {
         try {
             // 이미지 업로드 처리
-            String imageUrl = imageService.uploadImage(file, currentId);
+            String imageUrl = imageService.uploadImage(file, currentId, piccount);
             ImageUploadResponse response = new ImageUploadResponse(imageUrl);
 
             return ResponseEntity.ok(response);
