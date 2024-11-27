@@ -29,11 +29,12 @@ public interface ArticleRepository {
     @Update("""
 			UPDATE article
 			SET updateDate = NOW(),
+    		boardId = #{boardId},
 			title = #{title},
 			`body` = #{body}
 			WHERE id = #{id}
 			""")
-    public void modifyArticle(int id, String title, String body);
+    public void modifyArticle(int id, String title, String body, String boardId);
 
     @Select("""
 			SELECT A.* , M.nickname AS extra__writer

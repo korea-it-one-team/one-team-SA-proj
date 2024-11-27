@@ -185,34 +185,45 @@
 
 <body>
 <script th:inline="javascript">
-        function ArticleModify__submit(form) {
+    const imageRegex = /!\[.*?\]\(\/images(?:\/article\/\d+\/\d+)?\/[^)]+\)/g;
+
+    // 이미지 URL만 추출하는 함수
+    function extractImageUrls(markdown) {
+        const imageUrls = [];
+        let match;
+
+        while ((match = imageRegex.exec(markdown)) !== null) {
+            // URL만 추출
+            const url = match[0].match(/\((.*?)\)/)[1]; // 괄호 안의 URL 추출
+            imageUrls.push(url);
+        }
+
+        return imageUrls;
+    }
+
+    function ArticleModify__submit(form) {
         form.title.value = form.title.value.trim();
 
         if (form.title.value.length == 0) {
-        alert('제목을 입력하세요.');
-        return;
-    }
+            alert('제목을 입력하세요.');
+            return;
+        }
 
         toastui.Editor.factory({
-        el: document.querySelector('#editor')
-    });
+            el: document.querySelector('#editor')
+        });
 
         const markdown = editor.getMarkdown().trim();
 
         if (markdown.length == 0) {
-        alert('내용을 입력하세요.');
-        return;
-    }
+            alert('내용을 입력하세요.');
+            return;
+        }
 
-            // 이미지 URL들을 Markdown에서 추출
-            const imageUrls = [];
-            const imageRegex = /!\[.*?\]\((.*?)\)/g; // Markdown 이미지 패턴
-            let match;
-            while ((match = imageRegex.exec(markdown)) !== null) {
-                imageUrls.push(match[1]); // 이미지 URL만 추출
-            }
-            // 이미지 URL들을 hidden input 필드에 저장
-            form.imageUrls.value = imageUrls.join(','); // 쉼표로 구분하여 전송
+        // 이미지 URL 추출
+        const imageUrls = extractImageUrls(markdown);
+        form.imageUrls.value = imageUrls.join(','); // 쉼표로 구분하여 전송
+
 
         $('#fileInput').attr('name', 'file__article__' + [[${currentId}]] + '__extra__Img__1');
 
@@ -220,22 +231,22 @@
         form.submit();
     }
 
-function updateFileName(input) {
-const fileNameEl = document.getElementById('fileName');
-if (input.files.length > 0) {
-fileNameEl.textContent = input.files[0].name; // 파일명 표시
-fileNameEl.style.color = '#ffffff'; // 파일 선택 시 텍스트 색상 흰색으로 변경
-} else {
-fileNameEl.textContent = '선택된 파일 없음'; // 기본 메시지
-fileNameEl.style.color = '#aaaaaa'; // 파일 미선택 시 기본 색상 적용
-}
-}
+    function updateFileName(input) {
+        const fileNameEl = document.getElementById('fileName');
+        if (input.files.length > 0) {
+            fileNameEl.textContent = input.files[0].name; // 파일명 표시
+            fileNameEl.style.color = '#ffffff'; // 파일 선택 시 텍스트 색상 흰색으로 변경
+        } else {
+            fileNameEl.textContent = '선택된 파일 없음'; // 기본 메시지
+            fileNameEl.style.color = '#aaaaaa'; // 파일 미선택 시 기본 색상 적용
+        }
+    }
 
-function updateSelectColor(selectElement) {
-if (selectElement.value === "") {
+    function updateSelectColor(selectElement) {
+        if (selectElement.value === "") {
 // 기본 선택 상태: 텍스트 색상 회색
-selectElement.style.color = "#aaaaaa";
-} else {
+            selectElement.style.color = "#aaaaaa";
+        } else {
 // 다른 옵션 선택: 텍스트 색상 흰색
             selectElement.style.color = "#ffffff";
         }
@@ -264,7 +275,8 @@ selectElement.style.color = "#aaaaaa";
             <div class="write-form-line">
                 <label class="write-form-label">제목</label>
                 <input class="input write-form-input" name="title"
-                       autocomplete="off" th:value="${article.title}" type="text" placeholder="새 제목을 입력하세요." maxlength="20"/>
+                       autocomplete="off" th:value="${article.title}" type="text" placeholder="새 제목을 입력하세요."
+                       maxlength="20"/>
             </div>
             <div class="write-form-line">
                 <label class="write-form-label">동영상 첨부</label>
@@ -273,12 +285,13 @@ selectElement.style.color = "#aaaaaa";
                     <span id="fileName" class="custom-file-name"
                           th:text="${file != null ? file.originFileName : '선택된 파일 없음'}">선택된 파일 없음
                     </span>
-                    <input id="fileInput" type="file" name="file" class="hidden" onchange="updateFileName(this)" accept="video/*">
+                    <input id="fileInput" type="file" name="file" class="hidden" onchange="updateFileName(this)"
+                           accept="video/*">
                 </div>
             </div>
             <div class="write-editor-container">
                 <div id="editor">
-                    <textarea th:text="${article.body}"></textarea>
+                    <textarea th:utext="${article.body}"></textarea>
                 </div>
             </div>
             <div class="write-btns">
@@ -299,7 +312,32 @@ selectElement.style.color = "#aaaaaa";
     </div>
 
     <script>
-        const currentId = document.querySelector('#currentId').value; // currentId 가져오기 (hidden input or element에서)
+        const initialMarkdown = document.querySelector("#editor textarea").value; // 초기 값 가져오기
+        const currentId = document.querySelector('#currentId').value; // currentId 값 가져오기
+
+        // 마크다운에서 가장 높은 이미지 번호 계산 함수
+        function getHighestImageIndex(markdown, currentId) {
+            // 정규식 디버깅을 위해 변수 출력
+            console.log("Current ID:", currentId);
+            console.log("Markdown:", markdown);
+
+            const imageRegex = new RegExp(`!\\[.*?\\]\\(/images/article/\\d+/` + currentId + `/` + currentId + `-(\\d+)\\.png\\)`, 'g');
+            console.log("Regex:", imageRegex);
+
+            let match;
+            let highestIndex = 0;
+
+            // 모든 이미지 번호를 순회하며 가장 높은 인덱스 추출
+            while ((match = imageRegex.exec(markdown)) !== null) {
+                const index = parseInt(match[1], 10);
+                console.log("Found Index:", index); // 디버깅 출력
+                if (index > highestIndex) {
+                    highestIndex = index;
+                }
+            }
+
+            return highestIndex;
+        }
 
 
         const editor = new toastui.Editor({
@@ -307,15 +345,20 @@ selectElement.style.color = "#aaaaaa";
             height: `calc(600 * var(--rpx-vw))`, // 반응형 height
             initialEditType: 'markdown',
             previewStyle: 'vertical',
-            initialValue: '', // 초기 마크다운 값
             hooks: {
                 addImageBlobHook: function (blob, callback) {
-                    // 이미지 파일을 업로드하는 FormData 생성
+                    // 현재 에디터의 마크다운 상태 가져오기
+                    const currentMarkdown = editor.getMarkdown();
+
+                    // 가장 높은 이미지 인덱스 계산
+                    const highestIndex = getHighestImageIndex(currentMarkdown, currentId);
+                    const nextIndex = highestIndex + 1; // 새로운 이미지 인덱스
+
                     const formData = new FormData();
                     formData.append('file', blob);
-                    formData.append('currentId', currentId); // currentId 추가
+                    formData.append('currentId', currentId);
+                    formData.append('piccount', nextIndex); // 다음 이미지 번호 전송
 
-                    // 서버로 이미지를 업로드 (여러 이미지를 처리할 수 있도록 변경)
                     fetch('/api/images/upload', {
                         method: 'POST',
                         body: formData,
@@ -323,8 +366,7 @@ selectElement.style.color = "#aaaaaa";
                         .then(response => response.json())
                         .then(data => {
                             if (data.url) {
-                                // 업로드된 이미지 URL을 에디터에 삽입
-                                callback(data.url, '');
+                                callback(data.url, ''); // 업로드된 이미지 URL 삽입
                             } else {
                                 console.error('Image upload failed: ', data);
                             }
@@ -333,10 +375,14 @@ selectElement.style.color = "#aaaaaa";
                             console.error('Error uploading image:', error);
                         });
 
-                    return false;  // 기본 이미지 업로드 동작 방지
-                }
-            }
+                    return false; // 기본 이미지 업로드 동작 방지
+                },
+            },
         });
+
+        // 초기 값 디코딩 및 설정
+        const decodedMarkdown = initialMarkdown.replace(/\\\\/g, '\\').replace(/\\/g, '');
+        editor.setMarkdown(decodedMarkdown);
 
         // 이미지 업로드 기능을 활성화하기 위해 클릭 시 파일 선택
         document.querySelector(".image")
@@ -344,15 +390,21 @@ selectElement.style.color = "#aaaaaa";
                 const imageInput = document.createElement('input');
                 imageInput.type = 'file';
                 imageInput.accept = 'image/*';
-                imageInput.multiple = true;  // 여러 개의 이미지 파일 선택 가능
+                imageInput.multiple = true; // 여러 개의 이미지 파일 선택 가능
 
                 imageInput.addEventListener('change', function (event) {
                     const files = event.target.files;
                     if (files && files.length > 0) {
+                        // 파일 업로드 시작
                         Array.from(files).forEach(file => {
+                            const currentMarkdown = editor.getMarkdown(); // 현재 마크다운 내용 가져오기
+                            const highestIndex = getHighestImageIndex(currentMarkdown, currentId);
+                            const nextIndex = highestIndex + 1; // 새로운 이미지 번호 계산
+
                             const formData = new FormData();
                             formData.append('file', file);
                             formData.append('currentId', currentId); // currentId 추가
+                            formData.append('piccount', nextIndex); // 동적으로 계산한 이미지 번호 추가
 
                             fetch('/api/images/upload', {
                                 method: 'POST',
@@ -374,9 +426,10 @@ selectElement.style.color = "#aaaaaa";
                     }
                 });
 
-                imageInput.click();  // 파일 선택 창 강제 팝업
+                imageInput.click(); // 파일 선택 창 강제 팝업
             });
     </script>
+
 
 </section>
 
