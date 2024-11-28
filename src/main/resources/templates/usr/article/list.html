@@ -289,12 +289,12 @@
 
         <!-- 검색 기능 -->
         <form action="" method="get" class="article-search-form">
-            <input type="hidden" name="boardId" th:value="${param.boardId}"/>
-            <select name="searchKeywordTypeCode" class="search-select" th:value="${param.searchKeywordTypeCode}">
-                <option value="title">제목</option>
-                <option value="body">내용</option>
-                <option value="title,body">제목 및 내용</option>
-                <option value="writer">작성자</option>
+            <input type="hidden" name="boardId" th:value="${boardId}"/>
+            <select name="searchKeywordTypeCode" class="search-select" th:value="${searchKeywordTypeCode}">
+                <option value="title" th:selected="${searchKeywordTypeCode == 'title'}">제목</option>
+                <option value="body" th:selected="${searchKeywordTypeCode == 'body'}">내용</option>
+                <option value="title,body" th:selected="${searchKeywordTypeCode == 'title,body'}">제목 및 내용</option>
+                <option value="writer" th:selected="${searchKeywordTypeCode == 'writer'}">작성자</option>
             </select>
             <div class="search-wrapper">
                 <input type="text" name="searchKeyword" class="search-input" placeholder="검색어를 입력하세요."
