@@ -151,17 +151,6 @@ public class ExampleController {
 
         try (InputStream inputStream = connection.getInputStream()) {
 
-            // URL에서 파일 이름과 확장자 추출
-            String fileName = new File(url.getPath()).getName();
-            String fileExtension = "";
-
-            // 파일 이름에서 확장자 추출
-            int dotIndex = fileName.lastIndexOf('.');
-            if (dotIndex > 0 && dotIndex < fileName.length() - 1) {
-                fileExtension = fileName.substring(dotIndex); // 확장자 추출
-            } else {
-                fileExtension = ".jpg"; // 기본 확장자 설정
-            }
 
             File tempFile = File.createTempFile("downloaded-", ".jpg");
 

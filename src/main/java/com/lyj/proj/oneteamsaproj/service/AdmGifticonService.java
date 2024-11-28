@@ -39,8 +39,8 @@ public class AdmGifticonService {
 
     public void updateStockAndImage(int gifticonId,  MultipartFile file) throws IOException {
 
-        String uuid = UUID.randomUUID().toString();
-        String ext = file.getContentType();
+        String uuid = UUID.randomUUID().toString() + ".jpg";
+        String ext = "image/jpeg"; // 강제로 JPG로 설정
 
         InputStream keyFile = ResourceUtils.getURL(keyFileLocation).openStream();
 
@@ -52,7 +52,7 @@ public class AdmGifticonService {
 
         // Google Cloud Storage에 이미지 업로드
         BlobInfo blobInfo = BlobInfo.newBuilder(bucketName, uuid)
-                .setContentType(ext)
+                .setContentType(ext) // MIME 타입 설정
                 .build();
         Blob blob = storage.create(blobInfo, file.getBytes());
         System.out.println("asdf : " + bucketName + "/" + uuid);

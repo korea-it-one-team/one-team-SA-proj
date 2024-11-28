@@ -9,7 +9,14 @@
         <div class="my-header-menu">
             <span class="game-schedule-prediction" onclick="window.location.href='/usr/home/gameSchedule'">경기일정 및 예측</span>
             <span class="analysis-community" onclick="window.location.href='/usr/article/list?boardId=2&page=1'">분석 커뮤니티</span>
-            <span class="product-exchange" onclick="window.location.href='/usr/gifticons/List'">상품교환</span>
+            <!-- 상품교환 및 상품교환관리 -->
+            <span th:unless="${rq.getLoginedMember() != null and rq.getLoginedMember().getAuthLevel() == 7}"
+                  class="product-exchange"
+                  onclick="window.location.href='/usr/gifticons/List'">상품교환</span>
+
+            <span th:if="${rq.getLoginedMember() != null and rq.getLoginedMember().getAuthLevel() == 7}"
+                  class="product-exchange"
+                  onclick="window.location.href='/adm/exchange/gifticonList'">상품관리</span>
             <span class="customer-center" onclick="window.location.href='/customer-support'">고객센터</span>
         </div>
         <!-- 로그인/로그아웃 버튼 -->
