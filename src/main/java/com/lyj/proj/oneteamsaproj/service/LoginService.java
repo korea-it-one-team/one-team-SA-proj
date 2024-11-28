@@ -69,7 +69,7 @@ public class LoginService {
         return null; // 로그인되지 않은 경우
     }
 
-    public Integer getLoginedMemberId() {
+    public int getLoginedMemberId() {
         Member member = getLoginedMember();
         return member != null ? member.getId() : -1;
     }

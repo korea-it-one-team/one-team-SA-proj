@@ -232,11 +232,9 @@ public class UsrArticleController {
 
     @RequestMapping("/usr/article/doWrite")
     @ResponseBody
-    public String doWrite(HttpServletRequest req, String boardId, String title, String body, String replaceUri,
+    public String doWrite(String boardId, String title, String body, String replaceUri,
                           @RequestParam("imageUrls") String imageUrls,
                           MultipartRequest multipartRequest) {
-
-        RqUtil rq = (RqUtil) req.getAttribute("rq");
 
         if (Ut.isEmptyOrNull(title)) {
             return Ut.jsHistoryBack("F-1", "제목을 입력해주세요.");

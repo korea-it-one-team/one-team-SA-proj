@@ -52,3 +52,6 @@ custom:
   emailFromName: kicknalisys
   genFileDirPath: C:\work_oneteam\one-team-SA-proj\images
   videoFileDirPath: C:\work_oneteam\one-team-SA-proj\videos
+logging:
+  level:
+    org.springframework.security: DEBUG

@@ -39,7 +39,10 @@ public class UsrMemberController {
     }
 
     @RequestMapping("/usr/member/login")
-    public String showLogin(HttpServletRequest req) {
+    public String showLogin(@RequestParam(value = "error", required = false) String error, HttpServletRequest req) {
+        if ("sessionExpired".equals(error)) {
+            return Ut.jsReplace("F-1","세션이 만료되었습니다. 다시 로그인해주세요.", "usr/member/login");
+        }
         return "usr/member/login";
     }
 
@@ -47,7 +50,6 @@ public class UsrMemberController {
     @RequestMapping("/usr/member/doLogin")
     @ResponseBody
     public String doLogin(HttpServletRequest req, String loginId, String loginPw, String afterLoginUri) {
-        RqUtil rq = (RqUtil) req.getAttribute("rq");
 
         if (Ut.isEmptyOrNull(loginId)) {
             return Ut.jsHistoryBack("F-2", "아이디를 입력하지 않았습니다.");
@@ -146,11 +148,14 @@ public class UsrMemberController {
     @RequestMapping("/usr/member/doCheckPw")
     @ResponseBody
     public String doCheckPw(String loginPw) {
+
+        Member member = loginService.getLoginedMember();
+
         if (Ut.isEmptyOrNull(loginPw)) {
             return Ut.jsHistoryBack("F-1", "비밀번호를 입력해주세요.");
         }
 
-        if (!loginService.getLoginedMember().getLoginPw().equals(passwordHelper.encryptPassword(loginPw))) {
+        if (!passwordHelper.isPasswordMatch(loginPw, member.getLoginPw())) {
             return Ut.jsHistoryBack("F-2", "비밀번호가 틀렸습니다.");
         }
 

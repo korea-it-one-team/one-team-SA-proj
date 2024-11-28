@@ -82,8 +82,6 @@ public class AdminGifticonController {
 
     @GetMapping("adm/exchange/detail")
     public ResponseEntity<Map<String, Object>> getExchangeDetails(HttpServletRequest req, int id) {
-        // 교환 상세 정보 가져오기 (DB에서 조회)
-        RqUtil rq = (RqUtil) req.getAttribute("rq");
 
         List<Exchange_Detail> exchange = exchangeService.findById(id, loginService.getLoginedMemberId());
         if (exchange == null) {

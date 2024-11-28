@@ -26,9 +26,9 @@ public class CustomerSupportService {
         return customerSupportRepository.lastConsultation();
     }
 
-    public List<Consultation> getHistory(int member_id, String member_status) {
+    public List<Consultation> getHistory(int member_id, boolean isAdmin) {
 
-        if(member_status.equals("관리자")){
+        if(isAdmin){
             return customerSupportRepository.allFind();
         }
         return customerSupportRepository.getHistory(member_id);

@@ -27,37 +27,41 @@ public class CustomerSupportController {
 
     @RequestMapping("/customer-support")
     public String showCustomerSupport(HttpServletRequest req, Model model) {
-        RqUtil rq = (RqUtil) req.getAttribute("rq");
-        int member_id = 0;
-        String member_status = "";
-        if(loginService.getLoginedMemberId() != -1){
-            member_id = loginService.getLoginedMemberId();
-            member_status = loginService.getLoginedMember().getAuthLevel() == 7 ? "관리자" : "유저";
-        };
+
+        Member member = null;
+        boolean isAdmin = false;
+
+        if (loginService.isLogined()) {
+            member = loginService.getLoginedMember();
+            isAdmin = member.isAdmin();
+        }
 
         // DB에서 FAQ, 상담내역 등을 불러와서 모델에 추가
         List<faq_Categorys> categories = customerSupportService.getcategorys();
         List<Faq> faqs = customerSupportService.getFaqs();
-        List<Consultation> consultations = customerSupportService.getHistory(member_id, member_status);
+        List<Consultation> consultations = customerSupportService.getHistory(loginService.getLoginedMemberId(), isAdmin);
 
         model.addAttribute("categories", categories);
         model.addAttribute("faqs", faqs);
         model.addAttribute("consultations", consultations);
-        if (member_status.equals("관리자")){
+        if (isAdmin){
             model.addAttribute("isAdmin",true);
         }else {
             model.addAttribute("isAdmin",false);
-        };
+        }
         return "usr/service/customer_support"; // HTML 파일 이름
     }
 
     @PostMapping("/submit-consultation")
     @ResponseBody
-    public ResponseEntity<Consultation> submitConsultation(HttpServletRequest req, @RequestParam String title, @RequestParam String content) {
+    public ResponseEntity<Consultation> submitConsultation(@RequestParam String title, @RequestParam String content) {
 
-        RqUtil rq = (RqUtil) req.getAttribute("rq");
+        System.out.println("title : " + title);
+        System.out.println("content : " + content);
+        System.out.println("loginedMemberId : " + loginService.getLoginedMemberId());
+
         // 상담 저장 로직
-        Consultation consultation = customerSupportService.addConsultation(title,content,loginService.getLoginedMemberId());
+        Consultation consultation = customerSupportService.addConsultation(title, content, loginService.getLoginedMemberId());
 
         // 저장된 상담 객체 반환
         return ResponseEntity.ok(consultation);

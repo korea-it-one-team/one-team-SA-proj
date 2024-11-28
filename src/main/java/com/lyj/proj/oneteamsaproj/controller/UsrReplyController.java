@@ -30,9 +30,12 @@ public class UsrReplyController {
 
     @RequestMapping("/usr/reply/doWrite")
     @ResponseBody
-    public String doWrite(HttpServletRequest req, String relTypeCode, int relId, String body) {
+    public String doWrite(String relTypeCode, int relId, String body) {
 
-        RqUtil rq = (RqUtil) req.getAttribute("rq");
+        System.out.println("relTypeCode:" + relTypeCode);
+        System.out.println("relId:" + relId);
+        System.out.println("body:" + body);
+        System.out.println("loginedMemberId" + loginService.getLoginedMemberId());
 
         if (Ut.isEmptyOrNull(body)) {
             return Ut.jsHistoryBack("F-2", "내용을 입력해주세요.");
@@ -40,7 +43,11 @@ public class UsrReplyController {
 
         ResultData writeReplyRd = replyService.writeReply(loginService.getLoginedMemberId(), body, relTypeCode, relId);
 
+        System.out.println("writeReplyRd:" + writeReplyRd.toString());
+
         int id = (int) writeReplyRd.getData1();
+
+        System.out.println("writeReplyRd.getData1():" + id);
 
         return Ut.jsReplace(writeReplyRd.getResultCode(), writeReplyRd.getMsg(), "../article/detail?id=" + relId);
 
