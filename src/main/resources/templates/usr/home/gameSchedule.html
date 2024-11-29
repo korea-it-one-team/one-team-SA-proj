@@ -439,6 +439,8 @@
             console.log("gameId:", gameId);
             console.log("memberId:", memberId);
 
+            const csrfToken = $('meta[name="_csrf"]').attr('content');
+            const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
             // 예측 값을 서버로 전송
             $.ajax({
                 type: "POST",
@@ -447,6 +449,9 @@
                     gameId: gameId,
                     memberId: memberId,
                     prediction: prediction
+                },
+                headers: {
+                    [csrfHeader]: csrfToken // CSRF 토큰 추가
                 },
                 success: function (response) {
                     console.log("응답:", response);

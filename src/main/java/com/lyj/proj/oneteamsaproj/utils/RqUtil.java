@@ -119,4 +119,6 @@ public class RqUtil {
     public String jsReplace(String msg, String uri) {
         return Ut.jsReplace(msg, uri);
     }
+
+    public String jsAlert(String resultCode, String msg) { return Ut.jsAlert(resultCode, msg); }
 }

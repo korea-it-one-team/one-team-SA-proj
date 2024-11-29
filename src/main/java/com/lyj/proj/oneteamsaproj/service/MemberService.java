@@ -1,12 +1,16 @@
 package com.lyj.proj.oneteamsaproj.service;
 
 import com.lyj.proj.oneteamsaproj.repository.MemberRepository;
+import com.lyj.proj.oneteamsaproj.security.custom.CustomUserDetails;
 import com.lyj.proj.oneteamsaproj.utils.PasswordHelper;
 import com.lyj.proj.oneteamsaproj.utils.Ut;
 import com.lyj.proj.oneteamsaproj.vo.Member;
 import com.lyj.proj.oneteamsaproj.vo.ResultData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -180,5 +184,28 @@ public class MemberService {
 
     public int deleteExpiredMembers() {
         return memberRepository.markMembersAsUnrecoverable();
+    }
+
+    public void updateMemberInfo(int updatedMemberId) {
+        // DB에서 수정된 회원 정보 가져오기
+        Member updatedMember = getMemberById(updatedMemberId);
+
+        // 새로운 CustomUserDetails 생성
+        CustomUserDetails newUserDetails = new CustomUserDetails(updatedMember);
+
+        // 현재 인증된 사용자 가져오기
+        Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (currentAuth != null && currentAuth.getPrincipal() instanceof CustomUserDetails) {
+            // 새로운 Authentication 객체 생성
+            Authentication newAuth = new UsernamePasswordAuthenticationToken(
+                    newUserDetails, // 수정된 사용자 정보
+                    currentAuth.getCredentials(), // 기존 자격 증명 유지
+                    currentAuth.getAuthorities() // 기존 권한 유지
+            );
+
+            // SecurityContext에 새로운 Authentication 설정
+            SecurityContextHolder.getContext().setAuthentication(newAuth);
+        }
     }
 }

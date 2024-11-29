@@ -163,15 +163,13 @@ public class UsrMemberController {
     }
 
     @RequestMapping("/usr/member/modify")
-    public String showmyModify() {
+    public String showModify() {
         return "usr/member/modify";
     }
 
     @RequestMapping("/usr/member/doModify")
     @ResponseBody
     public String doModify(HttpServletRequest req, String loginPw, String name, String nickname, String cellphoneNum, String email) {
-
-        RqUtil rq = (RqUtil) req.getAttribute("rq");
 
         // 비번을 입력하지 않아도 회원정보 수정이 가능하도록 만들어야 함.(비번은 바꾸기 싫을때.)
         // 비번은 안바꾸는거 가능(사용자 입장). 비번 null 체크 X
@@ -192,13 +190,15 @@ public class UsrMemberController {
         ResultData modifyRd;
 
         if (Ut.isEmptyOrNull(loginPw)) {
-
             modifyRd = memberService.modifyWithoutPw(loginService.getLoginedMemberId(), name, nickname, cellphoneNum, email);
 
         } else {
             modifyRd = memberService.modify(loginService.getLoginedMemberId(), loginPw, name, nickname, cellphoneNum, email);
         }
 
+        if(modifyRd.isSuccess()) {
+            memberService.updateMemberInfo(loginService.getLoginedMemberId());
+        }
 
         return Ut.jsReplace(modifyRd.getResultCode(), modifyRd.getMsg(), "../member/myPage");
     }

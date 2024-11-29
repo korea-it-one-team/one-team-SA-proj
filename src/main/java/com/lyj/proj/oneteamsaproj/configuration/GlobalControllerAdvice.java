@@ -5,6 +5,7 @@ import com.lyj.proj.oneteamsaproj.utils.RqUtil;
 import com.lyj.proj.oneteamsaproj.vo.Member;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -53,5 +54,12 @@ public class GlobalControllerAdvice {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication != null && authentication.isAuthenticated() &&
                 !(authentication.getPrincipal() instanceof String && authentication.getPrincipal().equals("anonymousUser"));
+    }
+
+    //Csrf 토큰
+    @ModelAttribute("csrfToken")
+    public CsrfToken addCsrfTokenToModel(CsrfToken csrfToken) {
+        // Spring Security가 CsrfToken 객체를 자동으로 주입
+        return csrfToken;
     }
 }

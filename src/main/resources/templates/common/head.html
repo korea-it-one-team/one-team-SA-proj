@@ -7,10 +7,10 @@
         @import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Noto+Sans+KR:wght@100..900&display=swap');
     </style>
 
-    <link rel="stylesheet" href="/resource/common.css" />
+    <link rel="stylesheet" href="/resource/common.css"/>
     <script src="/resource/common.js" defer></script>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- 제이쿼리 및 ui -->
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -21,22 +21,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <!-- 테일윈드 및 daisyUI -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css" rel="stylesheet"/>
 
     <!-- 토스트 UI -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.0/purify.min.js"></script>
 
     <!-- 토스트 UI 에디터 코어 -->
     <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
-    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"/>
     <link rel="stylesheet" href="https://nhn.github.io/tui.editor/latest/dist/cdn/theme/toastui-editor-dark.css">
 
     <!-- 토스트 UI 에디터 플러그인, 컬러피커 -->
-    <link rel="stylesheet" href="https://uicdn.toast.com/tui-color-picker/latest/tui-color-picker.css" />
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui-color-picker/latest/tui-color-picker.css"/>
     <script src="https://uicdn.toast.com/tui-color-picker/latest/tui-color-picker.min.js"></script>
 
     <link rel="stylesheet"
-          href="https://uicdn.toast.com/editor-plugin-color-syntax/latest/toastui-editor-plugin-color-syntax.min.css" />
+          href="https://uicdn.toast.com/editor-plugin-color-syntax/latest/toastui-editor-plugin-color-syntax.min.css"/>
     <script src="https://uicdn.toast.com/editor-plugin-color-syntax/latest/toastui-editor-plugin-color-syntax.min.js"></script>
 
     <!-- 토스트 UI 차트 -->
@@ -88,32 +88,33 @@
         .ratio-16\/9::after {
             content: "";
             display: block;
-            padding-top: calc(100%/ 16 * 9);
+            padding-top: calc(100% / 16 * 9);
         }
 
         .ratio-16\/9::after {
             content: "";
             display: block;
-            padding-top: calc(100%/ 16 * 9);
+            padding-top: calc(100% / 16 * 9);
         }
 
         .ratio-9\/16::after {
             content: "";
             display: block;
-            padding-top: calc(100%/ 9 * 16);
+            padding-top: calc(100% / 9 * 16);
         }
 
         .ratio-1\/1::after {
             content: "";
             display: block;
-            padding-top: calc(100%/ 1 * 1);
+            padding-top: calc(100% / 1 * 1);
         }
 
         .ratio-1\/2::after {
             content: "";
             display: block;
-            padding-top: calc(100%/ 1 * 2);
+            padding-top: calc(100% / 1 * 2);
         }
+
         /* 토스트 UI */
     </style>
 
@@ -140,9 +141,9 @@
                     const html = renderCodepen(node.literal);
 
                     return [
-                        { type: "openTag", tagName: "div", outerNewLine: true },
-                        { type: "html", content: html },
-                        { type: "closeTag", tagName: "div", outerNewLine: true }
+                        {type: "openTag", tagName: "div", outerNewLine: true},
+                        {type: "html", content: html},
+                        {type: "closeTag", tagName: "div", outerNewLine: true}
                     ];
                 }
             };
@@ -186,8 +187,9 @@
                 );
             }
 
-            return { toHTMLRenderers };
+            return {toHTMLRenderers};
         }
+
         // 유튜브 플러그인 끝
 
         // repl 플러그인 시작
@@ -197,9 +199,9 @@
                     const html = renderRepl(node.literal);
 
                     return [
-                        { type: "openTag", tagName: "div", outerNewLine: true },
-                        { type: "html", content: html },
-                        { type: "closeTag", tagName: "div", outerNewLine: true }
+                        {type: "openTag", tagName: "div", outerNewLine: true},
+                        {type: "html", content: html},
+                        {type: "closeTag", tagName: "div", outerNewLine: true}
                     ];
                 }
             };
@@ -222,7 +224,7 @@
                 );
             }
 
-            return { toHTMLRenderers };
+            return {toHTMLRenderers};
         }
 
         function youtubePlugin() {
@@ -231,9 +233,9 @@
                     const html = renderYoutube(node.literal);
 
                     return [
-                        { type: "openTag", tagName: "div", outerNewLine: true },
-                        { type: "html", content: html },
-                        { type: "closeTag", tagName: "div", outerNewLine: true }
+                        {type: "openTag", tagName: "div", outerNewLine: true},
+                        {type: "html", content: html},
+                        {type: "closeTag", tagName: "div", outerNewLine: true}
                     ];
                 }
             };
@@ -305,9 +307,10 @@
                     '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>'
                 );
             }
+
             // 유튜브 플러그인 끝
 
-            return { toHTMLRenderers };
+            return {toHTMLRenderers};
         }
 
         // katex 플러그인
@@ -319,14 +322,14 @@
                     });
 
                     return [
-                        { type: "openTag", tagName: "div", outerNewLine: true },
-                        { type: "html", content: html },
-                        { type: "closeTag", tagName: "div", outerNewLine: true }
+                        {type: "openTag", tagName: "div", outerNewLine: true},
+                        {type: "html", content: html},
+                        {type: "closeTag", tagName: "div", outerNewLine: true}
                     ];
                 }
             };
 
-            return { toHTMLRenderers };
+            return {toHTMLRenderers};
         }
 
         const ToastEditor__chartOptions = {
@@ -353,7 +356,7 @@
                     theme: theme,
                     plugins: [
                         [toastui.Editor.plugin.chart, ToastEditor__chartOptions],
-                        [toastui.Editor.plugin.codeSyntaxHighlight, { highlighter: Prism }],
+                        [toastui.Editor.plugin.codeSyntaxHighlight, {highlighter: Prism}],
                         toastui.Editor.plugin.colorSyntax,
                         toastui.Editor.plugin.tableMergedCell,
                         toastui.Editor.plugin.uml,
@@ -364,17 +367,17 @@
                     ],
                     customHTMLRenderer: {
                         paragraph(node, context) {
-                            const { entering } = context;
+                            const {entering} = context;
                             return entering
-                                ? { type: "openTag", tagName: "p", attributes: { style: "text-align: left;" } }
-                                : { type: "closeTag", tagName: "p" };
+                                ? {type: "openTag", tagName: "p", attributes: {style: "text-align: left;"}}
+                                : {type: "closeTag", tagName: "p"};
                         },
                         heading(node, context) {
-                            const { entering } = context;
+                            const {entering} = context;
                             const level = node.level;
                             return entering
-                                ? { type: "openTag", tagName: `h${level}`, attributes: { style: "text-align: left;" } }
-                                : { type: "closeTag", tagName: `h${level}` };
+                                ? {type: "openTag", tagName: `h${level}`, attributes: {style: "text-align: left;"}}
+                                : {type: "closeTag", tagName: `h${level}`};
                         }
                     }
                 });
@@ -399,9 +402,9 @@
                     el: node,
                     initialValue: initialValue,
                     viewer: true,
-                    theme : theme,
+                    theme: theme,
                     plugins: [
-                        [toastui.Editor.plugin.codeSyntaxHighlight, { highlighter: Prism }],
+                        [toastui.Editor.plugin.codeSyntaxHighlight, {highlighter: Prism}],
                         toastui.Editor.plugin.colorSyntax,
                         toastui.Editor.plugin.tableMergedCell,
                         toastui.Editor.plugin.uml,
@@ -445,7 +448,20 @@
             ToastEditor__init();
             ToastEditorView__init();
         });
+    </script>
 
+    <!-- Csrf 토큰 -->
+    <meta name="_csrf" th:content="${csrfToken.token}"/>
+    <meta name="_csrf_header" th:content="${csrfToken.headerName}"/>
+
+    <script th:inline="javascript">
+        $.ajaxSetup({
+            beforeSend: function (xhr) {
+                const csrfToken = $('meta[name="_csrf"]').attr('content');
+                const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            }
+        });
     </script>
 </head>
 

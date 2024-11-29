@@ -4,6 +4,7 @@ import com.lyj.proj.oneteamsaproj.security.custom.CustomUserDetailsService;
 import com.lyj.proj.oneteamsaproj.security.custom.DebugSecurityContextFilter;
 import com.lyj.proj.oneteamsaproj.security.handler.CustomAccessDeniedHandler;
 import com.lyj.proj.oneteamsaproj.security.handler.CustomAuthenticationEntryPoint;
+import com.lyj.proj.oneteamsaproj.utils.RqUtil;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,8 +15,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -75,20 +78,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                         .permitAll()
                 )
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers(request -> {
-                            // CSRF를 비활성화할 조건
-                            String requestUri = request.getRequestURI();
-                            return requestUri.endsWith("Ajax") ||
-                                    "Y".equals(request.getParameter("ajax")) ||
-                                    "Y".equals(request.getParameter("isAjax"));
-                        })
-                        .ignoringRequestMatchers(
-                                "/predict",
-                                "/usr/reactionPoint/doGoodReaction",
-                                "/usr/reactionPoint/doBadReaction",
-                                "/submit-consultation",
-                                "/usr/article/doIncreaseHitCountRd",
-                                "usr/reply/doWrite") // 특정 요청에 대하여 CSRF 비활성화
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // 쿠키로 전달
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)

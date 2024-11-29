@@ -139,6 +139,7 @@
   <div class="modify-member-card">
     <h2 class="modify-member-title">MODIFY MEMBER INFO</h2>
     <form onsubmit="MemberModify__submit(this); return false;" th:action="@{/usr/member/doModify}" method="POST">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
       <div class="form-group">
         <label class="label-modify-member">가입일</label>
         <div class="modify-member-static" th:text="${loginedMember.regDate}"></div>

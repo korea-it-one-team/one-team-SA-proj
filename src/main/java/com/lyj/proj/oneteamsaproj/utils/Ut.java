@@ -98,6 +98,21 @@ public class Ut {
 				""", resultMsg);
 	}
 
+	public static String jsAlert(String resultCode, String msg) {
+
+		String resultMsg = resultCode + "/" + msg;
+
+		return Ut.f("""
+                <script>
+                    let resultMsg = '%s'.trim();
+
+                    if(resultMsg.length > 0){
+                        alert(resultMsg);
+                    }
+                </script>
+            """, resultMsg);
+	}
+
 	public static boolean isEmptyOrNull(String str) {
 		return str == null || str.trim().length() == 0;
 	}
