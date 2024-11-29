@@ -29,15 +29,7 @@ public class Article {
     private boolean userCanModify;
     private boolean userCanDelete;
 
-    //  ---- 날짜/시간 표현 구간 시작 ----
+    // 게시글 작성시간이 현재시간 기준으로.
     private String formattedDate;
 
-    public String getFormattedDate() {
-        return formattedDate;
-    }
-
-    public void setFormattedDate(String formattedDate) {
-        this.formattedDate = formattedDate;
-    }
-    //  ---- 날짜/시간 표현 구간 끝 ----
 }

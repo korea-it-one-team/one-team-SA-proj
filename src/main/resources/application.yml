@@ -14,8 +14,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: # 발송할 서비스 이메일
-    password: # 앱 비밀번호.
+    username: meustar829@gmail.com
+    password: bpmy acbo urpc eglp
     properties:
       mail:
         smtp:
