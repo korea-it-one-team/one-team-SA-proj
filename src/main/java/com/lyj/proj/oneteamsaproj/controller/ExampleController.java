@@ -2,9 +2,9 @@ package com.lyj.proj.oneteamsaproj.controller;
 
 import com.lyj.proj.oneteamsaproj.service.ExchangeService;
 import com.lyj.proj.oneteamsaproj.service.GifticonService;
-import com.lyj.proj.oneteamsaproj.utils.RqUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import net.nurigo.sdk.NurigoApp;
+import net.nurigo.sdk.message.exception.NurigoFileUploadException;
 import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
 import net.nurigo.sdk.message.model.Balance;
 import net.nurigo.sdk.message.model.Message;
@@ -15,6 +15,7 @@ import net.nurigo.sdk.message.response.MessageListResponse;
 import net.nurigo.sdk.message.response.MultipleDetailMessageSentResponse;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +30,8 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.UUID;
+
 import io.github.cdimascio.dotenv.Dotenv;
 
 @RestController
@@ -133,8 +136,6 @@ public class ExampleController {
      */
     @PostMapping("adm/exchange/{id}/application")
     public SingleMessageSentResponse sendMmsByResourcePath(HttpServletRequest req, @PathVariable int id) throws IOException {
-        RqUtil rq = (RqUtil) req.getAttribute("rq");
-
         // 1. 수신자 전화번호 가져오기 및 형식 정리
         String memberPhone = exchangeService.getPhoneNum(id);
         String normalizedPhone = memberPhone.replaceAll("-", ""); // 하이픈 제거
@@ -144,27 +145,22 @@ public class ExampleController {
         URL url = new URL(gifticonUrl);
 
         // 3. URL로부터 이미지 다운로드 및 임시 파일 생성
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        connection.setDoInput(true);
+        HttpURLConnection connection = null; // try 외부에서 선언
+        try {
+            // URL에서 이미지 다운로드
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setDoInput(true);
 
-        try (InputStream inputStream = connection.getInputStream()) {
-
-            // URL에서 파일 이름과 확장자 추출
-            String fileName = new File(url.getPath()).getName();
-            String fileExtension = "";
-
-            // 파일 이름에서 확장자 추출
-            int dotIndex = fileName.lastIndexOf('.');
-            if (dotIndex > 0 && dotIndex < fileName.length() - 1) {
-                fileExtension = fileName.substring(dotIndex); // 확장자 추출
-            } else {
-                fileExtension = ".jpg"; // 기본 확장자 설정
+            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                throw new RuntimeException("이미지 다운로드 실패: HTTP " + connection.getResponseCode());
             }
 
-            File tempFile = File.createTempFile("downloaded-", ".jpg");
-
-            try (OutputStream outputStream = new FileOutputStream(tempFile)) {
+            // 임시 파일 생성 및 확장자 설정
+            File tempFile = new File(System.getProperty("java.io.tmpdir"), "downloaded-" + UUID.randomUUID() + ".jpg");
+            // Nurigo SDK 파일 업로드
+            try (InputStream inputStream = connection.getInputStream();
+                 OutputStream outputStream = new FileOutputStream(tempFile)) {
                 byte[] buffer = new byte[8192];
                 int bytesRead;
                 while ((bytesRead = inputStream.read(buffer)) != -1) {
@@ -172,27 +168,30 @@ public class ExampleController {
                 }
             }
 
-            // 4. 이미지 파일 업로드 후 Image ID 획득
+
+
             String imageId = this.messageService.uploadFile(tempFile, StorageType.MMS, null);
-            tempFile.deleteOnExit();  // 임시 파일 삭제 예약
+            tempFile.deleteOnExit();
 
-            // 5. 메시지 생성 및 설정
+            // 메시지 생성 및 전송
             Message message = new Message();
-            message.setFrom("01064480039"); // 발신 번호 설정
-            message.setTo(normalizedPhone); // 수신 번호 설정 (동적으로 처리)
+            message.setFrom("01064480039");
+            message.setTo(normalizedPhone);
             message.setText("KICKNALYSIS에서 신청하신 상품 교환권입니다.");
-            message.setImageId(imageId); // 업로드된 이미지 ID 설정
+            message.setImageId(imageId);
 
-            // 6. 메시지 전송
             return this.messageService.sendOne(new SingleMessageSendingRequest(message));
 
-        } catch (IOException e) {
-            e.printStackTrace(); // 로깅 또는 예외 처리 필요
-            throw new RuntimeException("이미지를 가져오거나 메시지 전송 중 오류가 발생했습니다.", e);
+        }  catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("이미지 다운로드 또는 메시지 전송 중 오류 발생.", e);
         } finally {
-            connection.disconnect(); // 연결 해제
+            if (connection != null) {
+                connection.disconnect(); // 연결 해제
+            }
         }
     }
+
 
     /**
      * 여러 메시지 발송 예제
@@ -237,7 +236,6 @@ public class ExampleController {
         }
         return null;
     }
-
 
     @PostMapping("/send-scheduled-messages")
     public MultipleDetailMessageSentResponse sendScheduledMessages() {

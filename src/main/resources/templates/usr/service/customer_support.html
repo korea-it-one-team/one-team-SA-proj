@@ -381,7 +381,7 @@
             </form>
         </div>
 
-        <div id="history" class="content-section hidden">
+        <div id="history" class="content-section">
             <h2 class="mb-6" style="font-size: calc(24 * var(--rpx-vw)); font-weight: bold;">상담내역</h2>
             <ul class="consultation-list">
                 <th:block th:if="${#lists.size(consultations) > 0}">
@@ -390,7 +390,8 @@
                             <a href="#" th:onclick="'showConsultationDetails(' + ${consultation.id} + ')'"
                                class="consultation-link" th:text="${consultation.title}"></a>
 
-                            <div class="consultation-answer hidden" th:class="'consultation-answer-' + ${consultation.id}">
+                            <div class="consultation-answer hidden"
+                                 th:classappend="'consultation-answer-' + ${consultation.id}">
                                 <div class="consultation-box consultation-details">
                                     <span class="consultation-label">내용</span>
                                     <p class="consultation-text" th:text="${consultation.content}"></p>
@@ -401,7 +402,8 @@
                                         <input type="text" class="consultation-input"
                                                th:value="${consultation.answer}"/>
                                         <button class="consultation-save-btn"
-                                                th:onclick="'saveAnswer(' + ${consultation.id} + ')'">저장</button>
+                                                th:onclick="'saveAnswer(' + ${consultation.id} + ')'">저장
+                                        </button>
                                     </div>
                                 </th:block>
                                 <th:block th:if="${!isAdmin}">
@@ -422,12 +424,13 @@
     </div>
 </section>
 
-<footer th:replace="~{common/footer :: footer}"></footer>
-
 <script>
     function showConsultationDetails(id) {
-        $('.content_answer').addClass('hidden');
-        $('.content_answer' + id).removeClass('hidden');
+        console.log($('.consultation-answer-' + id)); // 선택자가 올바른지 확인용
+        // 모든 상담 내용을 숨김
+        $('.consultation-answer').addClass('hidden');
+        // 선택된 상담 내용을 표시
+        $('.consultation-answer-' + id).removeClass('hidden');
     }
 
     function saveAnswer(id) {
@@ -447,5 +450,8 @@
         });
     }
 </script>
+
+<footer th:replace="~{common/footer :: footer}"></footer>
+
 </body>
 </html>

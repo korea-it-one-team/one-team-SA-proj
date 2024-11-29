@@ -275,7 +275,7 @@
                     </div>
                     <hr class="divider" />
                     <div class="article-body">
-                        <span class="article-body-text" th:text="${article.body}">내용</span>
+                        <span class="article-body-text" th:utext="${article.body}">내용</span>
                     </div>
                     <div class="article-info">
                         <span class="article-writer" th:text="${article.extra__writer}">작성자</span>
@@ -347,6 +347,20 @@
         </div>
     </div>
 </section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const articleBodies = document.querySelectorAll('.article-body-text');
+        articleBodies.forEach(body => {
+            // 현재 콘텐츠 가져오기
+            let content = body.innerHTML;
+            // 이미지 URL 패턴에 매칭되는 부분을 [사진]으로 치환
+            const updatedContent = content.replace(/!\[.*?\]\((\/images\/article\/.+?)\)/g, '[사진]');
+            // 치환된 콘텐츠를 다시 설정
+            body.innerHTML = updatedContent;
+        });
+    });
+</script>
 
 <footer th:replace="~{common/footer :: footer}"></footer>
 </body>

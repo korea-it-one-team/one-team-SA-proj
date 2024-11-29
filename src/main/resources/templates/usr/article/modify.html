@@ -299,7 +299,35 @@ selectElement.style.color = "#aaaaaa";
     </div>
 
     <script>
-        const currentId = document.querySelector('#currentId').value; // currentId 가져오기 (hidden input or element에서)
+        const initialMarkdown = document.querySelector("#editor textarea").value; // 초기 값 가져오기
+        const currentId = document.querySelector('#currentId').value; // currentId 값 가져오기
+
+        const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
+        // 마크다운에서 가장 높은 이미지 번호 계산 함수
+        function getHighestImageIndex(markdown, currentId) {
+            // 정규식 디버깅을 위해 변수 출력
+            console.log("Current ID:", currentId);
+            console.log("Markdown:", markdown);
+
+            const imageRegex = new RegExp(`!\\[.*?\\]\\(/images/article/\\d+/` + currentId + `/` + currentId + `-(\\d+)\\.png\\)`, 'g');
+            console.log("Regex:", imageRegex);
+
+            let match;
+            let highestIndex = 0;
+
+            // 모든 이미지 번호를 순회하며 가장 높은 인덱스 추출
+            while ((match = imageRegex.exec(markdown)) !== null) {
+                const index = parseInt(match[1], 10);
+                console.log("Found Index:", index); // 디버깅 출력
+                if (index > highestIndex) {
+                    highestIndex = index;
+                }
+            }
+
+            return highestIndex;
+        }
 
 
         const editor = new toastui.Editor({
@@ -307,24 +335,31 @@ selectElement.style.color = "#aaaaaa";
             height: `calc(600 * var(--rpx-vw))`, // 반응형 height
             initialEditType: 'markdown',
             previewStyle: 'vertical',
-            initialValue: '', // 초기 마크다운 값
             hooks: {
                 addImageBlobHook: function (blob, callback) {
-                    // 이미지 파일을 업로드하는 FormData 생성
+                    // 현재 에디터의 마크다운 상태 가져오기
+                    const currentMarkdown = editor.getMarkdown();
+
+                    // 가장 높은 이미지 인덱스 계산
+                    const highestIndex = getHighestImageIndex(currentMarkdown, currentId);
+                    const nextIndex = highestIndex + 1; // 새로운 이미지 인덱스
+
                     const formData = new FormData();
                     formData.append('file', blob);
-                    formData.append('currentId', currentId); // currentId 추가
+                    formData.append('currentId', currentId);
+                    formData.append('piccount', nextIndex); // 다음 이미지 번호 전송
 
-                    // 서버로 이미지를 업로드 (여러 이미지를 처리할 수 있도록 변경)
                     fetch('/api/images/upload', {
                         method: 'POST',
                         body: formData,
+                        headers: {
+                            [csrfHeader]: csrfToken // CSRF 토큰 추가
+                        }
                     })
                         .then(response => response.json())
                         .then(data => {
                             if (data.url) {
-                                // 업로드된 이미지 URL을 에디터에 삽입
-                                callback(data.url, '');
+                                callback(data.url, ''); // 업로드된 이미지 URL 삽입
                             } else {
                                 console.error('Image upload failed: ', data);
                             }
@@ -333,10 +368,14 @@ selectElement.style.color = "#aaaaaa";
                             console.error('Error uploading image:', error);
                         });
 
-                    return false;  // 기본 이미지 업로드 동작 방지
-                }
-            }
+                    return false; // 기본 이미지 업로드 동작 방지
+                },
+            },
         });
+
+        // 초기 값 디코딩 및 설정
+        const decodedMarkdown = initialMarkdown.replace(/\\\\/g, '\\').replace(/\\/g, '');
+        editor.setMarkdown(decodedMarkdown);
 
         // 이미지 업로드 기능을 활성화하기 위해 클릭 시 파일 선택
         document.querySelector(".image")
@@ -344,19 +383,28 @@ selectElement.style.color = "#aaaaaa";
                 const imageInput = document.createElement('input');
                 imageInput.type = 'file';
                 imageInput.accept = 'image/*';
-                imageInput.multiple = true;  // 여러 개의 이미지 파일 선택 가능
+                imageInput.multiple = true; // 여러 개의 이미지 파일 선택 가능
 
                 imageInput.addEventListener('change', function (event) {
                     const files = event.target.files;
                     if (files && files.length > 0) {
+                        // 파일 업로드 시작
                         Array.from(files).forEach(file => {
+                            const currentMarkdown = editor.getMarkdown(); // 현재 마크다운 내용 가져오기
+                            const highestIndex = getHighestImageIndex(currentMarkdown, currentId);
+                            const nextIndex = highestIndex + 1; // 새로운 이미지 번호 계산
+
                             const formData = new FormData();
                             formData.append('file', file);
                             formData.append('currentId', currentId); // currentId 추가
+                            formData.append('piccount', nextIndex); // 동적으로 계산한 이미지 번호 추가
 
                             fetch('/api/images/upload', {
                                 method: 'POST',
                                 body: formData,
+                                headers: {
+                                    [csrfHeader]: csrfToken // CSRF 토큰 추가
+                                }
                             })
                                 .then(response => response.json())
                                 .then(data => {
@@ -373,8 +421,8 @@ selectElement.style.color = "#aaaaaa";
                         });
                     }
                 });
-
-                imageInput.click();  // 파일 선택 창 강제 팝업
+                imageInput.click(); // 파일 선택 창 강제 팝업
+                $('.toastui-editor-popup-add-image').remove();
             });
     </script>
 

@@ -32,29 +32,45 @@ public class ArticleService {
         articleRepository.writeArticle(memberId, title, body, boardId);
 
         int id = articleRepository.getLastInsertId();
-        String updatedBody = updateImagePaths(body,Integer.valueOf(boardId) , id);
-        articleRepository.bodyUpdate(updatedBody,id);
+        String updatedBody = updateImagePaths(body, Integer.valueOf(boardId), id);
+        articleRepository.bodyUpdate(updatedBody, id);
         return ResultData.from("S-1", Ut.f("%d번 글이 등록되었습니다.", id), "등록 된 게시글의 id", id);
 
     }
 
     public String updateImagePaths(String body, int boardId, int articleId) {
         // 정규식으로 이미지 경로 추출
-        Pattern pattern = Pattern.compile("!\\[\\]\\((/images/[^)]+)\\)");
-        Matcher matcher = pattern.matcher(body);
+        // 정규식 패턴
+        Pattern patternExisting = Pattern.compile("!\\[\\]\\(/images/article/\\d+/\\d+/\\d+-(\\d+)\\.(\\w+)\\)");
+        Pattern patternNew = Pattern.compile("!\\[\\]\\(/images/(\\d+)-(\\d+)\\.(\\w+)\\)");
+        // Matcher 생성
+        Matcher matcherExisting = patternExisting.matcher(body);
+        Matcher matcherNew = patternNew.matcher(body);
 
         StringBuffer updatedBody = new StringBuffer();
-        int index = 1;
 
-        while (matcher.find()) {
-            String oldPath = matcher.group(1);
-            String extension = oldPath.substring(oldPath.lastIndexOf(".")); // 확장자 추출
-            String newPath = String.format("/images/article/%d/%d/%d-%d%s", boardId,articleId, articleId, index, extension);
-
-            matcher.appendReplacement(updatedBody, "![](" + newPath + ")");
-            index++;
+        // 기존 경로 이미지 처리
+        while (matcherExisting.find()) {
+            int currentIndex = Integer.parseInt(matcherExisting.group(1)); // 인덱스 추출
+            String extension = matcherExisting.group(2); // 확장자 추출
+            // 경로 유지
+            String newPath = String.format("/images/article/%d/%d/%d-%d.%s", boardId, articleId, articleId, currentIndex, extension);
+            matcherExisting.appendReplacement(updatedBody, "![](" + newPath + ")");
         }
-        matcher.appendTail(updatedBody);
+        matcherExisting.appendTail(updatedBody);
+        // 새 이미지 처리
+        String intermediateBody = updatedBody.toString(); // 기존 처리 결과 가져오기
+        updatedBody = new StringBuffer(); // 새 버퍼 초기화
+        matcherNew = patternNew.matcher(intermediateBody);
+        while (matcherNew.find()) {
+            int currentIndex = Integer.parseInt(matcherNew.group(2)); // 인덱스 추출
+            String extension = matcherNew.group(3); // 확장자 추출
+
+            // 새 경로 생성
+            String newPath = String.format("/images/article/%d/%d/%d-%d.%s", boardId, articleId, articleId, currentIndex, extension);
+            matcherNew.appendReplacement(updatedBody, "![](" + newPath + ")");
+        }
+        matcherNew.appendTail(updatedBody);
 
         return updatedBody.toString();
     }
@@ -65,9 +81,11 @@ public class ArticleService {
 
     }
 
-    public void modifyArticle(int id, String title, String body) {
+    public void modifyArticle(int id, String title, String body, String boardId) {
 
-        articleRepository.modifyArticle(id, title, body);
+        articleRepository.modifyArticle(id, title, body,boardId);
+        String updatedBody = updateImagePaths(body,Integer.valueOf(boardId) , id);
+        articleRepository.bodyUpdate(updatedBody, id);
     }
 
     public Article getForPrintArticle(int loginedMemberId, int id) {

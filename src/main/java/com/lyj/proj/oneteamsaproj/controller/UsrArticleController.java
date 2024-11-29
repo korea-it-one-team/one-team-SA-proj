@@ -138,7 +138,7 @@ public class UsrArticleController {
     // 로그인 체크 -> 유무 체크 -> 권한 체크 -> 수정
     @RequestMapping("/usr/article/doModify")
     @ResponseBody
-    public String doModify(HttpServletRequest req, int id, String title, String body,
+    public String doModify(HttpServletRequest req, int id, String title, String body, String boardId,
                            @RequestParam("imageUrls") String imageUrls,
                            MultipartRequest multipartRequest) {
 
@@ -157,7 +157,7 @@ public class UsrArticleController {
             return Ut.jsHistoryBack(userCanModifyRd.getResultCode(), userCanModifyRd.getMsg());
         }
         if (userCanModifyRd.isSuccess()) {
-            articleService.modifyArticle(id, title, body);
+            articleService.modifyArticle(id, title, body, boardId);
         }
 
         article = articleService.getArticleById(id);
@@ -169,8 +169,14 @@ public class UsrArticleController {
             try {
                 // images 배열을 순차적으로 처리
                 for (String imageUrl : images) {
+                    if (imageUrl.split("/").length >= 4) {
+                        if (!imageUrl.substring(16, 17).equals(boardId)) {
+                            imageService.moveImage(imageUrl,boardId,id);
+                        }
+                        continue;
+                    }
                     // 각 이미지 URL을 처리 (예: DB에 저장하거나, 다른 서비스에 저장)
-                    imageService.saveImage(imageUrl, article.getId(), article.getBoardId());  // 이미지 업로드
+                    imageService.saveImage(imageUrl, id, boardId);  // 이미지 업로드
                 }
             } catch (IOException e) {
                 return Ut.jsHistoryBack("F-4", "이미지 업로드 중 오류 발생.");
@@ -196,7 +202,7 @@ public class UsrArticleController {
 
     @RequestMapping("/usr/article/doDelete")
     @ResponseBody
-    public String doDelete(HttpServletRequest req, int id) {
+    public String doDelete(HttpServletRequest req, int id) throws IOException {
 
         RqUtil rq = (RqUtil) req.getAttribute("rq");
 
@@ -215,6 +221,7 @@ public class UsrArticleController {
 
         if (userCanDeleteRd.isSuccess()) {
             articleService.deleteArticle(id);
+            imageService.deleteImage(id, article.getBoardId());
         }
 
         return Ut.jsReplace(userCanDeleteRd.getResultCode(), userCanDeleteRd.getMsg(), "../article/list?boardId=2&page=1");
@@ -267,7 +274,7 @@ public class UsrArticleController {
                 // images 배열을 순차적으로 처리
                 for (String imageUrl : images) {
                     // 각 이미지 URL을 처리 (예: DB에 저장하거나, 다른 서비스에 저장)
-                    imageService.saveImage(imageUrl, article.getId(), article.getBoardId());  // 이미지 업로드
+                    imageService.saveImage(imageUrl, id, boardId);  // 이미지 업로드
                 }
             } catch (IOException e) {
                 return Ut.jsHistoryBack("F-4", "이미지 업로드 중 오류 발생.");
