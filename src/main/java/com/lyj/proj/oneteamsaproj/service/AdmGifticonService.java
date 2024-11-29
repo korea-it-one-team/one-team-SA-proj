@@ -55,7 +55,6 @@ public class AdmGifticonService {
                 .setContentType(ext) // MIME 타입 설정
                 .build();
         Blob blob = storage.create(blobInfo, file.getBytes());
-        System.out.println("asdf : " + bucketName + "/" + uuid);
 
         admgifticonRepository.gifticonStockSave(gifticonId,bucketName + "/" + uuid);
         int gifticonStockCount = admgifticonRepository.gifticonStockCount(gifticonId);

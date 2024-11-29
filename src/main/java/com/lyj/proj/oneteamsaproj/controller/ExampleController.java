@@ -5,6 +5,7 @@ import com.lyj.proj.oneteamsaproj.service.GifticonService;
 import com.lyj.proj.oneteamsaproj.vo.Rq;
 import jakarta.servlet.http.HttpServletRequest;
 import net.nurigo.sdk.NurigoApp;
+import net.nurigo.sdk.message.exception.NurigoFileUploadException;
 import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
 import net.nurigo.sdk.message.model.Balance;
 import net.nurigo.sdk.message.model.Message;
@@ -30,6 +31,8 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.UUID;
+
 import io.github.cdimascio.dotenv.Dotenv;
 
 @RestController
@@ -49,6 +52,7 @@ public class ExampleController {
         if (apiKey == null || apiSecret == null) {
             throw new IllegalStateException("API_KEY or API_SECRETKEY is not set.");
         }
+
 
         // 반드시 계정 내 등록된 유효한 API 키, API Secret Key를 입력해주셔야 합니다!
         this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecret, "https://api.coolsms.co.kr");
@@ -145,16 +149,22 @@ public class ExampleController {
         URL url = new URL(gifticonUrl);
 
         // 3. URL로부터 이미지 다운로드 및 임시 파일 생성
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        connection.setDoInput(true);
+        HttpURLConnection connection = null; // try 외부에서 선언
+        try {
+            // URL에서 이미지 다운로드
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setDoInput(true);
 
-        try (InputStream inputStream = connection.getInputStream()) {
+            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                throw new RuntimeException("이미지 다운로드 실패: HTTP " + connection.getResponseCode());
+            }
 
-
-            File tempFile = File.createTempFile("downloaded-", ".jpg");
-
-            try (OutputStream outputStream = new FileOutputStream(tempFile)) {
+            // 임시 파일 생성 및 확장자 설정
+            File tempFile = new File(System.getProperty("java.io.tmpdir"), "downloaded-" + UUID.randomUUID() + ".jpg");
+            // Nurigo SDK 파일 업로드
+            try (InputStream inputStream = connection.getInputStream();
+                 OutputStream outputStream = new FileOutputStream(tempFile)) {
                 byte[] buffer = new byte[8192];
                 int bytesRead;
                 while ((bytesRead = inputStream.read(buffer)) != -1) {
@@ -162,27 +172,30 @@ public class ExampleController {
                 }
             }
 
-            // 4. 이미지 파일 업로드 후 Image ID 획득
+
+
             String imageId = this.messageService.uploadFile(tempFile, StorageType.MMS, null);
-            tempFile.deleteOnExit();  // 임시 파일 삭제 예약
+            tempFile.deleteOnExit();
 
-            // 5. 메시지 생성 및 설정
+            // 메시지 생성 및 전송
             Message message = new Message();
-            message.setFrom("01064480039"); // 발신 번호 설정
-            message.setTo(normalizedPhone); // 수신 번호 설정 (동적으로 처리)
+            message.setFrom("01064480039");
+            message.setTo(normalizedPhone);
             message.setText("KICKNALYSIS에서 신청하신 상품 교환권입니다.");
-            message.setImageId(imageId); // 업로드된 이미지 ID 설정
+            message.setImageId(imageId);
 
-            // 6. 메시지 전송
             return this.messageService.sendOne(new SingleMessageSendingRequest(message));
 
-        } catch (IOException e) {
-            e.printStackTrace(); // 로깅 또는 예외 처리 필요
-            throw new RuntimeException("이미지를 가져오거나 메시지 전송 중 오류가 발생했습니다.", e);
+        }  catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("이미지 다운로드 또는 메시지 전송 중 오류 발생.", e);
         } finally {
-            connection.disconnect(); // 연결 해제
+            if (connection != null) {
+                connection.disconnect(); // 연결 해제
+            }
         }
     }
+
 
     /**
      * 여러 메시지 발송 예제

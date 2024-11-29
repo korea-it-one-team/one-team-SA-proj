@@ -13,7 +13,7 @@
     <style>
         /* 기존 스타일 그대로 유지 */
         body {
-            display: flex;
+            /*display: flex;*/
             flex-direction: column;
             align-items: center;
         }
@@ -51,10 +51,10 @@
 <header th:replace="~{common/header-2 :: header-2}"></header>
 
 <div class="make-header-margin"></div>
-<div class="head-h1">Admin Gifticon Management</div>
+<div class="head-h1 text-center">Admin Gifticon Management</div>
 
-<div class="relative mb-3 border-4 border-white">
-    <a class="btn btn-lg" href="/adm/exchange/list">상품교환처리</a>
+<div class="mb-4 text-right">
+    <a class="btn btn-lg mr-80" href="/adm/exchange/list">상품교환처리</a>
 </div>
 
 <div class="gifticon-list">
