@@ -205,4 +205,90 @@ public interface ArticleRepository {
 			WHERE id = #{id}
 			""")
 	void bodyUpdate(String updatedBody, int id);
+
+	@Select("""
+    <script>
+    SELECT COUNT(*)
+    FROM article AS A
+    INNER JOIN `member` AS M
+    ON A.memberId = M.id
+    WHERE 1 AND A.memberId = #{loginedMemberId}
+    <if test="boardIds != null and boardIds.size() > 0">
+        AND A.boardId IN
+        <foreach item="boardId" collection="boardIds" open="(" separator="," close=")">
+            #{boardId}
+        </foreach>
+    </if>
+    <if test="searchKeyword != ''">
+        <choose>
+            <when test="searchKeywordTypeCode == 'title'">
+                AND A.title LIKE CONCAT('%', #{searchKeyword}, '%')
+            </when>
+            <when test="searchKeywordTypeCode == 'body'">
+                AND A.`body` LIKE CONCAT('%', #{searchKeyword}, '%')
+            </when>
+            <when test="searchKeywordTypeCode == 'writer'">
+                AND M.nickname LIKE CONCAT('%', #{searchKeyword}, '%')
+            </when>
+            <otherwise>
+                AND (A.title LIKE CONCAT('%', #{searchKeyword}, '%')
+                     OR A.`body` LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </otherwise>
+        </choose>
+    </if>
+    </script>
+""")
+	int getMyArticlesCount(@Param("boardIds") List<Integer> boardIds,
+						   @Param("loginedMemberId") int loginedMemberId,
+						   @Param("searchKeywordTypeCode") String searchKeywordTypeCode,
+						   @Param("searchKeyword") String searchKeyword);
+
+	@Select("""
+    <script>
+    SELECT A.*, 
+           M.nickname AS extra__writer, 
+           IFNULL(COUNT(R.id), 0) AS extra__repliesCount
+    FROM article AS A
+    INNER JOIN `member` AS M
+    ON A.memberId = M.id
+    LEFT JOIN `reply` AS R
+    ON A.id = R.relId
+    WHERE 1 AND A.memberId = #{loginedMemberId}
+    <if test="boardIds != null and boardIds.size() > 0">
+        AND A.boardId IN
+        <foreach item="boardId" collection="boardIds" open="(" separator="," close=")">
+            #{boardId}
+        </foreach>
+    </if>
+    <if test="searchKeyword != ''">
+        <choose>
+            <when test="searchKeywordTypeCode == 'title'">
+                AND A.title LIKE CONCAT('%', #{searchKeyword}, '%')
+            </when>
+            <when test="searchKeywordTypeCode == 'body'">
+                AND A.`body` LIKE CONCAT('%', #{searchKeyword}, '%')
+            </when>
+            <when test="searchKeywordTypeCode == 'writer'">
+                AND M.nickname LIKE CONCAT('%', #{searchKeyword}, '%')
+            </when>
+            <otherwise>
+                AND (A.title LIKE CONCAT('%', #{searchKeyword}, '%')
+                     OR A.`body` LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </otherwise>
+        </choose>
+    </if>
+    GROUP BY A.id
+    ORDER BY A.id DESC
+    <if test="limitFrom >= 0">
+        LIMIT #{limitFrom}, #{limitTake}
+    </if>
+    </script>
+""")
+	List<Article> getForPrintMyArticles(@Param("boardIds") List<Integer> boardIds,
+										@Param("loginedMemberId") int loginedMemberId,
+										@Param("limitFrom") int limitFrom,
+										@Param("limitTake") int limitTake,
+										@Param("searchKeywordTypeCode") String searchKeywordTypeCode,
+										@Param("searchKeyword") String searchKeyword);
+
 }
