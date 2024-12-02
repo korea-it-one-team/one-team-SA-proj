@@ -1,18 +1,17 @@
 package com.lyj.proj.oneteamsaproj.controller;
 
 import com.lyj.proj.oneteamsaproj.service.CustomerSupportService;
+import com.lyj.proj.oneteamsaproj.service.LoginService;
+import com.lyj.proj.oneteamsaproj.utils.RqUtil;
 import com.lyj.proj.oneteamsaproj.vo.*;
 import jakarta.servlet.http.HttpServletRequest;
-import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class CustomerSupportController {
@@ -20,43 +19,49 @@ public class CustomerSupportController {
     @Autowired
     private CustomerSupportService customerSupportService;
 
+    @Autowired
+    private LoginService loginService;
 
     @Autowired
-    private Rq rq;
+    private RqUtil rq;
 
     @RequestMapping("/customer-support")
     public String showCustomerSupport(HttpServletRequest req, Model model) {
-        Rq rq = (Rq) req.getAttribute("rq");
-        int member_id = 0;
-        String member_status = "";
-        if(rq.getLoginedMemberId() != 0){
-            member_id = rq.getLoginedMemberId();
-            member_status = rq.getLoginedMember().getAuthLevel() == 7 ? "관리자" : "유저";
-        };
+
+        Member member = null;
+        boolean isAdmin = false;
+
+        if (loginService.isLogined()) {
+            member = loginService.getLoginedMember();
+            isAdmin = member.isAdmin();
+        }
 
         // DB에서 FAQ, 상담내역 등을 불러와서 모델에 추가
         List<faq_Categorys> categories = customerSupportService.getcategorys();
         List<Faq> faqs = customerSupportService.getFaqs();
-        List<Consultation> consultations = customerSupportService.getHistory(member_id, member_status);
+        List<Consultation> consultations = customerSupportService.getHistory(loginService.getLoginedMemberId(), isAdmin);
 
         model.addAttribute("categories", categories);
         model.addAttribute("faqs", faqs);
         model.addAttribute("consultations", consultations);
-        if (member_status.equals("관리자")){
+        if (isAdmin){
             model.addAttribute("isAdmin",true);
         }else {
             model.addAttribute("isAdmin",false);
-        };
+        }
         return "usr/service/customer_support"; // HTML 파일 이름
     }
 
     @PostMapping("/submit-consultation")
     @ResponseBody
-    public ResponseEntity<Consultation> submitConsultation(HttpServletRequest req, @RequestParam String title, @RequestParam String content) {
+    public ResponseEntity<Consultation> submitConsultation(@RequestParam String title, @RequestParam String content) {
 
-        Rq rq = (Rq) req.getAttribute("rq");
+        System.out.println("title : " + title);
+        System.out.println("content : " + content);
+        System.out.println("loginedMemberId : " + loginService.getLoginedMemberId());
+
         // 상담 저장 로직
-        Consultation consultation = customerSupportService.addConsultation(title,content,rq.getLoginedMemberId());
+        Consultation consultation = customerSupportService.addConsultation(title, content, loginService.getLoginedMemberId());
 
         // 저장된 상담 객체 반환
         return ResponseEntity.ok(consultation);

@@ -128,8 +128,8 @@
             <button type="submit" class="login-button">로그인</button>
         </form>
         <div class="login-links">
-            <a th:href="${rq.findLoginIdUri}">아이디 찾기</a>
-            <a th:href="${rq.findLoginPwUri}">비밀번호 찾기</a>
+            <a th:href="${rq.getFindLoginIdUri()}">아이디 찾기</a>
+            <a th:href="${rq.getFindLoginPwUri()}">비밀번호 찾기</a>
         </div>
         <div class="back-button" onclick="history.back()">뒤로가기</div>
     </div>

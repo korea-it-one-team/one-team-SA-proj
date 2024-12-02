@@ -1,10 +1,11 @@
 package com.lyj.proj.oneteamsaproj.controller;
 
 import com.lyj.proj.oneteamsaproj.service.GameScheduleService;
+import com.lyj.proj.oneteamsaproj.service.LoginService;
 import com.lyj.proj.oneteamsaproj.service.WinDrawLoseService;
 import com.lyj.proj.oneteamsaproj.vo.GameSchedule;
 import com.lyj.proj.oneteamsaproj.vo.Member;
-import com.lyj.proj.oneteamsaproj.vo.Rq;
+import com.lyj.proj.oneteamsaproj.utils.RqUtil;
 import com.lyj.proj.oneteamsaproj.vo.WinDrawLose;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +30,16 @@ public class UsrGameScheduleController {
 
     private final GameScheduleService gameScheduleService;
     private WinDrawLoseService winDrawLoseService; // 예측 서비스 추가
-    private final Rq rq;
+    private final RqUtil rq;
 
     @Autowired
-    public UsrGameScheduleController(GameScheduleService gameScheduleService, WinDrawLoseService winDrawLoseService, Rq rq) {
+    private LoginService loginService;
+
+    @Autowired
+    public UsrGameScheduleController(GameScheduleService gameScheduleService, WinDrawLoseService winDrawLoseService, RqUtil rq) {
         this.gameScheduleService = gameScheduleService;
         this.winDrawLoseService = winDrawLoseService;
         this.rq = rq;
-
     }
 
     // JSP 접근 메서드
@@ -57,7 +60,7 @@ public class UsrGameScheduleController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         String formattedDateTime = now.format(formatter);
         // 현재 로그인한 회원의 id를 가져와서 경기예측정보를 모델에 추가
-        int memberId = rq.getLoginedMemberId();
+        int memberId = loginService.getLoginedMemberId();
         List<WinDrawLose> userPredictions = winDrawLoseService.getPrediction(memberId);
         // 각 경기 일정에 맞는 예측 정보를 Map으로 변환하여 모델에 추가
         Map<Integer, String> predictionsMap = new HashMap<>();
@@ -113,7 +116,7 @@ public class UsrGameScheduleController {
         LocalDate selectedDate = LocalDate.parse(date);
         List<GameSchedule> schedules = gameScheduleService.getGameSchedulesByDate(selectedDate);
         // 로그인된 회원 정보 가져오기
-        Member loginedMember = rq.getLoginedMember();
+        Member loginedMember = loginService.getLoginedMember();
 
         // 예측 정보를 가져오기 (로그인된 경우)
         Map<Integer, String> userPredictionsMap = new HashMap<>();

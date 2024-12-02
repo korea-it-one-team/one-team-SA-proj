@@ -114,6 +114,12 @@
     .back-button:hover {
         text-decoration: underline;
     }
+
+    .to-my-list {
+        cursor: pointer;
+        color: #cdf256;
+        text-decoration: underline;
+    }
 </style>
 <body>
 <header th:replace="~{common/header-2 :: header-2}"></header>
@@ -127,45 +133,45 @@
         <div class="mypage-content">
             <div class="mypage-info-item">
                 <span class="mypage-label">내가 쓴 게시글</span>
-                <span class="mypage-value" onclick="window.location.href='/usr/article/myList'">바로가기</span>
+                <span class="mypage-value to-my-list" onclick="window.location.href='/usr/article/myList'">바로가기</span>
             </div>
             <div class="mypage-info-item">
                 <span class="mypage-label">가입일</span>
-                <span class="mypage-value" th:text="${rq.loginedMember.regDate}">가입일</span>
+                <span class="mypage-value" th:text="${loginedMember.regDate}">가입일</span>
             </div>
             <div class="mypage-info-item">
                 <span class="mypage-label">아이디</span>
-                <span class="mypage-value" th:text="${rq.loginedMember.loginId}">아이디</span>
+                <span class="mypage-value" th:text="${loginedMember.loginId}">아이디</span>
             </div>
             <div class="mypage-info-item">
                 <span class="mypage-label">이름</span>
-                <span class="mypage-value" th:text="${rq.loginedMember.name}">이름</span>
+                <span class="mypage-value" th:text="${loginedMember.name}">이름</span>
             </div>
             <div class="mypage-info-item">
                 <span class="mypage-label">닉네임</span>
-                <span class="mypage-value" th:text="${rq.loginedMember.nickname}">닉네임</span>
+                <span class="mypage-value" th:text="${loginedMember.nickname}">닉네임</span>
             </div>
             <div class="mypage-info-item">
                 <span class="mypage-label">보유 포인트</span>
-                <span class="mypage-value" th:text="${rq.loginedMember.points}">보유 포인트</span>
+                <span class="mypage-value" th:text="${loginedMember.points}">보유 포인트</span>
             </div>
             <div class="mypage-info-item">
                 <span class="mypage-label">이메일</span>
-                <span class="mypage-value" th:text="${rq.loginedMember.email}">이메일</span>
+                <span class="mypage-value" th:text="${loginedMember.email}">이메일</span>
             </div>
             <div class="mypage-info-item">
                 <span class="mypage-label">전화번호</span>
-                <span class="mypage-value" th:text="${rq.loginedMember.cellphoneNum}">전화번호</span>
+                <span class="mypage-value" th:text="${loginedMember.cellphoneNum}">전화번호</span>
             </div>
             <div class="mypage-actions">
                 <a th:href="@{/usr/member/checkPw}" class="mypage-btn">회원정보 수정</a>
-                <div class="btns" th:if="${rq.loginedMember.delStatus == 0}">
+                <div class="btns" th:if="${loginedMember.delStatus == 0}">
                     <form action="/usr/member/doDelete" method="post" onsubmit="return confirmDelete();">
                         <input type="hidden" name="id" value="${rq.loginedMember.id}">
                         <button class="mypage-btn mypage-btn-red" type="submit" >회원탈퇴</button>
                     </form>
                 </div>
-                <div class="btns" th:if="${rq.loginedMember.delStatus == 1}">
+                <div class="btns" th:if="${loginedMember.delStatus == 1}">
                     <form action="/usr/member/doRestore" method="post" onsubmit="return confirmCancel();">
                         <input type="hidden" name="id" value="${rq.loginedMember.id}">
                         <button class="mypage-btn mypage-btn-red" type="submit" >탈퇴취소</button>

@@ -51,10 +51,9 @@ public interface ReplyRepository {
 				""")
     public void modifyReply(int id, String body);
 
-
 	@Delete("""
-			DELETE FROM reply
-			WHERE id = #{id}
-			""")
-    public void deleteReply(int id);
+         DELETE FROM reply
+         WHERE id = #{id}
+         """)
+	public void deleteReply(int id);
 }

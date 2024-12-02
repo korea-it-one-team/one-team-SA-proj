@@ -39,10 +39,10 @@ public class ArticleService {
     }
 
     public String updateImagePaths(String body, int boardId, int articleId) {
+        // 정규식으로 이미지 경로 추출
         // 정규식 패턴
         Pattern patternExisting = Pattern.compile("!\\[\\]\\(/images/article/\\d+/\\d+/\\d+-(\\d+)\\.(\\w+)\\)");
         Pattern patternNew = Pattern.compile("!\\[\\]\\(/images/(\\d+)-(\\d+)\\.(\\w+)\\)");
-
         // Matcher 생성
         Matcher matcherExisting = patternExisting.matcher(body);
         Matcher matcherNew = patternNew.matcher(body);
@@ -53,18 +53,15 @@ public class ArticleService {
         while (matcherExisting.find()) {
             int currentIndex = Integer.parseInt(matcherExisting.group(1)); // 인덱스 추출
             String extension = matcherExisting.group(2); // 확장자 추출
-
             // 경로 유지
             String newPath = String.format("/images/article/%d/%d/%d-%d.%s", boardId, articleId, articleId, currentIndex, extension);
             matcherExisting.appendReplacement(updatedBody, "![](" + newPath + ")");
         }
         matcherExisting.appendTail(updatedBody);
-
         // 새 이미지 처리
         String intermediateBody = updatedBody.toString(); // 기존 처리 결과 가져오기
         updatedBody = new StringBuffer(); // 새 버퍼 초기화
         matcherNew = patternNew.matcher(intermediateBody);
-
         while (matcherNew.find()) {
             int currentIndex = Integer.parseInt(matcherNew.group(2)); // 인덱스 추출
             String extension = matcherNew.group(3); // 확장자 추출
@@ -81,7 +78,6 @@ public class ArticleService {
     public void deleteArticle(int id) {
 
         articleRepository.deleteArticle(id);
-
 
     }
 
@@ -112,8 +108,8 @@ public class ArticleService {
         int limitTake = itemsInAPage;
 
 
-        //  ---- 날짜/시간 표현 구간 시작 ----
-        //  게시글 목록의 날짜 표현부분을 현재 날짜를 기준으로 시간(HH:mm)으로 표현, 과거의 게시글은 YYYY-MM-DD 형식으로.
+    //  ---- 날짜/시간 표현 구간 시작 ----
+    //  게시글 목록의 날짜 표현부분을 현재 날짜를 기준으로 시간(HH:mm)으로 표현, 과거의 게시글은 YYYY-MM-DD 형식으로.
 
         List<Article> articles = articleRepository.getForPrintArticles(boardId, limitFrom, limitTake, searchKeywordTypeCode, searchKeyword);
 
@@ -256,7 +252,6 @@ public class ArticleService {
         return articleRepository.getBadRP(relId);
     }
 
-
     public int getMyArticlesCount(List<Integer> boardIds, int loginedMemberId, String searchKeywordTypeCode, String searchKeyword) {
         return articleRepository.getMyArticlesCount(boardIds, loginedMemberId, searchKeywordTypeCode, searchKeyword);
     }
@@ -274,4 +269,5 @@ public class ArticleService {
 
         return articles;
     }
+
 }

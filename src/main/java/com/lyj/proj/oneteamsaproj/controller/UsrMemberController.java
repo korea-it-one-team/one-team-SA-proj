@@ -1,10 +1,12 @@
 package com.lyj.proj.oneteamsaproj.controller;
 
+import com.lyj.proj.oneteamsaproj.service.LoginService;
 import com.lyj.proj.oneteamsaproj.service.MemberService;
+import com.lyj.proj.oneteamsaproj.utils.PasswordHelper;
 import com.lyj.proj.oneteamsaproj.utils.Ut;
 import com.lyj.proj.oneteamsaproj.vo.Member;
 import com.lyj.proj.oneteamsaproj.vo.ResultData;
-import com.lyj.proj.oneteamsaproj.vo.Rq;
+import com.lyj.proj.oneteamsaproj.utils.RqUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,22 +18,31 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class UsrMemberController {
 
     @Autowired
-    private Rq rq;
+    private RqUtil rq;
 
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private LoginService loginService;
+
+    @Autowired
+    private PasswordHelper passwordHelper;
 
     @RequestMapping("/usr/member/doLogout")
     @ResponseBody
     public String doLogout(HttpServletRequest req) {
 
-        rq.logout();
+        loginService.logout();
 
         return Ut.jsReplace("S-1", Ut.f("로그아웃"), "/");
     }
 
     @RequestMapping("/usr/member/login")
-    public String showLogin(HttpServletRequest req) {
+    public String showLogin(@RequestParam(value = "error", required = false) String error, HttpServletRequest req) {
+        if ("sessionExpired".equals(error)) {
+            return Ut.jsReplace("F-1","세션이 만료되었습니다. 다시 로그인해주세요.", "usr/member/login");
+        }
         return "usr/member/login";
     }
 
@@ -39,8 +50,6 @@ public class UsrMemberController {
     @RequestMapping("/usr/member/doLogin")
     @ResponseBody
     public String doLogin(HttpServletRequest req, String loginId, String loginPw, String afterLoginUri) {
-
-        Rq rq = (Rq) req.getAttribute("rq");
 
         if (Ut.isEmptyOrNull(loginId)) {
             return Ut.jsHistoryBack("F-2", "아이디를 입력하지 않았습니다.");
@@ -54,20 +63,29 @@ public class UsrMemberController {
         if (member == null) {
             return Ut.jsHistoryBack("F-3", Ut.f("%s는(은) 존재하지 않는 아이디 입니다.", loginId));
         }
-        System.err.println(Ut.sha256(loginPw));
 
-        if (member.getLoginPw().equals(Ut.sha256(loginPw)) == false) {
-            return Ut.jsHistoryBack("F-4", Ut.f("비밀번호가 일치하지 않습니다."));
+        if (!passwordHelper.isPasswordMatch(loginPw, member.getLoginPw())) {
+            return Ut.jsHistoryBack("F-4", "비밀번호가 일치하지 않습니다.");
         }
 
         if (member.getDelStatus() == 2) {
-            return Ut.jsReplace("사용정지된 계정이야", "/");
+            return Ut.jsReplace("사용정지된 계정입니다.", "/");
         }
 
-        rq.login(member);
+        // 로그인 처리
+        try {
+            // LoginService를 통해 로그인 처리
+            member = loginService.login(loginId, loginPw);
+        } catch (IllegalArgumentException e) {
+            return Ut.jsHistoryBack("F-4", e.getMessage());
+        }
 
-        if (afterLoginUri.length() > 0) {
+        if (member.getDelStatus() == 2) {
+            return Ut.jsReplace("사용정지된 계정입니다.", "/");
+        }
 
+        // 로그인 후 이동할 URL 처리
+        if (!Ut.isEmptyOrNull(afterLoginUri)) {
             return Ut.jsReplace("S-1", Ut.f("%s님 환영합니다", member.getNickname()), afterLoginUri);
         }
 
@@ -130,11 +148,14 @@ public class UsrMemberController {
     @RequestMapping("/usr/member/doCheckPw")
     @ResponseBody
     public String doCheckPw(String loginPw) {
+
+        Member member = loginService.getLoginedMember();
+
         if (Ut.isEmptyOrNull(loginPw)) {
             return Ut.jsHistoryBack("F-1", "비밀번호를 입력해주세요.");
         }
 
-        if (rq.getLoginedMember().getLoginPw().equals(Ut.sha256(loginPw)) == false) {
+        if (!passwordHelper.isPasswordMatch(loginPw, member.getLoginPw())) {
             return Ut.jsHistoryBack("F-2", "비밀번호가 틀렸습니다.");
         }
 
@@ -142,15 +163,13 @@ public class UsrMemberController {
     }
 
     @RequestMapping("/usr/member/modify")
-    public String showmyModify() {
+    public String showModify() {
         return "usr/member/modify";
     }
 
     @RequestMapping("/usr/member/doModify")
     @ResponseBody
     public String doModify(HttpServletRequest req, String loginPw, String name, String nickname, String cellphoneNum, String email) {
-
-        Rq rq = (Rq) req.getAttribute("rq");
 
         // 비번을 입력하지 않아도 회원정보 수정이 가능하도록 만들어야 함.(비번은 바꾸기 싫을때.)
         // 비번은 안바꾸는거 가능(사용자 입장). 비번 null 체크 X
@@ -171,13 +190,15 @@ public class UsrMemberController {
         ResultData modifyRd;
 
         if (Ut.isEmptyOrNull(loginPw)) {
-
-            modifyRd = memberService.modifyWithoutPw(rq.getLoginedMemberId(), name, nickname, cellphoneNum, email);
+            modifyRd = memberService.modifyWithoutPw(loginService.getLoginedMemberId(), name, nickname, cellphoneNum, email);
 
         } else {
-            modifyRd = memberService.modify(rq.getLoginedMemberId(), loginPw, name, nickname, cellphoneNum, email);
+            modifyRd = memberService.modify(loginService.getLoginedMemberId(), loginPw, name, nickname, cellphoneNum, email);
         }
 
+        if(modifyRd.isSuccess()) {
+            memberService.updateMemberInfo(loginService.getLoginedMemberId());
+        }
 
         return Ut.jsReplace(modifyRd.getResultCode(), modifyRd.getMsg(), "../member/myPage");
     }
@@ -249,7 +270,7 @@ public class UsrMemberController {
     // 회원이 직접 탈퇴처리
     @RequestMapping("/usr/member/doDelete")
     public String doDelete() {
-        int loginedMemberId = rq.getLoginedMemberId();
+        int loginedMemberId = loginService.getLoginedMemberId();
 
         // 7일 유예 기간 설정
         memberService.doDeleteMember(loginedMemberId, 7);
@@ -260,7 +281,7 @@ public class UsrMemberController {
     // 회원이 탈퇴처리 취소
     @RequestMapping("/usr/member/doRestore")
     public String doRestore() {
-        int loginedMemberId = rq.getLoginedMemberId();
+        int loginedMemberId = loginService.getLoginedMemberId();
 
         memberService.restoreMember(loginedMemberId);
 

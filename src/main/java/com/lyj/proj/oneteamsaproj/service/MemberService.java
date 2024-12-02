@@ -1,11 +1,16 @@
 package com.lyj.proj.oneteamsaproj.service;
 
 import com.lyj.proj.oneteamsaproj.repository.MemberRepository;
+import com.lyj.proj.oneteamsaproj.security.custom.CustomUserDetails;
+import com.lyj.proj.oneteamsaproj.utils.PasswordHelper;
 import com.lyj.proj.oneteamsaproj.utils.Ut;
 import com.lyj.proj.oneteamsaproj.vo.Member;
 import com.lyj.proj.oneteamsaproj.vo.ResultData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,6 +31,9 @@ public class MemberService {
     @Autowired
     private MailService mailService;
 
+    @Autowired
+    private PasswordHelper passwordHelper;
+
     public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
@@ -44,7 +52,7 @@ public class MemberService {
             return ResultData.from("F-8", Ut.f("이미 사용중인 이름(%s)과 이메일(%s)입니다.", name, email));
         }
 
-        loginPw = Ut.sha256(loginPw);
+        loginPw = passwordHelper.encryptPassword(loginPw);
 
         memberRepository.doJoin(loginId, loginPw, name, nickname, cellphoneNum, email);
 
@@ -66,7 +74,7 @@ public class MemberService {
             return ResultData.from("F-8", Ut.f("이미 사용중인 이름(%s)과 이메일(%s)입니다.", name, email));
         }
 
-        loginPw = Ut.sha256(loginPw);
+        loginPw = passwordHelper.encryptPassword(loginPw);
         memberRepository.doSign(loginId, loginPw, name, cellphoneNum, email);
 
         int id = memberRepository.getLastInsertId();
@@ -98,7 +106,7 @@ public class MemberService {
     }
 
     public ResultData modify(int loginedMemberId, String loginPw, String name, String nickname, String cellphoneNum, String email) {
-        loginPw = Ut.sha256(loginPw);
+        loginPw = passwordHelper.encryptPassword(loginPw);
         memberRepository.modify(loginedMemberId, loginPw, name, nickname, cellphoneNum, email);
 
         return ResultData.from("S-1", "회원정보 수정 완료");
@@ -142,7 +150,7 @@ public class MemberService {
     }
 
     private void setTempPassword(Member actor, String tempPassword) {
-        memberRepository.modify(actor.getId(), Ut.sha256(tempPassword), null, null, null, null);
+        memberRepository.modify(actor.getId(), passwordHelper.encryptPassword(tempPassword), null, null, null, null);
     }
 
     public void addPoints(int memberId, int points) {
@@ -176,5 +184,28 @@ public class MemberService {
 
     public int deleteExpiredMembers() {
         return memberRepository.markMembersAsUnrecoverable();
+    }
+
+    public void updateMemberInfo(int updatedMemberId) {
+        // DB에서 수정된 회원 정보 가져오기
+        Member updatedMember = getMemberById(updatedMemberId);
+
+        // 새로운 CustomUserDetails 생성
+        CustomUserDetails newUserDetails = new CustomUserDetails(updatedMember);
+
+        // 현재 인증된 사용자 가져오기
+        Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (currentAuth != null && currentAuth.getPrincipal() instanceof CustomUserDetails) {
+            // 새로운 Authentication 객체 생성
+            Authentication newAuth = new UsernamePasswordAuthenticationToken(
+                    newUserDetails, // 수정된 사용자 정보
+                    currentAuth.getCredentials(), // 기존 자격 증명 유지
+                    currentAuth.getAuthorities() // 기존 권한 유지
+            );
+
+            // SecurityContext에 새로운 Authentication 설정
+            SecurityContextHolder.getContext().setAuthentication(newAuth);
+        }
     }
 }

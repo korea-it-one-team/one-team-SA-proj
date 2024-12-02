@@ -185,45 +185,34 @@
 
 <body>
 <script th:inline="javascript">
-    const imageRegex = /!\[.*?\]\(\/images(?:\/article\/\d+\/\d+)?\/[^)]+\)/g;
-
-    // 이미지 URL만 추출하는 함수
-    function extractImageUrls(markdown) {
-        const imageUrls = [];
-        let match;
-
-        while ((match = imageRegex.exec(markdown)) !== null) {
-            // URL만 추출
-            const url = match[0].match(/\((.*?)\)/)[1]; // 괄호 안의 URL 추출
-            imageUrls.push(url);
-        }
-
-        return imageUrls;
-    }
-
-    function ArticleModify__submit(form) {
+        function ArticleModify__submit(form) {
         form.title.value = form.title.value.trim();
 
         if (form.title.value.length == 0) {
-            alert('제목을 입력하세요.');
-            return;
-        }
+        alert('제목을 입력하세요.');
+        return;
+    }
 
         toastui.Editor.factory({
-            el: document.querySelector('#editor')
-        });
+        el: document.querySelector('#editor')
+    });
 
         const markdown = editor.getMarkdown().trim();
 
         if (markdown.length == 0) {
-            alert('내용을 입력하세요.');
-            return;
-        }
+        alert('내용을 입력하세요.');
+        return;
+    }
 
-        // 이미지 URL 추출
-        const imageUrls = extractImageUrls(markdown);
-        form.imageUrls.value = imageUrls.join(','); // 쉼표로 구분하여 전송
-
+            // 이미지 URL들을 Markdown에서 추출
+            const imageUrls = [];
+            const imageRegex = /!\[.*?\]\((.*?)\)/g; // Markdown 이미지 패턴
+            let match;
+            while ((match = imageRegex.exec(markdown)) !== null) {
+                imageUrls.push(match[1]); // 이미지 URL만 추출
+            }
+            // 이미지 URL들을 hidden input 필드에 저장
+            form.imageUrls.value = imageUrls.join(','); // 쉼표로 구분하여 전송
 
         $('#fileInput').attr('name', 'file__article__' + [[${currentId}]] + '__extra__Img__1');
 
@@ -231,22 +220,22 @@
         form.submit();
     }
 
-    function updateFileName(input) {
-        const fileNameEl = document.getElementById('fileName');
-        if (input.files.length > 0) {
-            fileNameEl.textContent = input.files[0].name; // 파일명 표시
-            fileNameEl.style.color = '#ffffff'; // 파일 선택 시 텍스트 색상 흰색으로 변경
-        } else {
-            fileNameEl.textContent = '선택된 파일 없음'; // 기본 메시지
-            fileNameEl.style.color = '#aaaaaa'; // 파일 미선택 시 기본 색상 적용
-        }
-    }
+function updateFileName(input) {
+const fileNameEl = document.getElementById('fileName');
+if (input.files.length > 0) {
+fileNameEl.textContent = input.files[0].name; // 파일명 표시
+fileNameEl.style.color = '#ffffff'; // 파일 선택 시 텍스트 색상 흰색으로 변경
+} else {
+fileNameEl.textContent = '선택된 파일 없음'; // 기본 메시지
+fileNameEl.style.color = '#aaaaaa'; // 파일 미선택 시 기본 색상 적용
+}
+}
 
-    function updateSelectColor(selectElement) {
-        if (selectElement.value === "") {
+function updateSelectColor(selectElement) {
+if (selectElement.value === "") {
 // 기본 선택 상태: 텍스트 색상 회색
-            selectElement.style.color = "#aaaaaa";
-        } else {
+selectElement.style.color = "#aaaaaa";
+} else {
 // 다른 옵션 선택: 텍스트 색상 흰색
             selectElement.style.color = "#ffffff";
         }
@@ -267,7 +256,7 @@
                 <select class="input write-form-select" name="boardId" onchange="updateSelectColor(this)">
                     <option value="" disabled th:selected="${article.boardId == null}">게시판을 선택해주세요.</option>
                     <!-- NOTICE: Admin일 때만 표시 -->
-                    <option value="1" th:if="${rq.isAdmin()}" th:selected="${article.boardId == 1}">NOTICE</option>
+                    <option value="1" th:if="${loginedMember.isAdmin()}" th:selected="${article.boardId == 1}">NOTICE</option>
                     <option value="2" th:selected="${article.boardId == 2}">ANALYSIS</option>
                     <option value="3" th:selected="${article.boardId == 3}">FREE</option>
                 </select>
@@ -275,8 +264,7 @@
             <div class="write-form-line">
                 <label class="write-form-label">제목</label>
                 <input class="input write-form-input" name="title"
-                       autocomplete="off" th:value="${article.title}" type="text" placeholder="새 제목을 입력하세요."
-                       maxlength="20"/>
+                       autocomplete="off" th:value="${article.title}" type="text" placeholder="새 제목을 입력하세요." maxlength="20"/>
             </div>
             <div class="write-form-line">
                 <label class="write-form-label">동영상 첨부</label>
@@ -285,13 +273,12 @@
                     <span id="fileName" class="custom-file-name"
                           th:text="${file != null ? file.originFileName : '선택된 파일 없음'}">선택된 파일 없음
                     </span>
-                    <input id="fileInput" type="file" name="file" class="hidden" onchange="updateFileName(this)"
-                           accept="video/*">
+                    <input id="fileInput" type="file" name="file" class="hidden" onchange="updateFileName(this)" accept="video/*">
                 </div>
             </div>
             <div class="write-editor-container">
                 <div id="editor">
-                    <textarea th:utext="${article.body}"></textarea>
+                    <textarea th:text="${article.body}"></textarea>
                 </div>
             </div>
             <div class="write-btns">
@@ -314,6 +301,9 @@
     <script>
         const initialMarkdown = document.querySelector("#editor textarea").value; // 초기 값 가져오기
         const currentId = document.querySelector('#currentId').value; // currentId 값 가져오기
+
+        const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
 
         // 마크다운에서 가장 높은 이미지 번호 계산 함수
         function getHighestImageIndex(markdown, currentId) {
@@ -362,6 +352,9 @@
                     fetch('/api/images/upload', {
                         method: 'POST',
                         body: formData,
+                        headers: {
+                            [csrfHeader]: csrfToken // CSRF 토큰 추가
+                        }
                     })
                         .then(response => response.json())
                         .then(data => {
@@ -409,6 +402,9 @@
                             fetch('/api/images/upload', {
                                 method: 'POST',
                                 body: formData,
+                                headers: {
+                                    [csrfHeader]: csrfToken // CSRF 토큰 추가
+                                }
                             })
                                 .then(response => response.json())
                                 .then(data => {
@@ -425,11 +421,10 @@
                         });
                     }
                 });
-
                 imageInput.click(); // 파일 선택 창 강제 팝업
+                $('.toastui-editor-popup-add-image').remove();
             });
     </script>
-
 
 </section>
 

@@ -115,9 +115,15 @@
         currentExchangeId = id;
         const currentExchangeUrl = `../exchange/detail?id=` + id;
 
+        const csrfToken = $('meta[name="_csrf"]').attr('content');
+        const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+
         $.ajax({
             url: currentExchangeUrl, // 교환 신청 상세 정보 가져오기
             method: 'GET',
+            headers: {
+                [csrfHeader]: csrfToken
+            },
             success: function(data) {
                 $('#gifticonName').text(data.gifticon_Name);
                 $('#name').text(data.member_name);

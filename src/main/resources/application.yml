@@ -1,6 +1,10 @@
 server:
   port: 8088
 spring:
+  security:
+    user:
+      name:
+      password:
   cloud:
     gcp:
       storage:
@@ -14,8 +18,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: gasi758@gmail.com # 발송할 서비스 이메일
-    password: ${EMAIL_KEY} # 앱 비밀번호.
+    username: gasi758@gmail.com
+    password: ${EMAIL_KEY}
     properties:
       mail:
         smtp:
@@ -48,3 +52,6 @@ custom:
   emailFromName: kicknalisys
   genFileDirPath: C:\work_oneteam\one-team-SA-proj\images
   videoFileDirPath: C:\work_oneteam\one-team-SA-proj\videos
+logging:
+  level:
+    org.springframework.security: DEBUG

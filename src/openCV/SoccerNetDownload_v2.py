@@ -11,7 +11,7 @@ app = Flask(__name__)
 @app.route("/download", methods=["POST"])
 def download_data():
 
-    mySoccerNetDownloader.downloadGames(files=["1_224p.mkv", "2_224p.mkv"], split=["train","valid","test"])
+    mySoccerNetDownloader.downloadGames(files=["1_720p.mkv", "2_720p.mkv"], split=["train","valid","test"])
     # download labels SN v2
     mySoccerNetDownloader.downloadGames(files=["Labels-v2.json"], split=["train","valid","test"])
     # download labels for camera shot

@@ -237,7 +237,7 @@ public interface ArticleRepository {
         </choose>
     </if>
     </script>
-	""")
+   """)
 	int getMyArticlesCount(@Param("boardIds") List<Integer> boardIds,
 						   @Param("loginedMemberId") int loginedMemberId,
 						   @Param("searchKeywordTypeCode") String searchKeywordTypeCode,
@@ -283,7 +283,7 @@ public interface ArticleRepository {
         LIMIT #{limitFrom}, #{limitTake}
     </if>
     </script>
-	""")
+   """)
 	List<Article> getForPrintMyArticles(@Param("boardIds") List<Integer> boardIds,
 										@Param("loginedMemberId") int loginedMemberId,
 										@Param("limitFrom") int limitFrom,

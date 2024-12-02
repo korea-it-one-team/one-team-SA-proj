@@ -32,6 +32,4 @@ public class ImageController {
             return ResponseEntity.status(500).body(new ImageUploadResponse("Upload failed"));
         }
     }
-
-
 }
