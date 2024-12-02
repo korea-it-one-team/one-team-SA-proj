@@ -53,7 +53,7 @@ public interface ExchangeRepository {
 
 	@Insert("""
 				insert into exchange_history
-				set member_id = ${member_Id},
+				set member_id = ${memberId},
 	    		gifticon_id = ${id},
 	    		points = (Select points from gifticons where id = ${id}),
 	    		exchange_status = 'REQUESTED',

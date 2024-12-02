@@ -450,18 +450,21 @@
     .match-item {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: center; /* 전체 아이템을 중앙으로 정렬 */
         padding: calc(10 * var(--rpx-vw));
         background-color: #383838;
         border-radius: calc(6 * var(--rpx-vw));
         margin-bottom: calc(10 * var(--rpx-vw));
+        text-align: center; /* 텍스트 중앙 정렬 */
     }
 
     .match-info {
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: center; /* match-info 내부 요소를 가로 중앙으로 정렬 */
         gap: calc(8 * var(--rpx-vw)); /* 요소 간의 간격 조절 */
+        text-align: center; /* 텍스트 중앙 정렬 */
+        width: 100%; /* 필요하면 match-info를 가득 채우게 설정 */
     }
 
     .match-info > span {

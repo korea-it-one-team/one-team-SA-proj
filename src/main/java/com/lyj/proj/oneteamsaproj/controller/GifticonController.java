@@ -3,6 +3,7 @@ package com.lyj.proj.oneteamsaproj.controller;
 import com.lyj.proj.oneteamsaproj.service.ExchangeService;
 import com.lyj.proj.oneteamsaproj.service.GifticonService;
 import com.lyj.proj.oneteamsaproj.service.LoginService;
+import com.lyj.proj.oneteamsaproj.service.MemberService;
 import com.lyj.proj.oneteamsaproj.vo.Gifticon;
 import com.lyj.proj.oneteamsaproj.utils.RqUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,6 +29,9 @@ public class GifticonController {
     @Autowired
     private LoginService loginService;
 
+    @Autowired
+    private MemberService memberService;
+
     @RequestMapping("usr/gifticons/List")
     public String getGifticonList(Model model, @RequestParam(defaultValue = "1") int page) {
 
@@ -46,7 +50,6 @@ public class GifticonController {
 
     @PostMapping("usr/gifticons/{id}/application")
     public ResponseEntity<Map<String, Object>> getGifticonApplication(HttpServletRequest req, @PathVariable int id) {
-        RqUtil rq = (RqUtil) req.getAttribute("rq");
         int loginedMemberId = loginService.getLoginedMemberId();
 
         if (loginedMemberId <= 0) {
@@ -62,6 +65,7 @@ public class GifticonController {
         boolean application = exchangeService.gifticon_Application(id, loginedMemberId);
 
         if (application) {
+            memberService.updateMemberInfo(loginService.getLoginedMemberId());
             return ResponseEntity.ok(Map.of("message", "교환 신청이 완료되었습니다.", "id", id));
         }
 

@@ -58,7 +58,6 @@ public class UsrReplyController {
     public String doModify(HttpServletRequest req, int id, String body) {
         System.err.println(id);
         System.err.println(body);
-        RqUtil rq = (RqUtil) req.getAttribute("rq");
 
         Reply reply = replyService.getReply(id);
 
@@ -77,24 +76,24 @@ public class UsrReplyController {
         return reply.getBody();
     }
 
-//    @RequestMapping("/usr/reply/doDelete")
-//    @ResponseBody
-//    public String doDelete(HttpServletRequest req, int id) {
-//        Rq rq = (Rq) req.getAttribute("rq");
-//
-//        Reply reply = replyService.getReply(id);
-//
-//        if (reply == null) {
-//            return Ut.jsHistoryBack("F-1", Ut.f("%d번 댓글은 존재하지 않습니다", id));
-//        }
-//
-//        ResultData loginedMemberCanDeleteRd = replyService.userCanDelete(rq.getLoginedMemberId(), reply);
-//
-//        if (loginedMemberCanDeleteRd.isSuccess()) {
-//            replyService.deleteReply(id);
-//        }
-//
-//
-//    }
+    @RequestMapping("/usr/reply/doDelete")
+    @ResponseBody
+    public String doDelete(HttpServletRequest req, int id) {
+
+        Reply reply = replyService.getReply(id);
+
+        if (reply == null) {
+            return Ut.jsHistoryBack("F-1", Ut.f("%d번 댓글은 존재하지 않습니다", id));
+        }
+
+        ResultData loginedMemberCanDeleteRd = replyService.userCanDelete(loginService.getLoginedMemberId(), reply);
+
+        if (loginedMemberCanDeleteRd.isSuccess()) {
+            replyService.deleteReply(id);
+        }
+
+        return Ut.jsReplace(loginedMemberCanDeleteRd.getResultCode(), loginedMemberCanDeleteRd.getMsg(), "../article/detail?id=" + id);
+    }
+
 
 }

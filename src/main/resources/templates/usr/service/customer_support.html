@@ -369,7 +369,7 @@
 
         <div id="consultation" class="content-section hidden">
             <h2 class="mb-6" style="font-size: calc(24 * var(--rpx-vw)); font-weight: bold;">1:1 상담</h2>
-            <form th:action="@{/submit-consultation}" method="post">
+            <form th:if="${isLogined}" th:action="@{/submit-consultation}" method="post">
                 <div class="mb-4">
                     <label for="title" style="display: block; font-weight: bold; font-size: calc(16 * var(--rpx-vw));">제목</label>
                     <input type="text" class="input-bordered" id="title" name="title" required>
@@ -380,6 +380,11 @@
                 </div>
                 <button type="submit" class="btn btn-success">저장</button>
             </form>
+            <div th:if="${!isLogined}">
+                <div class="login-reminder">
+                    1:1 상담 작성을 위해 <a class="btn btn-sm login-link" onclick="window.location.href='/usr/member/login?afterLoginUri=/customer-support'">로그인</a>이 필요합니다.
+                </div>
+            </div>
         </div>
 
         <div id="history" class="content-section">
