@@ -134,50 +134,5 @@ public class ImageService {
             Files.deleteIfExists(dPath);
         }
     }
-    public void deleteImage(int articleId, int boardId) throws IOException {
-        Path sourcePath = Paths.get(uploadDir, "article", String.valueOf(boardId), String.valueOf(articleId));
-        if (Files.exists(sourcePath)) {
-            // 디렉토리 내부 파일 삭제
-            try (Stream<Path> files = Files.list(sourcePath)) {
-                files.forEach(file -> {
-                    try {
-                        Files.delete(file); // 파일 삭제
-                    } catch (IOException e) {
-                        throw new RuntimeException("파일 삭제 중 오류 발생: " + file, e);
-                    }
-                });
-            }
-
-            // 디렉토리 삭제
-            Files.delete(sourcePath);
-        }
-    }
-
-    public void moveImage(String imageUrl, String boardId, int articleId) throws IOException {
-        Path dPath = Paths.get(uploadDir, "article", imageUrl.substring(16, 17), String.valueOf(articleId)); // 기존 폴더
-        Path sourcePath = Paths.get(uploadDir, "article", boardId, String.valueOf(articleId)); // 새로운 폴더
-
-        // 새로운 폴더 생성 (존재하지 않으면)
-        if (!Files.exists(sourcePath)) {
-            Files.createDirectories(sourcePath);
-        }
-
-        // 기존 폴더의 파일 이동
-        if (Files.exists(dPath)) {
-            try (Stream<Path> files = Files.list(dPath)) {
-                files.forEach(file -> {
-                    try {
-                        Path targetPath = sourcePath.resolve(file.getFileName()); // 새 위치의 파일 경로
-                        Files.move(file, targetPath); // 파일 이동
-                    } catch (IOException e) {
-                        throw new RuntimeException("파일 이동 중 오류 발생: " + file, e);
-                    }
-                });
-            }
-
-            // 기존 폴더 삭제 (선택)
-            Files.deleteIfExists(dPath);
-        }
-    }
 
 }
