@@ -252,5 +252,22 @@ public class ArticleService {
         return articleRepository.getBadRP(relId);
     }
 
+    public int getMyArticlesCount(List<Integer> boardIds, int loginedMemberId, String searchKeywordTypeCode, String searchKeyword) {
+        return articleRepository.getMyArticlesCount(boardIds, loginedMemberId, searchKeywordTypeCode, searchKeyword);
+    }
+
+    public List<Article> getForPrintMyArticles(List<Integer> boardIds, int loginedMemberId, int itemsInAPage, int page, String searchKeywordTypeCode, String searchKeyword) {
+        int limitFrom = (page - 1) * itemsInAPage;
+        int limitTake = itemsInAPage;
+
+        List<Article> articles = articleRepository.getForPrintMyArticles(boardIds, loginedMemberId, limitFrom, limitTake, searchKeywordTypeCode, searchKeyword);
+
+        // 게시글 리스트의 날짜를 가공하여 추가
+        for (Article article : articles) {
+            formatArticleDate(article);
+        }
+
+        return articles;
+    }
 
 }

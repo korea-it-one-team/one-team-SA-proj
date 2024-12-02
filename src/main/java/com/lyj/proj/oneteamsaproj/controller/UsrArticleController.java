@@ -369,4 +369,40 @@ public class UsrArticleController {
         return "usr/article/list";
     }
 
+    @RequestMapping("/usr/article/myList")
+    public String showMyList(HttpServletRequest req, Model model,
+                             @RequestParam(defaultValue = "2,3") List<Integer> boardIds, // 여러 boardId를 받아오도록 수정
+                             @RequestParam(defaultValue = "1") int page,
+                             @RequestParam(defaultValue = "title,body") String searchKeywordTypeCode,
+                             @RequestParam(defaultValue = "") String searchKeyword) throws IOException {
+
+        // 현재 로그인한 회원 ID 가져오기
+        int loginedMemberId = loginService.getLoginedMemberId();
+
+        // boardIds 유효성 검사
+        if (boardIds == null || boardIds.isEmpty()) {
+            return rq.historyBackOnView("잘못된 게시판 ID입니다.");
+        }
+
+        // 페이지네이션
+        int articlesCount = articleService.getMyArticlesCount(boardIds, loginedMemberId, searchKeywordTypeCode, searchKeyword);
+
+        int itemsInAPage = 10;
+
+        int pagesCount = (int) Math.ceil(articlesCount / (double) itemsInAPage);
+
+        List<Article> articles = articleService.getForPrintMyArticles(boardIds, loginedMemberId, itemsInAPage, page, searchKeywordTypeCode, searchKeyword);
+
+        model.addAttribute("articles", articles);
+        model.addAttribute("articlesCount", articlesCount);
+        model.addAttribute("pagesCount", pagesCount);
+        model.addAttribute("page", page);
+        model.addAttribute("searchKeywordTypeCode", searchKeywordTypeCode);
+        model.addAttribute("searchKeyword", searchKeyword);
+        model.addAttribute("boardIds", boardIds);
+
+        return "usr/article/myList";
+    }
+
+
 }

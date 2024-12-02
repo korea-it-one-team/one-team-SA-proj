@@ -114,6 +114,12 @@
     .back-button:hover {
         text-decoration: underline;
     }
+
+    .to-my-list {
+        cursor: pointer;
+        color: #cdf256;
+        text-decoration: underline;
+    }
 </style>
 <body>
 <header th:replace="~{common/header-2 :: header-2}"></header>
@@ -125,6 +131,10 @@
             <h2>MY PAGE</h2>
         </div>
         <div class="mypage-content">
+            <div class="mypage-info-item">
+                <span class="mypage-label">내가 쓴 게시글</span>
+                <span class="mypage-value to-my-list" onclick="window.location.href='/usr/article/myList'">바로가기</span>
+            </div>
             <div class="mypage-info-item">
                 <span class="mypage-label">가입일</span>
                 <span class="mypage-value" th:text="${loginedMember.regDate}">가입일</span>

@@ -27,11 +27,26 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         System.out.println("AccessDeniedHandler 호출됨"); // 디버깅 로그 추가
         System.out.println("rq : " + rq);
 
+        if (rq == null) {
+            System.out.println("rq 객체가 null입니다. 초기화 여부를 확인하세요.");
+            resp.setContentType("application/json; charset=UTF-8");
+            resp.getWriter().write("{\"resultCode\":\"F-RQ\", \"msg\":\"내부 오류가 발생했습니다.\"}");
+            return;
+        }
+
         // CSRF 예외인지 확인
         if (accessDeniedException instanceof org.springframework.security.web.csrf.CsrfException) {
             handleCsrfException(req, resp);
             return; // CSRF 관련 예외 처리 후 나머지 로직은 실행되지 않도록 반환
         }
+
+        String afterLoginUri = rq.getAfterLoginUri();
+        if (afterLoginUri == null || afterLoginUri.isEmpty()) {
+            afterLoginUri = "/";
+            System.out.println("afterLoginUri가 null이거나 빈 문자열입니다. 기본값 '/'으로 설정합니다.");
+        }
+
+        System.out.println("afterLoginUri = " + afterLoginUri);
 
         // 관리자 여부 확인
         boolean isAdmin = isAdmin();
@@ -40,9 +55,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         // AJAX 요청 여부 확인
         boolean isAjax = isAjaxRequest(req);
         System.out.println("isAjax = " + isAjax);
-
-        String afterLoginUri = rq.getAfterLoginUri();
-        System.out.println("afterLoginUri = " + afterLoginUri);
 
         System.out.println("isLogined = " + isLogined());
 

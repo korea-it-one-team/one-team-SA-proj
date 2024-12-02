@@ -294,12 +294,13 @@
         margin-top: calc(8 * var(--rpx-vw));
         padding: calc(8 * var(--rpx-vw));
         border-radius: calc(4 * var(--rpx-vw));
+        font-size: calc(14 * var(--rpx-vw));
     }
 
     /* 저장 버튼 스타일 */
     .consultation-save-btn {
-        background-color: #10b981;
-        color: #ffffff;
+        background-color: #cdf256;
+        color: #1e1e1e;
         padding: calc(8 * var(--rpx-vw)) calc(16 * var(--rpx-vw));
         border: none;
         border-radius: calc(4 * var(--rpx-vw));
@@ -311,7 +312,7 @@
     }
 
     .consultation-save-btn:hover {
-        background-color: #0e9869;
+        background-color: #b0e040;
     }
 
     /* 상담 내역 없음 메시지 */
@@ -370,11 +371,11 @@
             <h2 class="mb-6" style="font-size: calc(24 * var(--rpx-vw)); font-weight: bold;">1:1 상담</h2>
             <form th:action="@{/submit-consultation}" method="post">
                 <div class="mb-4">
-                    <label for="title" style="display: block; font-weight: bold;">제목</label>
+                    <label for="title" style="display: block; font-weight: bold; font-size: calc(16 * var(--rpx-vw));">제목</label>
                     <input type="text" class="input-bordered" id="title" name="title" required>
                 </div>
                 <div class="mb-4">
-                    <label for="content" style="display: block; font-weight: bold;">내용</label>
+                    <label for="content" style="display: block; font-weight: bold; font-size: calc(16 * var(--rpx-vw));">내용</label>
                     <textarea class="textarea-bordered" id="content" name="content" required></textarea>
                 </div>
                 <button type="submit" class="btn btn-success">저장</button>
@@ -399,7 +400,7 @@
                                 <th:block th:if="${isAdmin}">
                                     <div class="consultation-box consultation-admin-answer">
                                         <span class="consultation-label-admin">답변</span>
-                                        <input type="text" class="consultation-input"
+                                        <input type="text" th:class="'consultation-input consultation-input-' + ${consultation.id}"
                                                th:value="${consultation.answer}"/>
                                         <button class="consultation-save-btn"
                                                 th:onclick="'saveAnswer(' + ${consultation.id} + ')'">저장
@@ -434,12 +435,22 @@
     }
 
     function saveAnswer(id) {
-        const answer = $('.content_answer' + id + ' input[type="text"]').val();
+        const answer = $('.consultation-input-' + id).val();
+
+        console.log("id = " + id);
+        console.log("answer = " + answer);
+
+        // CSRF 토큰 추가
+        const csrfToken = $('meta[name="_csrf"]').attr('content');
+        const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
 
         $.ajax({
             url: '/save-answer',
             method: 'POST',
-            data: {id: id, answer: answer},
+            data: { id: id, answer: answer },
+            headers: {
+                [csrfHeader]: csrfToken
+            },
             success: function (response) {
                 alert('답변이 저장되었습니다.');
                 location.reload();
