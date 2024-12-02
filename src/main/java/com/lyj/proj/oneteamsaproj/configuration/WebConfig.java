@@ -2,6 +2,7 @@ package com.lyj.proj.oneteamsaproj.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -34,7 +35,14 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/video/**")
                 .addResourceLocations("file:src/main/resources/static/video/")
                 .setCachePeriod(0);  // 캐시 기간을 0으로 설정
+    }
 
-
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        // CORS 허용 설정
+        registry.addMapping("/**") // 모든 경로에 대해
+                .allowedOrigins("http://localhost:5000") // Flask 서버 허용
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP 메서드
+                .allowCredentials(true); // 인증 정보 허용 (필요 시)
     }
 }
