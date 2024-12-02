@@ -72,10 +72,11 @@ public class ReplyService {
     }
 
     public void modifyReply(int id, String body) {
-
         replyRepository.modifyReply(id, body);
 
     }
 
-
+    public void deleteReply(int id) {
+        replyRepository.deleteReply(id);
+    }
 }

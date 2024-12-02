@@ -407,5 +407,4 @@ public class UsrArticleController {
 
         return "usr/article/myList";
     }
-
 }
