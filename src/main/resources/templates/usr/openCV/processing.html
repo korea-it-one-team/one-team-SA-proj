@@ -25,6 +25,9 @@
             const retryInterval = 5000;
 
             function checkStatus() {
+
+                console.log("checkStatus() 실행");
+
                 fetch('/video-status')
                     .then(response => response.json())
                     .then(data => {
@@ -37,18 +40,23 @@
 
                         if (data.status === 'completed') {
                             console.log("동영상 처리가 완료되었습니다.");
-                            window.location.href = 'openCV/result';
-                        } else if (data.status === 'processing' || data.status === 'idle') {
+                            window.location.href = '/openCV/result';
+                        } else if (data.status === 'processing' || data.status === 'idle' || data.status === 'saving') {
                             retryCount = 0;
                             setTimeout(checkStatus, retryInterval);
                             console.log("아직 동영상이 처리 중입니다.");
                         } else if (data.status === 'error') {
                             console.log("Flask 측에서 동영상 처리에 실패하였습니다.")
-                            window.location.href = 'openCV/result';
+                            window.location.href = '/openCV/result';
                         }
                     })
                     .catch(error => {
-                        console.error('상태 확인 오류:', error);
+                        if (error.name === 'TypeError') {
+                            console.error('네트워크 오류 또는 서버 연결 실패:', error.message);
+                        } else {
+                            console.error('JSON 파싱 오류:', error.message);
+                        }
+
                         retryCount++;
 
                         if (retryCount < maxRetries) {

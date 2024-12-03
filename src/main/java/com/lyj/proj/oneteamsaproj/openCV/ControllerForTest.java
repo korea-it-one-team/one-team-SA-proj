@@ -26,9 +26,9 @@ import java.util.Scanner;
 public class ControllerForTest {
 
     private final RestTemplate restTemplate;
-    private static final String FLASK_DOWNLOAD_URL = "http://localhost:5000/download_video";
-    private static final String VIDEO_SAVE_PATH = "src/main/resources/static/video/processed_video.mp4";
-    private static final String FLASK_IMAGE_PROCESS_URL = "http://localhost:5000/process-image";
+    private static final String FLASK_DOWNLOAD_URL = "http://localhost:5000/video/download_video";
+    private static final String VIDEO_SAVE_PATH = "src/main/resources/static/video/processed_video_h264.mp4";
+    private static final String FLASK_IMAGE_PROCESS_URL = "http://localhost:5000/image/process-image";
     private static final String IMAGE_SAVE_PATH = "src/main/resources/static/images/gray_image.jpg";
 
     @Autowired
@@ -39,7 +39,11 @@ public class ControllerForTest {
     // 동영상 처리 요청을 보내고 처리 중 페이지로 리다이렉트
     @GetMapping("openCV/video-test")
     public String openCVVideoTest() {
-        String flaskUrl = "http://localhost:5000/process_video";
+        System.out.println("openCV video test");
+
+        String flaskUrl = "http://localhost:5000/video/process_video";
+
+        System.out.println("flaskUrl: " + flaskUrl);
 
         // 요청 생성
         HttpHeaders headers = new HttpHeaders();
@@ -49,6 +53,8 @@ public class ControllerForTest {
         body.add("video", new FileSystemResource("src/main/resources/static/video/temp_video.mp4"));
         body.add("home_team", "Arsenal");
         body.add("away_team", "Liverpool");
+
+        System.out.println("body" + body);
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
@@ -90,12 +96,11 @@ public class ControllerForTest {
             status.put("progress", "0");
             System.err.println("Flask 상태 확인 중 오류 발생: " + e.getMessage());
         }
-
         return status;
     }
 
     private Map<String, Object> checkProcessingStatus() {
-        String url = "http://localhost:5000/video-status"; // Flask 서버 상태 확인 API
+        String url = "http://localhost:5000/video/video-status"; // Flask 서버 상태 확인 API
 
         try {
             Map<String, Object> response = restTemplate.getForObject(url, Map.class);
@@ -109,10 +114,21 @@ public class ControllerForTest {
 
     @GetMapping("openCV/result")
     public String resultPage(Model model) {
+
         try {
+            Map<String, Object> flaskStatus = restTemplate.getForObject("http://localhost:5000/video/video-status", Map.class);
+            if (!"completed".equals(flaskStatus.get("status"))) {
+                if("error".equals(flaskStatus.get("status"))) {
+                    model.addAttribute("errorMessage", "flask에서 동영상 처리에 실패하였습니다.");
+                    return "usr/openCV/error";
+                }
+                model.addAttribute("errorMessage", "동영상 처리가 완료되지 않았습니다.");
+                return "usr/openCV/processing";
+            }
+
             // Flask 서버에서 동영상 다운로드
             if (downloadProcessedVideo()) {
-                model.addAttribute("videoSrc", "/video/processed_video.mp4");
+                model.addAttribute("videoSrc", "/video/processed_video_h264.mp4");
                 System.out.println("동영상 다운로드 및 저장 성공.");
                 return "usr/openCV/result";  // 결과 페이지로 이동
             } else {
