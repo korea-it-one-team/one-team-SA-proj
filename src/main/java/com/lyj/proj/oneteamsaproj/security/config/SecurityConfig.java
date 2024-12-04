@@ -7,6 +7,7 @@ import com.lyj.proj.oneteamsaproj.security.handler.CustomAuthenticationEntryPoin
 import com.lyj.proj.oneteamsaproj.utils.RqUtil;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
@@ -80,6 +81,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // 쿠키로 전달
                 )
+                .cors(Customizer.withDefaults())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                         .maximumSessions(1)

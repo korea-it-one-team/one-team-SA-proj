@@ -1,12 +1,14 @@
 package com.lyj.proj.oneteamsaproj.controller;
 
 
+import com.lyj.proj.oneteamsaproj.openCV.FlaskProcessingController;
 import com.lyj.proj.oneteamsaproj.service.*;
 import com.lyj.proj.oneteamsaproj.utils.RqUtil;
 import com.lyj.proj.oneteamsaproj.utils.Ut;
 import com.lyj.proj.oneteamsaproj.vo.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -22,6 +25,9 @@ import java.util.Map;
 
 @Controller
 public class UsrArticleController {
+
+    @Autowired
+    private FlaskProcessingController flaskProcessingController;
 
     @Autowired
     private RqUtil rq;
@@ -126,7 +132,7 @@ public class UsrArticleController {
         }
 
         GenFile existingFile = genFileService.getGenFileByRelId("article", id);
-        if(existingFile != null) {
+        if (existingFile != null) {
             model.addAttribute("file", existingFile);
         }
 
@@ -171,7 +177,7 @@ public class UsrArticleController {
                 for (String imageUrl : images) {
                     if (imageUrl.split("/").length >= 4) {
                         if (!imageUrl.substring(16, 17).equals(boardId)) {
-                            imageService.moveImage(imageUrl,boardId,id);
+                            imageService.moveImage(imageUrl, boardId, id);
                         }
                         continue;
                     }
@@ -239,9 +245,16 @@ public class UsrArticleController {
 
     @RequestMapping("/usr/article/doWrite")
     @ResponseBody
-    public String doWrite(String boardId, String title, String body, String replaceUri,
-                          @RequestParam("imageUrls") String imageUrls,
-                          MultipartRequest multipartRequest) {
+    public String doWrite(
+            String request,
+            String boardId,
+            String title,
+            String body,
+            @RequestParam(required = false) String replaceUri,
+            @RequestParam(required = false) String homeTeam,
+            @RequestParam(required = false) String awayTeam,
+            @RequestParam("imageUrls") String imageUrls,
+            MultipartRequest multipartRequest) {
 
         if (Ut.isEmptyOrNull(title)) {
             return Ut.jsHistoryBack("F-1", "제목을 입력해주세요.");
@@ -259,8 +272,6 @@ public class UsrArticleController {
         ResultData writeArticleRd = articleService.writeArticle(loginService.getLoginedMemberId(), title, body, boardId);
         int id = (int) writeArticleRd.getData1();  // 게시물 ID
 
-        Article article = articleService.getArticleById(id);
-
         // 이미지 URL들을 처리 (쉼표로 구분된 URL들)
         String[] images = imageUrls.split(",");
         System.out.println("imageUrls : " + imageUrls);
@@ -268,7 +279,6 @@ public class UsrArticleController {
 
         // images 배열을 사용하여 처리
         // 파일 업로드
-
         if (imageUrls.length() >= 2) {
             try {
                 // images 배열을 순차적으로 처리
@@ -282,29 +292,69 @@ public class UsrArticleController {
         }
 
         // 파일 처리
+        ResultData genFileSaveRs = null;
         Map<String, List<MultipartFile>> fileMap = multipartRequest.getMultiFileMap();
-
         for (String fileInputName : fileMap.keySet()) {
             List<MultipartFile> multipartFiles = fileMap.get(fileInputName);
 
             for (MultipartFile multipartFile : multipartFiles) {
                 if (!multipartFile.isEmpty()) {
-                    // 파일 확장자 확인
-                    String fileExtension = getFileExtension(multipartFile.getOriginalFilename());
-                    if (isValidVideoExtension(fileExtension) || isValidImageExtension(fileExtension)) {
-                        ResultData fileResult = genFileService.save(multipartFile, id);
-                        if (!fileResult.getResultCode().startsWith("S-")) {
-                            return Ut.jsHistoryBack("F-3", "파일 저장에 실패하였습니다.");
-                        }
-                    } else {
-                        return Ut.jsHistoryBack("F-4", "허용되지 않은 파일 형식입니다.");
-                    }
+                    genFileSaveRs = genFileService.save(multipartFile, id); // 기존 파일 저장
                 }
+            }
+        }
+
+        System.out.println("genFileSaveRs : " + genFileSaveRs.toString());
+
+        // REQUEST 처리
+        if ("true".equals(request)) {
+
+            System.out.println("request processing...");
+
+            String videoFilePath = (String) genFileSaveRs.getBody().get("fileRealPath");
+
+            System.out.println("homeTeam : " + homeTeam);
+            System.out.println("awayTeam : " + awayTeam);
+
+            if (Ut.isEmptyOrNull(homeTeam) || Ut.isEmptyOrNull(awayTeam)) {
+                return Ut.jsHistoryBack("F-5", "홈팀과 어웨이 팀 정보를 입력해주세요.");
+            }
+
+            if (videoFilePath == null) {
+                return Ut.jsHistoryBack("F-4", "동영상 파일이 업로드되지 않았습니다.");
+            }
+
+            try {
+                // Flask 서버로 파일과 팀 정보 전송
+                ResultData flaskResponse = flaskProcessingController.videoProcess(videoFilePath, homeTeam, awayTeam);
+
+                if (flaskResponse.isSuccess()) {
+                    return Ut.jsReplace("S-1", "동영상 처리가 시작되었습니다.", "../article/detail?id=" + id);
+                } else {
+                    return Ut.jsHistoryBack(flaskResponse.getResultCode(), flaskResponse.getMsg());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return Ut.jsHistoryBack("F-Flask", "Flask 서버와의 통신 중 오류가 발생했습니다.");
             }
         }
 
         return Ut.jsReplace(writeArticleRd.getResultCode(), writeArticleRd.getMsg(), "../article/detail?id=" + id);
     }
+
+    @RequestMapping("/usr/article/request")
+    public String showRequest(Model model) {
+
+        int currentId = articleService.getCurrentArticleId();
+
+        model.addAttribute("currentId", currentId);
+
+        return "usr/article/request";
+    }
+
+//    public String doRequest() {
+//
+//    }
 
     // 파일 확장자 추출 메서드
     private String getFileExtension(String filename) {

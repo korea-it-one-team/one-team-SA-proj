@@ -187,13 +187,22 @@
         }
     }
 
-    function updateSelectColor(selectElement) {
+    function handleSelectChange(selectElement) {
+        // 텍스트 색상 업데이트
         if (selectElement.value === "") {
             // 기본 선택 상태: 텍스트 색상 회색
             selectElement.style.color = "#aaaaaa";
         } else {
             // 다른 옵션 선택: 텍스트 색상 흰색
             selectElement.style.color = "#ffffff";
+        }
+
+        // 페이지 리다이렉트 처리
+        const selectedValue = selectElement.value;
+
+        if (selectedValue === "4") {
+            // REQUEST 게시판 선택 시 다른 페이지로 이동
+            window.location.href = `/usr/article/request?boardId=${selectedValue}`; // 원하는 URL로 이동
         }
     }
 </script>
@@ -240,16 +249,23 @@
     <div class="write-container">
         <form onsubmit="ArticleWrite__submit(this); return false;" th:action="@{/usr/article/doWrite}" method="POST"
               enctype="multipart/form-data" class="article-write-form">
+            <input type="hidden" name="request" value="false"/>
             <input type="hidden" name="body"/>
             <input type="hidden" name="id" th:value="${currentId}" id="currentId">
             <input type="hidden" name="imageUrls"/> <!-- 이미지 URL들을 전송할 hidden 필드 추가 -->
             <div class="write-form-line">
                 <label class="write-form-label">게시판</label>
-                <select class="input write-form-select" name="boardId" onchange="updateSelectColor(this)">
-                    <option value="" selected disabled>게시판을 선택해주세요.</option>
-                    <option th:if="${loginedMember.isAdmin()}" value="1">NOTICE</option>
-                    <option value="2">ANALYSIS</option>
-                    <option value="3">FREE</option>
+                <select class="input write-form-select" name="boardId" onchange="handleSelectChange(this)">
+                    <option value="" disabled
+                            th:selected="${param.boardId == null}">게시판을 선택해주세요.</option>
+                    <option th:if="${loginedMember.isAdmin()}" value="1"
+                            th:selected="${param.boardId == 1}">NOTICE</option>
+                    <option value="2"
+                            th:selected="${param.boardId == 2}">ANALYSIS</option>
+                    <option value="3"
+                            th:selected="${param.boardId == 3}">FREE</option>
+                    <option value="4"
+                            th:selected="${param.boardId == 4}">REQUEST</option>
                 </select>
             </div>
             <div class="write-form-line">

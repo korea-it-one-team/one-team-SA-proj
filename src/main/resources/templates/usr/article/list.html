@@ -29,6 +29,14 @@
         color: #ffffff;
     }
 
+    .boards {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: calc(10 * var(--rpx-vw));
+    }
+
     .board-menu {
         display: flex;
         justify-content: center;
@@ -56,6 +64,18 @@
 
     .now-board-name {
         color: #cdf256;
+    }
+
+    .board-explanation {
+        text-align: center;
+    }
+
+    .board-explanation-text {
+        font-size: calc(12 * var(--rpx-vw));
+    }
+
+    .board-explanation-small-text {
+        font-size : calc(10 * var(--rpx-vw));
     }
 
     .article-container {
@@ -253,16 +273,29 @@
                 <li>
                     <a th:class="${boardId == 3 ? 'board-name now-board-name' : 'board-name'}" href="/usr/article/list?boardId=3&page=1">FREE</a>
                 </li>
+                <li>
+                    <a th:class="${boardId == 4 ? 'board-name now-board-name' : 'board-name'}" href="/usr/article/list?boardId=4&page=1">REQUEST</a>
+                </li>
             </ul>
+            <div class="board-explanation">
+                <div th:if="${boardId == 1}" class="board-explanation-text">공지사항 게시판</div>
+                <div th:if="${boardId == 2}" class="board-explanation-text">분석 게시판</div>
+                <div th:if="${boardId == 3}" class="board-explanation-text">자유 게시판</div>
+                <div th:if="${boardId == 4}" class="board-explanation-text">
+                    <span>영상 분석 요청 게시판</span><br>
+                    <span class="board-explanation-small-text">※ 동영상은 1개까지만 업로드 가능하며, 50MB를 초과할 수 없습니다.</span>
+                </div>
+            </div>
         </div>
 
         <div class="article-container">
             <!-- 게시글 목록 상단 -->
             <div class="article-header">
-                <div class="article-count" th:text="${'총 ' + articlesCount + '개의 게시글이 있습니다.'}">0</div>
+                <div class="article-count" th:text="${'총 게시글 : ' + articlesCount + '개'}">0</div>
                 <!-- 공지사항 게시판이 아니면 로그인한 모든 회원 글쓰기 버튼 보이게, 공지사항 게시판이면 관리자만 보이게 -->
                 <div class="btn btn-sm" th:if="${loginedMember != null and (loginedMember.isAdmin() or (boardId != 1 and !loginedMember.isAdmin()))}">
-                    <a href="/usr/article/write">글쓰기</a>
+                    <a th:unless="${boardId == 4}" th:href="@{'/usr/article/write?boardId=' + ${boardId}}">글쓰기</a>
+                    <a th:if="${boardId == 4}" th:href="@{'/usr/article/request?boardId=' + ${boardId}}">글쓰기</a>
                 </div>
             </div>
 
@@ -270,8 +303,7 @@
             <div class="article-list">
                 <div class="article-item" th:each="article : ${articles}">
                     <div class="article-title">
-                        <a href="/usr/article/detail?id=1" class="article-link"
-                           th:href="@{/usr/article/detail(id=${article.id})}" th:text="${article.title}">제목</a>
+                        <a class="article-link" th:href="@{/usr/article/detail(id=${article.id})}" th:text="${article.title}">제목</a>
                     </div>
                     <hr class="divider" />
                     <div class="article-body">
