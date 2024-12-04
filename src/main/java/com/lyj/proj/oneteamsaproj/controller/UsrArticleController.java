@@ -228,6 +228,14 @@ public class UsrArticleController {
         if (userCanDeleteRd.isSuccess()) {
             articleService.deleteArticle(id);
             imageService.deleteImage(id, article.getBoardId());
+
+            //GenFile 처리
+            GenFile willDeleteGenFile = genFileService.getGenFileByRelId("article", id);
+            System.out.println("willDeleteGenFile: " + willDeleteGenFile.toString());
+            if (willDeleteGenFile != null) {
+                System.out.println("willDeleteGenFile 실행됨");
+                genFileService.deleteGenFile(willDeleteGenFile);
+            }
         }
 
         return Ut.jsReplace(userCanDeleteRd.getResultCode(), userCanDeleteRd.getMsg(), "../article/list?boardId=2&page=1");
