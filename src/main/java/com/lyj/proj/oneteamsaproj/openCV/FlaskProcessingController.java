@@ -1,7 +1,6 @@
 package com.lyj.proj.oneteamsaproj.openCV;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lyj.proj.oneteamsaproj.utils.MultipartInputStreamFileResource;
 import com.lyj.proj.oneteamsaproj.vo.ResultData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -13,7 +12,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
