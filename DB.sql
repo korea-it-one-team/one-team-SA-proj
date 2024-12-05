@@ -56,7 +56,7 @@ CREATE TABLE `member`(
                          nickname CHAR(20) NOT NULL,
                          cellphoneNum CHAR(20) NOT NULL,
                          email CHAR(50) NOT NULL,
-                         points INT NOT NULL,
+                         points INT NOT NULL DEFAULT 0 COMMENT '기본값은 0',
                          delStatus TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴 여부 (0=탈퇴 전, 1=탈퇴 후)',
                          delDate DATETIME COMMENT '탈퇴 날짜'
 );
@@ -91,6 +91,9 @@ CREATE TABLE exchange_logs (
                                log_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                FOREIGN KEY (exchange_id) REFERENCES exchange_history(id)
 );
+#### 관리자 테스트 데이터
+INSERT INTO `member` (regDate,updateDate, loginId, loginPw, `name`, nickname,cellphoneNum, email, points, authLevel)
+VALUES (NOW(), NOW(), 'admin', 'admin','admin', 'admin','010-0000-0000', 'admin@example.com', 100, 7);
 
 
 INSERT INTO `member` (regDate,updateDate, loginId, loginPw, `name`, nickname,cellphoneNum, email, points) VALUES
@@ -538,6 +541,7 @@ INSERT INTO faq (category_id, question, answer) VALUES
 (5, '커뮤니티의 규칙은 무엇인가요?', '커뮤니티 사용 시 상호 존중과 예의를 지켜주세요. 비방글은 삭제됩니다.'),
 (5, '게시글 신고는 어떻게 하나요?', '문제가 있는 게시글의 "신고" 버튼을 클릭하여 신고할 수 있습니다.');
 
+ALTER TABLE `member` ADD `deletePendingDate` DATETIME DEFAULT NULL COMMENT '탈퇴 유예 종료일';
 
 ################(INIT 끝)
 
@@ -553,9 +557,15 @@ SET points = 100;
 # 승무패 예측결과에 따라 points가 올라가는지 테스트 하기 위해 승무패 테이블을 삭제했다 다시 만들어야한다.
 DROP TABLE winDrawLose;
 
+DROP TABLE gameSchedule;
+
 SELECT * FROM `member`;
 
 SELECT * FROM winDrawLose;
+
+SELECT * FROM genFile;
+
+SELECT COUNT(*) FROM genFile WHERE type2Code = "video" AND relId = 5;
 
 SELECT * FROM gameSchedule WHERE startDate = '2024-10-19' ORDER BY id ASC;
 

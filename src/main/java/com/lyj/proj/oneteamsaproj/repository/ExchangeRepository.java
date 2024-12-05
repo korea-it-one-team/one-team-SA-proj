@@ -63,7 +63,7 @@ public interface ExchangeRepository {
 	void gifticon_Application(int id, int memberId);
 
 	@Select("""
-				SELECT poins FROM gifticons WHERE id = #{id}
+				SELECT points FROM gifticons WHERE id = #{id}
 			""")
 	public int getExchangeGifticonPoint(int id);
 

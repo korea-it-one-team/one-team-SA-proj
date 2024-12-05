@@ -6,8 +6,10 @@ import com.lyj.proj.oneteamsaproj.utils.Ut;
 import com.lyj.proj.oneteamsaproj.vo.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +43,10 @@ public class UsrArticleController {
     @Autowired
     private ReplyService replyService;
 
+    @Autowired
+    private ImageService imageService;
+
+
     // 액션 메서드, 컨트롤 메서드
     @RequestMapping("/usr/article/detail")
     public String showDetail(HttpServletRequest req, Model model, int id) {
@@ -49,7 +56,6 @@ public class UsrArticleController {
         Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
 
 //        // -1 싫어요, 0 표현 x, 1 좋아요
-//		int usersReaction = (int) reactionPointService.usersReaction(rq.getLoginedMemberId(), "article", id).getData1();
 //        model.addAttribute("usersReaction", usersReaction);
 
         ResultData usersReactionRd = reactionPointService.usersReaction(rq.getLoginedMemberId(), "article", id);
@@ -64,15 +70,17 @@ public class UsrArticleController {
         // 이미지 파일 여러개 첨부했을 때
         List<GenFile> files = genFileService.getFilesByRelTypeCodeAndRelId("article", id);
 
+        int videoFileCount = genFileService.getFileCountByType2CodeAndRelId("video", id);
+
         int repliesCount = replies.size();
 
         model.addAttribute("article", article);
-//		model.addAttribute("usersReaction", usersReaction);
 
         model.addAttribute("replies", replies);
         model.addAttribute("repliesCount", repliesCount);
 
         model.addAttribute("files", files);
+        model.addAttribute("videoFileCount", videoFileCount);
 
         model.addAttribute("isAlreadyAddGoodRp",
 
@@ -115,6 +123,11 @@ public class UsrArticleController {
             return Ut.jsHistoryBack("F-1", Ut.f("%d번 게시글은 없습니다", id));
         }
 
+        GenFile existingFile = genFileService.getGenFileByRelId("article", id);
+        if(existingFile != null) {
+            model.addAttribute("file", existingFile);
+        }
+
         model.addAttribute("article", article);
 
         return "usr/article/modify";
@@ -123,7 +136,9 @@ public class UsrArticleController {
     // 로그인 체크 -> 유무 체크 -> 권한 체크 -> 수정
     @RequestMapping("/usr/article/doModify")
     @ResponseBody
-    public String doModify(HttpServletRequest req, int id, String title, String body) {
+    public String doModify(HttpServletRequest req, int id, String title, String body,
+                           @RequestParam("imageUrls") String imageUrls,
+                           MultipartRequest multipartRequest) {
 
         Rq rq = (Rq) req.getAttribute("rq");
 
@@ -141,10 +156,38 @@ public class UsrArticleController {
         }
         if (userCanModifyRd.isSuccess()) {
             articleService.modifyArticle(id, title, body);
-
         }
 
         article = articleService.getArticleById(id);
+
+        // 이미지 URL들을 처리 (쉼표로 구분된 URL들)
+        String[] images = imageUrls.split(",");
+
+        if (imageUrls.length() >= 2) {
+            try {
+                // images 배열을 순차적으로 처리
+                for (String imageUrl : images) {
+                    // 각 이미지 URL을 처리 (예: DB에 저장하거나, 다른 서비스에 저장)
+                    imageService.saveImage(imageUrl, article.getId(), article.getBoardId());  // 이미지 업로드
+                }
+            } catch (IOException e) {
+                return Ut.jsHistoryBack("F-4", "이미지 업로드 중 오류 발생.");
+            }
+        }
+
+        // 파일 처리
+        Map<String, List<MultipartFile>> fileMap = multipartRequest.getMultiFileMap();
+
+        for (String fileInputName : fileMap.keySet()) {
+            List<MultipartFile> multipartFiles = fileMap.get(fileInputName);
+
+            for (MultipartFile multipartFile : multipartFiles) {
+                if (!multipartFile.isEmpty()) {
+                    // 기존 파일이 있다면 업데이트, 없으면 새로 추가
+                    genFileService.updateOrSave(multipartFile, id);
+                }
+            }
+        }
 
         return Ut.jsReplace(userCanModifyRd.getResultCode(), userCanModifyRd.getMsg(), "../article/detail?id=" + id);
     }
@@ -172,7 +215,7 @@ public class UsrArticleController {
             articleService.deleteArticle(id);
         }
 
-        return Ut.jsReplace(userCanDeleteRd.getResultCode(), userCanDeleteRd.getMsg(), "../article/list");
+        return Ut.jsReplace(userCanDeleteRd.getResultCode(), userCanDeleteRd.getMsg(), "../article/list?boardId=2&page=1");
     }
 
     @RequestMapping("/usr/article/write")
@@ -188,10 +231,10 @@ public class UsrArticleController {
     @RequestMapping("/usr/article/doWrite")
     @ResponseBody
     public String doWrite(HttpServletRequest req, String boardId, String title, String body, String replaceUri,
+                          @RequestParam("imageUrls") String imageUrls,
                           MultipartRequest multipartRequest) {
 
         Rq rq = (Rq) req.getAttribute("rq");
-
 
         if (Ut.isEmptyOrNull(title)) {
             return Ut.jsHistoryBack("F-1", "제목을 입력해주세요.");
@@ -199,23 +242,37 @@ public class UsrArticleController {
         if (Ut.isEmptyOrNull(body)) {
             return Ut.jsHistoryBack("F-2", "내용을 입력해주세요.");
         }
-//        if (Ut.isEmptyOrNull(boardId)) {
-//            return Ut.jsHistoryBack("F-3", "게시판을 선택해주세요");
-//        }
+
         if (Ut.isEmptyOrNull(boardId)) {
-            // 게시판 선택이 안 된 경우, 입력한 내용을 가지고 다시 글 작성 페이지로 이동
             String alertMsg = "게시판을 선택해주세요.";
             return Ut.jsReplace(alertMsg, "../article/write?title=%s&body=%s",
                     Ut.getEncodedUriComponent(title), Ut.getEncodedUriComponent(body));
         }
 
-        System.err.println(boardId);
-
         ResultData writeArticleRd = articleService.writeArticle(rq.getLoginedMemberId(), title, body, boardId);
-
-        int id = (int) writeArticleRd.getData1();
+        int id = (int) writeArticleRd.getData1();  // 게시물 ID
 
         Article article = articleService.getArticleById(id);
+
+        // 이미지 URL들을 처리 (쉼표로 구분된 URL들)
+        String[] images = imageUrls.split(",");
+        System.out.println("imageUrls : " + imageUrls);
+        System.out.println("imageUrls : " + imageUrls.length());
+
+        // images 배열을 사용하여 처리
+        // 파일 업로드
+
+        if (imageUrls.length() >= 2) {
+            try {
+                // images 배열을 순차적으로 처리
+                for (String imageUrl : images) {
+                    // 각 이미지 URL을 처리 (예: DB에 저장하거나, 다른 서비스에 저장)
+                    imageService.saveImage(imageUrl, article.getId(), article.getBoardId());  // 이미지 업로드
+                }
+            } catch (IOException e) {
+                return Ut.jsHistoryBack("F-4", "이미지 업로드 중 오류 발생.");
+            }
+        }
 
         // 파일 처리
         Map<String, List<MultipartFile>> fileMap = multipartRequest.getMultiFileMap();
@@ -225,41 +282,73 @@ public class UsrArticleController {
 
             for (MultipartFile multipartFile : multipartFiles) {
                 if (!multipartFile.isEmpty()) {
-                    genFileService.save(multipartFile, id);
+                    // 파일 확장자 확인
+                    String fileExtension = getFileExtension(multipartFile.getOriginalFilename());
+                    if (isValidVideoExtension(fileExtension) || isValidImageExtension(fileExtension)) {
+                        ResultData fileResult = genFileService.save(multipartFile, id);
+                        if (!fileResult.getResultCode().startsWith("S-")) {
+                            return Ut.jsHistoryBack("F-3", "파일 저장에 실패하였습니다.");
+                        }
+                    } else {
+                        return Ut.jsHistoryBack("F-4", "허용되지 않은 파일 형식입니다.");
+                    }
                 }
             }
         }
 
         return Ut.jsReplace(writeArticleRd.getResultCode(), writeArticleRd.getMsg(), "../article/detail?id=" + id);
+    }
 
+    // 파일 확장자 추출 메서드
+    private String getFileExtension(String filename) {
+        int lastDotIndex = filename.lastIndexOf('.');
+        if (lastDotIndex != -1) {
+            return filename.substring(lastDotIndex + 1).toLowerCase();
+        }
+        return "";
+    }
+
+    // 동영상 확장자 유효성 검사
+    private boolean isValidVideoExtension(String extension) {
+        List<String> validVideoExtensions = Arrays.asList("mp4", "avi", "mov", "mkv", "flv");
+        return validVideoExtensions.contains(extension);
+    }
+
+    // 이미지 확장자 유효성 검사
+    private boolean isValidImageExtension(String extension) {
+        List<String> validImageExtensions = Arrays.asList("jpg", "jpeg", "png", "gif", "bmp");
+        return validImageExtensions.contains(extension);
     }
 
     @RequestMapping("/usr/article/list")
-    public String showList(HttpServletRequest req, Model model, @RequestParam(defaultValue = "1") int boardId,
+    public String showList(HttpServletRequest req, Model model,
+                           @RequestParam(defaultValue = "1") Integer boardId,
                            @RequestParam(defaultValue = "1") int page,
                            @RequestParam(defaultValue = "title,body") String searchKeywordTypeCode,
                            @RequestParam(defaultValue = "") String searchKeyword) throws IOException {
 
         Rq rq = (Rq) req.getAttribute("rq");
 
+        // boardId 유효성 검사
+        if (boardId == null || boardId <= 0) {
+            return rq.historyBackOnView("잘못된 게시판 ID입니다.");
+        }
+
         Board board = boardService.getBoardById(boardId);
+
+        if (board == null) {
+            return rq.historyBackOnView("없는 게시판입니다.");
+        }
 
         // 페이지네이션
         int articlesCount = articleService.getArticlesCount(boardId, searchKeywordTypeCode, searchKeyword);
 
-        // 한 페이지에 글 10개
-        // 글 20개 -> 2page
-        // 글 25개 -> 3page
         int itemsInAPage = 10;
 
         int pagesCount = (int) Math.ceil(articlesCount / (double) itemsInAPage);
 
         List<Article> articles = articleService.getForPrintArticles(boardId, itemsInAPage, page, searchKeywordTypeCode,
                 searchKeyword);
-
-        if (board == null) {
-            return rq.historyBackOnView("없는 게시판입니다.");
-        }
 
         model.addAttribute("articles", articles);
         model.addAttribute("articlesCount", articlesCount);

@@ -1,42 +1,286 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title th:text="${pageTitle}">경기일정</title>
-    <link rel="stylesheet" href="/resource/common.css"/>
-    <link rel="stylesheet" href="/resource/gameSchedule.css"/>
-    <style>@import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');</style>
-    <script src="/resource/common.js" defer="defer"></script>
-    <!-- 제이쿼리, UI 추가 -->
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-    <!-- 폰트어썸 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <!-- 폰트어썸 FREE 아이콘 리스트 : https://fontawesome.com/v5.15/icons?d=gallery&p=2&m=free -->
-
+<head th:replace="~{common/head :: head}">
+    <title>경기일정 및 예측</title>
 </head>
+
+<style>
+    body {
+        overflow-x: hidden;
+    }
+
+    body, body * {
+        box-sizing: border-box;
+    }
+
+    .game-schedule-section-1 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: start;
+        flex-wrap: nowrap;
+        position: relative;
+        width: calc(1440 * var(--rpx-vw)); /* 가로 기준 비율 */
+        min-height: calc(1024 * var(--rpx-vh)); /* 세로 기준 비율 */
+        margin: 0 auto;
+        padding: calc(40 * var(--rpx-vh)) 0;
+        overflow: hidden;
+        gap: calc(60 * var(--rpx-vw));
+    }
+
+    .game-schedule-title-container {
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: inherit;
+        width: 50%;
+        padding: 0; /* 불필요한 여백 제거 */
+        margin: 0;
+    }
+
+    .game-schedule-title-content {
+        width: 100%;
+        font-size: calc(20 * var(--rpx-vw)); /* 폰트 크기 설정 */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0; /* 불필요한 여백 제거 */
+        margin: 0;
+    }
+
+    .game-schedule-title-content-1,
+    .game-schedule-title-content-2 {
+        text-align: left;
+        width: 100%; /* 각 줄의 너비를 100%로 설정 */
+        padding: 0; /* 불필요한 여백 제거 */
+        margin: 0;
+        line-height: calc(50 * var(--rpx-vw));
+    }
+
+    .game-schedule-title-content-2 {
+        text-align: right; /* 오른쪽 정렬 */
+        padding: 0; /* 불필요한 여백 제거 */
+        margin: 0;
+    }
+
+    .game-schedule-title-highlight {
+        color: #cdf256; /* 대문자 텍스트 색상 (예: 초록색) */
+        font-size: calc(48 * var(--rpx-vw));
+        font-weight: bold;
+        font-family: Audiowide, var(--default-font-family);
+    }
+
+    .game-schedule-title-normal {
+        font-size: calc(36 * var(--rpx-vw));
+        font-family: Audiowide, var(--default-font-family);
+    }
+
+    .date-picker-and-gameSchedule-flex-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        gap: calc(15 * var(--rpx-vw));
+        width: 50%;
+    }
+
+    .date-picker-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .date-picker-input-section {
+        display: flex; /* 플렉스 박스를 사용하여 정렬 */
+        justify-content: flex-start; /* 수평 중앙 정렬 */
+        align-items: center; /* 수직 중앙 정렬 */
+        flex-direction: row;
+        gap: calc(10 * var(--rpx-vw));
+    }
+
+    .label-for-datepicker {
+        font-size: calc(18 * var(--rpx-vw));
+        background-color: #cdf256;
+        color: #1e1e1e;
+        border-radius: calc(5 * var(--rpx-vw));
+        padding: calc(3 * var(--rpx-vw)) calc(10 * var(--rpx-vw)) 0 calc(10 * var(--rpx-vw));
+        box-shadow: calc(2 * var(--rpx-vw)) calc(2 * var(--rpx-vw)) 0 0 #7a9d0b;
+        box-sizing: border-box;
+    }
+
+    #datepicker {
+        color: #1e1e1e;
+        padding: calc(3 * var(--rpx-vw)) calc(7 * var(--rpx-vw)) 0 calc(7 * var(--rpx-vw));
+        font-size: calc(16 * var(--rpx-vw));
+        box-shadow: calc(2 * var(--rpx-vw)) calc(2 * var(--rpx-vw)) 0 0 #7a9d0b;
+        text-align: left;
+    }
+
+    .gameSchedule-list-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    #gameSchedule-list {
+        width: 100%;
+    }
+
+    .predict-instructions-text {
+        align-self: flex-end;
+        font-size: calc(12 * var(--rpx-vw))
+    }
+
+    .league-container {
+        background-color: #252525;
+        border-radius: calc(8 * var(--rpx-vw));
+        padding: calc(15 * var(--rpx-vw)) calc(15 * var(--rpx-vw)) calc(10 * var(--rpx-vw)) calc(15 * var(--rpx-vw));
+        margin-bottom: calc(20 * var(--rpx-vh));
+        box-shadow: calc(0 * var(--rpx-vw)) calc(4 * var(--rpx-vw)) calc(8 * var(--rpx-vw)) rgba(0, 0, 0, 0.2);
+    }
+
+    .league-header {
+        font-size: calc(20 * var(--rpx-vw));
+        font-weight: bold;
+        color: #ffffff;
+        margin-bottom: calc(10 * var(--rpx-vw));
+        border-bottom: 1px solid #666;
+        padding-bottom: calc(5 * var(--rpx-vw));
+    }
+
+    .match-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: calc(10 * var(--rpx-vw));
+        background-color: #383838;
+        border-radius: calc(6 * var(--rpx-vw));
+        margin-bottom: calc(10 * var(--rpx-vw));
+    }
+
+    .match-info {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: calc(8 * var(--rpx-vw)); /* 요소 간의 간격 조절 */
+    }
+
+    .match-info > span {
+        padding: calc(4 * var(--rpx-vw)) calc(4 * var(--rpx-vw)) calc(1 * var(--rpx-vw)) calc(4 * var(--rpx-vw));
+    }
+
+    .matchTime {
+        font-weight: bold;
+        color: #ffffff;
+        min-width: calc(50 * var(--rpx-vw));
+        font-size: calc(16 * var(--rpx-vw));
+        padding: calc(4 * var(--rpx-vw)) calc(4 * var(--rpx-vw)) calc(1 * var(--rpx-vw)) calc(4 * var(--rpx-vw));
+    }
+
+    .home-label {
+        background-color: #cdf256;
+        color: #1e1e1e;
+        border-radius: calc(3 * var(--rpx-vw));
+        font-size: calc(14 * var(--rpx-vw));
+        text-align: center;
+    }
+
+    .team-name, .my-vs-text {
+        font-size: calc(16 * var(--rpx-vw));
+        color: #ffffff;
+        font-weight: bold;
+    }
+
+    .score {
+        font-weight: bold;
+        font-size: calc(16 * var(--rpx-vw));
+    }
+
+    .low-score {
+        color: #ffffff;
+    }
+
+    .high-score {
+        color: #cdf256;
+    }
+
+    .prediction-buttons {
+        display: flex;
+        gap: 5px;
+    }
+
+    .prediction-button {
+        padding: calc(4 * var(--rpx-vw)) calc(4 * var(--rpx-vw)) calc(1 * var(--rpx-vw)) calc(4 * var(--rpx-vw));
+        border-radius: calc(3 * var(--rpx-vw));
+        border: none;
+        color: #ffffff;
+        font-size: calc(14 * var(--rpx-vw));
+    }
+
+    .no-game {
+        font-size: calc(16 * var(--rpx-vw));
+    }
+
+    /* 날짜를 눌렀을 때의 하이라이트 배경색과 텍스트 색상 변경 */
+    .ui-datepicker .ui-state-active, /* 선택된 날짜 */
+    .ui-datepicker .ui-state-highlight, /* 하이라이트된 날짜 */
+    .ui-datepicker .ui-datepicker-current-day a {
+        background-color: #cdf256; /* 원하는 하이라이트 배경색 */
+        color: #1e1e1e; /* 원하는 하이라이트 텍스트 색상 */
+    }
+
+    /* 오늘 날짜의 배경색과 텍스트 색상 */
+    .ui-datepicker .ui-datepicker-today a {
+        background-color: #ffeb3b; /* 원하는 오늘 날짜 배경색 */
+        color: #1e1e1e; /* 원하는 오늘 날짜 텍스트 색상 */
+        font-weight: bold; /* 오늘 날짜 강조 */
+    }
+
+</style>
+
 <body>
 <header th:replace="~{common/header-2 :: header-2}"></header>
 <div class="make-header-margin"></div>
 
-<div class="main-content">
-    <div class="main-title">
-        <h1 class="main-title-content">경기 일정</h1>
+<div class="game-schedule-section-1">
+    <div class="game-schedule-title-container">
+        <div class="game-schedule-title-content">
+            <div class="game-schedule-title-content-1">
+                <span class="game-schedule-title-highlight">CHECK </span>
+                <span class="game-schedule-title-normal"> the game schedule </span>
+                <span class="game-schedule-title-highlight"> &</span>
+            </div>
+            <div class="game-schedule-title-content-2 ">
+                <span class="game-schedule-title-highlight">SHOW </span>
+                <span class="game-schedule-title-normal"> your predictions </span>
+                <span class="game-schedule-title-highlight"> !</span>
+            </div>
+        </div>
     </div>
 
     <!-- 날짜 선택 추가 -->
-    <div class="date-picker-container">
-        <label for="datepicker">날짜 선택:</label>
-        <input type="text" id="datepicker" readonly>
-    </div>
+    <div class="date-picker-and-gameSchedule-flex-box">
+        <div class="date-picker-container">
+            <div class="date-picker-input-section">
+                <label for="datepicker" class="label-for-datepicker">날짜 선택</label>
+                <input type="text" id="datepicker" readonly>
+            </div>
+            <div class="predict-instructions-text">홈팀을 기준으로 경기 예측 버튼을 눌러주세요!</div>
+        </div>
 
-    <div class="gameSchedule-list-container">
-        <ul id="gameSchedule-list">
-        </ul>
+        <div class="gameSchedule-list-container">
+            <ul id="gameSchedule-list">
+            </ul>
+        </div>
     </div>
 </div>
+
+<footer th:replace="~{common/footer :: footer}"></footer>
 
 <!-- 경기일정 Ajax 요청 -->
 
@@ -64,48 +308,45 @@
             $.ajax({
                 type: "GET",
                 url: "/usr/home/gameSchedule/date",
-                data: { date: selectedDate },
+                data: {date: selectedDate},
                 success: function (response) {
-                    // 응답이 map인지 확인
                     if (response) {
-                        $("#gameSchedule-list").empty(); // 기존 경기 일정 초기화
+                        $("#gameSchedule-list").empty();
 
-                        let currentDate = ""; // 현재 날짜 초기화
+                        if (!response.schedules || response.schedules.length === 0) {
+                            $("#gameSchedule-list").append(`<li class="no-game">해당 날짜에는 경기가 없습니다.</li>`);
+                            return;
+                        }
+
                         let currentLeague = ""; // 현재 리그 초기화
+                        let leagueContainer;    // 리그 컨테이너
 
                         // 각 경기 일정 처리
                         response.schedules.forEach(function (gameSchedule) {
                             const loginedMember = response.loginedMember;
                             const userPredictionsMap = response.userPredictionsMap;
 
-                            // 경기 시작일과 시간
-                            const gameStartLocalDateTime = gameSchedule.startDate + "T" + gameSchedule.matchTime;
+                            const gameStartLocalDateTime = `${gameSchedule.startDate}T${gameSchedule.matchTime}`;
                             const isFutureGame = new Date() < new Date(gameStartLocalDateTime);
 
-                            // 선택한 날짜와 같은 경기만 표시
-                            if (selectedDate === gameSchedule.startDate) {
-                                // 날짜 표시
-                                if (currentDate !== gameSchedule.startDate) {
-                                    currentDate = gameSchedule.startDate;
-                                    $("#gameSchedule-list").append(`<h3 class="date-header">` + currentDate + `</h3>`);
-                                }
-
-                                // 리그 이름 표시
-                                if (currentLeague !== gameSchedule.leagueName) {
-                                    currentLeague = gameSchedule.leagueName;
-                                    $("#gameSchedule-list").append(`<h4 class="league-header">` + currentLeague + `</h4><div class="league-block"><div class="match-container">`);
-                                }
-
-                                // 경기 정보 추가
-                                let listItem = createMatchItem(gameSchedule, isFutureGame, loginedMember, userPredictionsMap);
-                                $("#gameSchedule-list").append(listItem);
+                            // 새로운 리그 블럭을 만듬
+                            if (currentLeague !== gameSchedule.leagueName) {
+                                currentLeague = gameSchedule.leagueName;
+                                leagueContainer = $(`
+                                    <div class="league-container">
+                                        <h4 class="league-header">${currentLeague}</h4>
+                                        <div class="league-block"></div>
+                                    </div>
+                                `);
+                                $("#gameSchedule-list").append(leagueContainer);
                             }
-                        });
 
-                        // 경기 끝나고 league-block 닫기
-                        $("#gameSchedule-list").append("</div></div>");
+                            // 경기 정보 생성 및 추가
+                            let listItem = createMatchItem(gameSchedule, isFutureGame, loginedMember, userPredictionsMap);
+                            leagueContainer.find(".league-block").append(listItem);
+                        });
                     } else {
-                        alert("잘못된 응답 형식입니다."); // 배열이 아닌 경우 경고
+                        alert("잘못된 응답 형식입니다.");
                     }
                 },
                 error: function (xhr) {
@@ -114,48 +355,67 @@
             });
         }
 
-        // 경기 정보를 리스트 아이템으로 생성하는 함수
         function createMatchItem(gameSchedule, isFutureGame, loginedMember, userPredictionsMap) {
-            let listItem = $(`<li class="match-item"></li>`)
-                .append(`<span class="matchTime">` + gameSchedule.matchTime + `</span>`)
-                .append(`<div class="home-label" style="margin: 0 5px;">홈</div>`) // 홈 라벨
-                .append(`<span style="margin-right: 5px;">` + gameSchedule.homeTeam + `</span>`);
+            let listItem = $(`
+                <li class="match-item">
+                    <span class="matchTime">${gameSchedule.matchTime}</span>
+                    <div class="match-info">
+                        <span class="home-label">홈</span>
+                        <span class="team-name">${gameSchedule.homeTeam}</span>
+            `);
 
             // 점수 표시
             if (gameSchedule.homeTeamScore !== '' && gameSchedule.awayTeamScore !== '') {
                 let homeScoreClass = gameSchedule.homeTeamScore > gameSchedule.awayTeamScore ? 'high-score' : 'low-score';
                 let awayScoreClass = gameSchedule.awayTeamScore > gameSchedule.homeTeamScore ? 'high-score' : 'low-score';
-
-                listItem.append(`<span class="score ` + homeScoreClass + `">` + gameSchedule.homeTeamScore + `</span> : <span class="score ` + awayScoreClass + `">` + gameSchedule.awayTeamScore + `</span>`);
+                listItem.find('.match-info').append(`<span class="score ${homeScoreClass}">${gameSchedule.homeTeamScore}</span> : <span class="score ${awayScoreClass}">${gameSchedule.awayTeamScore}</span>`);
             } else {
-                // 점수가 없을 경우 'vs' 추가
-                listItem.append(`<span> vs </span>`);
+                listItem.find('.match-info').append(`<span class="my-vs-text"> vs </span>`);
             }
 
-            // awayTeam을 추가
-            listItem.append(`<span style="margin: 0 5px;">` + gameSchedule.awayTeam + `</span>`);
+            listItem.find('.match-info').append(`<span class="team-name">${gameSchedule.awayTeam}</span></div>`);
 
-            // 예측 버튼 처리
-            if (loginedMember) {
-                let userPrediction = userPredictionsMap ? userPredictionsMap[gameSchedule.id] : null;
+            // 예측 버튼 처리 (로그인 여부에 상관없이 표시)
+            let userPrediction = userPredictionsMap ? userPredictionsMap[gameSchedule.id] : null;
+            let predictionButtons = $('<div class="prediction-buttons"></div>');
+            ['승', '무', '패'].forEach(function (prediction) {
+                let button = $(`<button class="prediction-button" data-prediction="${prediction}" data-game-id="${gameSchedule.id}" ${loginedMember ? `data-member-id="${loginedMember.id}"` : ''}></button>`)
+                    .text(prediction);
 
-                // 예측 버튼을 inline-block으로 설정
-                let predictionButtons = $('<div style="display: inline-block;"></div>');
-                ['승', '무', '패'].forEach(function (prediction) {
-                    let button = $(`<button class="prediction-button" style="margin: 0 2px;" data-prediction="` + prediction + `" data-game-id="` + gameSchedule.id + `" data-member-id="` + loginedMember.id + `"></button>`)
-                        .text(prediction)
-                        .css("background-color", userPrediction === prediction ? (prediction === '승' ? 'green' : (prediction === '무' ? 'yellow' : 'red')) : 'white');
-
-                    // 미래 경기일 경우 버튼 활성화, 과거 경기일 경우 비활성화
-                    if (!isFutureGame) {
-                        button.prop('disabled', true);
+                if (!isFutureGame) {
+                    // 과거 경기일 경우, 예측에 맞는 것만 스타일 변경
+                    if (userPrediction === prediction) {
+                        // 예측이 맞을 경우 해당 버튼에 색상 적용
+                        button.css({
+                            "background-color": prediction === '승' ? '#cdf256' :
+                                (prediction === '무' ? 'yellow' : 'red'),
+                            "color": prediction === '승' ? '#1e1e1e' :
+                                (prediction === '패' ? 'white' : '#1e1e1e')
+                        });
+                    } else {
+                        // 예측이 틀린 버튼은 비활성화된 스타일 적용
+                        button.css({
+                            "background-color": "#1e1e1e",
+                            "color": "#dfdfdf"
+                        });
                     }
+                    button.prop('disabled', true); // 과거 경기에서는 모든 버튼 비활성화
+                } else {
+                    // 미래 경기일 경우, 예측 정보에 맞는 스타일을 활성화
+                    button.css({
+                        "background-color": userPrediction === prediction ?
+                            (prediction === '승' ? '#cdf256' :
+                                (prediction === '무' ? 'yellow' : 'red')) : 'white',
+                        "color": userPrediction === prediction ?
+                            (prediction === '승' ? '#1e1e1e' :
+                                (prediction === '패' ? 'white' : '#1e1e1e')) : '#1e1e1e'
+                    });
+                    button.prop('disabled', false); // 미래 경기는 활성화
+                }
 
-                    predictionButtons.append(button);
-                });
-
-                listItem.append(predictionButtons);
-            }
+                predictionButtons.append(button);
+            });
+            listItem.append(predictionButtons);
 
             return listItem;
         }
@@ -166,18 +426,18 @@
 
             var prediction = $(this).data('prediction');
             var gameId = $(this).data('game-id');
-            var memberId = $(this).data('member-id');
+            var memberId = $(this).data('member-id'); // 로그인되지 않은 경우 null일 수 있음
+
+            // 로그인 여부 확인
+            if (!memberId) {
+                alert("로그인 후 사용해주세요.");
+                return;
+            }
 
             // 각 값이 올바르게 설정되었는지 확인하기 위해 콘솔 로그 추가
             console.log("prediction:", prediction);
             console.log("gameId:", gameId);
             console.log("memberId:", memberId);
-
-            // 빈 값이거나 설정되지 않은 값이 있을 경우 경고창 표시
-            if (!gameId || !memberId) {
-                alert("게임 ID와 회원 ID는 필수입니다.");
-                return;
-            }
 
             // 예측 값을 서버로 전송
             $.ajax({
@@ -189,23 +449,17 @@
                     prediction: prediction
                 },
                 success: function (response) {
-                    console.log("응답:", response);  // 응답 객체 확인
+                    console.log("응답:", response);
                     if (response.error) {
-                        // 서버에서 오류 메시지를 받은 경우
                         alert(response.error);
                     } else {
-                        alert("예측이 성공적으로 저장되었습니다."); // 성공 메시지 추가
-
-                        // 예측한 경기의 날짜를 가져오기 위해 gameSchedule에서 날짜를 찾는 로직 추가
-                        const selectedGameSchedule = response.gameSchedule; // 예측된 경기 정보
-                        const selectedDate = selectedGameSchedule.startDate; // 예측된 경기의 날짜
-
-                        // 현재 보고 있는 날짜로 경기 일정 다시 로드
+                        alert("예측이 성공적으로 저장되었습니다.");
+                        const selectedGameSchedule = response.gameSchedule;
+                        const selectedDate = selectedGameSchedule.startDate;
                         loadGameSchedules(selectedDate);
                     }
                 },
                 error: function (xhr) {
-                    // 오류 발생 시 서버에서 반환한 메시지를 표시
                     var errorMessage = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : "예측을 저장하는 중 문제가 발생했습니다.";
                     alert(errorMessage);
                 }
@@ -213,6 +467,5 @@
         });
     });
 </script>
-
 </body>
 </html>

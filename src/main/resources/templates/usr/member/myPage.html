@@ -3,50 +3,194 @@
 <head th:replace="~{common/head :: head}">
     <title th:text="${pageTitle}">MYPAGE</title>
 </head>
-<body>
-<header th:replace="common/header :: header"></header>
-<hr />
-<section class="mt-24 text-xl px-4">
-    <div class="mx-auto">
-        <table class="table" border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
-            <tbody>
-            <tr>
-                <th>가입일</th>
-                <td style="text-align: center;" th:text="${rq.loginedMember.regDate}">가입일</td>
-            </tr>
-            <tr>
-                <th>아이디</th>
-                <td style="text-align: center;" th:text="${rq.loginedMember.loginId}">아이디</td>
-            </tr>
-            <tr>
-                <th>이름</th>
-                <td style="text-align: center;" th:text="${rq.loginedMember.name}">이름</td>
-            </tr>
-            <tr>
-                <th>닉네임</th>
-                <td style="text-align: center;" th:text="${rq.loginedMember.nickname}">닉네임</td>
-            </tr>
-            <tr>
-                <th>이메일</th>
-                <td style="text-align: center;" th:text="${rq.loginedMember.email}">이메일</td>
-            </tr>
-            <tr>
-                <th>전화번호</th>
-                <td style="text-align: center;" th:text="${rq.loginedMember.cellphoneNum}">전화번호</td>
-            </tr>
-            <tr>
-                <th>회원정보 수정</th>
-                <td style="text-align: center;">
-                    <a th:href="@{/usr/member/checkPw}" class="btn btn-primary">수정</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <div class="btns">
-            <button class="btn" type="button" onclick="history.back()">뒤로가기</button>
-        </div>
-    </div>
-</section>
+<style>
+    .my-page-section-1 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+        position: relative;
+        width: calc(1440 * var(--rpx-vw)); /* 가로 기준 비율 */
+        min-height: calc(1024 * var(--rpx-vh)); /* 세로 기준 비율 */
+        margin: 0 auto;
+        padding: calc(60 * var(--rpx-vh)) 0;
+        overflow: hidden;
+        gap: calc(50 * var(--rpx-vw));
+    }
 
+    .mypage-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: calc(480 * var(--rpx-vw)); /* 컨테이너 너비 */
+        margin: 0 auto;
+        padding: calc(20 * var(--rpx-vw));
+        background-color: #252525;
+        border-radius: calc(10 * var(--rpx-vw));
+        box-shadow: 0 calc(4 * var(--rpx-vw)) calc(10 * var(--rpx-vw)) rgba(0, 0, 0, 0.5);
+        color: #ffffff;
+    }
+
+    .mypage-header h2 {
+        font-size: calc(28 * var(--rpx-vw)); /* 제목 크기 */
+        color: #cdf256; /* 포인트 컬러 */
+        margin-bottom: calc(20 * var(--rpx-vw));
+        text-align: center;
+        font-family: Audiowide;
+    }
+
+    .mypage-content {
+        display: flex;
+        flex-direction: column;
+        gap: calc(15 * var(--rpx-vw));
+        width: 100%;
+    }
+
+    .mypage-info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: calc(12 * var(--rpx-vw)) calc(15 * var(--rpx-vw));
+        background-color: #383838;
+        border-radius: calc(6 * var(--rpx-vw));
+        box-shadow: 0 calc(2 * var(--rpx-vw)) calc(4 * var(--rpx-vw)) rgba(0, 0, 0, 0.2);
+    }
+
+    .mypage-label {
+        font-size: calc(14 * var(--rpx-vw)); /* 레이블 크기 */
+        font-weight: bold;
+        color: #bbbbbb;
+    }
+
+    .mypage-value {
+        font-size: calc(14 * var(--rpx-vw)); /* 값 크기 */
+        color: #ffffff;
+    }
+
+    .mypage-actions {
+        display: flex;
+        flex-direction: column;
+        gap: calc(10 * var(--rpx-vw));
+        margin-top: calc(20 * var(--rpx-vw));
+        width: 100%;
+    }
+
+    .mypage-btn {
+        text-align: center;
+        background-color: #cdf256; /* 포인트 컬러 */
+        color: #1e1e1e;
+        font-weight: bold;
+        font-size: calc(14 * var(--rpx-vw));
+        padding: calc(10 * var(--rpx-vw)) calc(10 * var(--rpx-vw));
+        border-radius: calc(5 * var(--rpx-vw));
+        text-decoration: none;
+        transition: background-color 0.3s;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .mypage-btn-red {
+        background-color: #dc3545;
+        color: #ffffff;
+    }
+
+    .mypage-btn:hover {
+        background-color: #b6db4a; /* 포인트 컬러의 호버 상태 */
+    }
+
+    .mypage-btn-red:hover {
+        background-color: #b02a37;
+    }
+
+    .back-button {
+        font-size: calc(12 * var(--rpx-vw));
+        color: var(--primary-color);
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .back-button:hover {
+        text-decoration: underline;
+    }
+</style>
+<body>
+<header th:replace="~{common/header-2 :: header-2}"></header>
+<div class="make-header-margin"></div>
+
+<section class="my-page-section-1">
+    <div class="mypage-container">
+        <div class="mypage-header">
+            <h2>MY PAGE</h2>
+        </div>
+        <div class="mypage-content">
+            <div class="mypage-info-item">
+                <span class="mypage-label">가입일</span>
+                <span class="mypage-value" th:text="${rq.loginedMember.regDate}">가입일</span>
+            </div>
+            <div class="mypage-info-item">
+                <span class="mypage-label">아이디</span>
+                <span class="mypage-value" th:text="${rq.loginedMember.loginId}">아이디</span>
+            </div>
+            <div class="mypage-info-item">
+                <span class="mypage-label">이름</span>
+                <span class="mypage-value" th:text="${rq.loginedMember.name}">이름</span>
+            </div>
+            <div class="mypage-info-item">
+                <span class="mypage-label">닉네임</span>
+                <span class="mypage-value" th:text="${rq.loginedMember.nickname}">닉네임</span>
+            </div>
+            <div class="mypage-info-item">
+                <span class="mypage-label">보유 포인트</span>
+                <span class="mypage-value" th:text="${rq.loginedMember.points}">보유 포인트</span>
+            </div>
+            <div class="mypage-info-item">
+                <span class="mypage-label">이메일</span>
+                <span class="mypage-value" th:text="${rq.loginedMember.email}">이메일</span>
+            </div>
+            <div class="mypage-info-item">
+                <span class="mypage-label">전화번호</span>
+                <span class="mypage-value" th:text="${rq.loginedMember.cellphoneNum}">전화번호</span>
+            </div>
+            <div class="mypage-actions">
+                <a th:href="@{/usr/member/checkPw}" class="mypage-btn">회원정보 수정</a>
+                <div class="btns" th:if="${rq.loginedMember.delStatus == 0}">
+                    <form action="/usr/member/doDelete" method="post" onsubmit="return confirmDelete();">
+                        <input type="hidden" name="id" value="${rq.loginedMember.id}">
+                        <button class="mypage-btn mypage-btn-red" type="submit" >회원탈퇴</button>
+                    </form>
+                </div>
+                <div class="btns" th:if="${rq.loginedMember.delStatus == 1}">
+                    <form action="/usr/member/doRestore" method="post" onsubmit="return confirmCancel();">
+                        <input type="hidden" name="id" value="${rq.loginedMember.id}">
+                        <button class="mypage-btn mypage-btn-red" type="submit" >탈퇴취소</button>
+                    </form>
+                </div>
+            </div>
+            <div class="back-button" onclick="history.back()">뒤로가기</div>
+            </div>
+        </div>
+
+    <script>
+        function confirmDelete() {
+            if (confirm('정말 탈퇴하시겠습니까?')) {
+                alert('탈퇴되었습니다.');
+                return true; // confirm 후 계속 진행
+            }
+            return false; // confirm이 취소되면 제출을 막음
+        }
+
+        function confirmCancel() {
+            if (confirm('정말 취소하시겠습니까?')) {
+                alert('취소되었습니다.');
+                return true; // confirm 후 계속 진행
+            }
+            return false; // confirm이 취소되면 제출을 막음
+        }
+    </script>
+
+</section>
+<footer th:replace="~{common/footer :: footer}"></footer>
 </body>
 </html>

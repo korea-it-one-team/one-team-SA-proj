@@ -1,53 +1,29 @@
 <!DOCTYPE html>
-<html data-theme="light" xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="UTF-8">
     <title th:text="${pageTitle}">페이지 제목</title>
-    <style>@import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');</style>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Noto+Sans+KR:wght@100..900&display=swap');
+    </style>
+
     <link rel="stylesheet" href="/resource/common.css" />
     <script src="/resource/common.js" defer></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- 제이쿼리 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- 제이쿼리 및 ui -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <!-- 폰트어썸 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <!-- 테일윈드 및 daisyUI -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/daisyui/4.12.10/full.css" />
-
-    <script>
-        function Theme__toggle() {
-            const theme = localStorage.getItem('theme') ?? 'light';
-
-            if (theme == 'light') {
-                localStorage.setItem('theme', 'dark');
-                Theme__applyTo('dark');
-            } else {
-                localStorage.setItem('theme', 'light');
-                Theme__applyTo('light');
-            }
-        }
-
-        function Theme__applyTo(themeName) {
-            $('html').attr('data-theme', themeName);
-        }
-
-        function Theme__init() {
-            const theme = localStorage.getItem('theme') ?? 'light';
-            Theme__applyTo(theme);
-        }
-
-        $(document).ready(function () {
-            Theme__init();
-        });
-    </script>
 
     <!-- 토스트 UI -->
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.0/purify.min.js"></script>
 
     <!-- 토스트 UI 에디터 코어 -->
@@ -86,8 +62,6 @@
 
     <!-- 토스트 UI 에디터 플러그인, UML -->
     <script src="https://uicdn.toast.com/editor-plugin-uml/latest/toastui-editor-plugin-uml.min.js"></script>
-
-
 
     <style>
         /* 토스트 UI */
@@ -144,21 +118,6 @@
     </style>
 
     <script>
-
-        // const options = {
-        // 		  // ...
-        // 		  // 직접 입력하면서 커스터마이징 가능
-        // 		  // toolbarItems 뻬면 기본적인 툴바 다 사용하는 것
-        // 		  toolbarItems: [
-        // 		    ['heading', 'bold', 'italic', 'strike'],
-        // 		    ['hr', 'quote'],
-        // 		    ['ul', 'ol', 'task', 'indent', 'outdent'],
-        // 		    ['table', 'image', 'link'],
-        // 		    ['code', 'codeblock'],
-        // 		    ['scrollSync'],
-        // 		  ],
-        // 		};
-
         function getUriParams(uri) {
             uri = uri.trim();
             uri = uri.replaceAll("&amp;", "&");
@@ -378,7 +337,7 @@
         };
 
         function ToastEditor__init() {
-            $(".toast-ui-editor").each(function (index, node) {
+            $(".toast-editor").each(function (index, node) {
                 const $node = $(node);
                 const $initialValueEl = $node.find(" > script");
                 const initialValue =
@@ -390,8 +349,8 @@
                     el: node,
                     previewStyle: "vertical",
                     initialValue: initialValue,
-                    height: "600px",
-                    theme : theme,
+                    height: `calc(600 * var(--rpx-vw))`, // 반응형 height
+                    theme: theme,
                     plugins: [
                         [toastui.Editor.plugin.chart, ToastEditor__chartOptions],
                         [toastui.Editor.plugin.codeSyntaxHighlight, { highlighter: Prism }],
@@ -403,26 +362,25 @@
                         codepenPlugin,
                         replPlugin
                     ],
-                    customHTMLSanitizer: (html) => {
-                        return (
-                            DOMPurify.sanitize(html, {
-                                ADD_TAGS: ["iframe"],
-                                ADD_ATTR: [
-                                    "width",
-                                    "height",
-                                    "allow",
-                                    "allowfullscreen",
-                                    "frameborder",
-                                    "scrolling",
-                                    "style",
-                                    "title",
-                                    "loading",
-                                    "allowtransparency"
-                                ]
-                            }) || ""
-                        );
+                    customHTMLRenderer: {
+                        paragraph(node, context) {
+                            const { entering } = context;
+                            return entering
+                                ? { type: "openTag", tagName: "p", attributes: { style: "text-align: left;" } }
+                                : { type: "closeTag", tagName: "p" };
+                        },
+                        heading(node, context) {
+                            const { entering } = context;
+                            const level = node.level;
+                            return entering
+                                ? { type: "openTag", tagName: `h${level}`, attributes: { style: "text-align: left;" } }
+                                : { type: "closeTag", tagName: `h${level}` };
+                        }
                     }
                 });
+
+                // 에디터의 width는 부모 요소로 설정
+                node.style.width = "100%";
 
                 $node.data("data-toast-editor", editor);
             });
@@ -434,9 +392,8 @@
                 const $initialValueEl = $node.find(" > script");
                 const initialValue =
                     $initialValueEl.length == 0 ? "" : $initialValueEl.html().trim();
-                $node.empty();
-
-                const theme = localStorage.getItem('theme') ?? "light";
+                node.innerHTML = ""; // 기존 내용을 비우기
+                const theme = localStorage.getItem('theme') ?? "dark";
 
                 let viewer = new toastui.Editor.factory({
                     el: node,
@@ -474,7 +431,13 @@
                     }
                 });
 
-                $node.data("data-toast-editor", viewer);
+                node.style.textAlign = "left"; // 상위 요소의 정렬 설정
+
+                // 내부 요소 강제 좌측 정렬
+                const contentNode = node.querySelector(".toastui-editor-contents");
+                if (contentNode) {
+                    contentNode.style.textAlign = "left";
+                }
             });
         }
 

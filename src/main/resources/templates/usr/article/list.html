@@ -3,99 +3,351 @@
 <head th:replace="~{common/head :: head}">
     <title th:text="${board.code + ' LIST'}">LIST</title>
 </head>
+<style>
+    .article-list-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        position: relative;
+        width: calc(1440 * var(--rpx-vw)); /* 가로 기준 비율 */
+        min-height: calc(1024 * var(--rpx-vh)); /* 세로 기준 비율 */
+        margin: 0 auto;
+        padding: calc(60 * var(--rpx-vh)) 0;
+        overflow: hidden;
+        gap: calc(80 * var(--rpx-vw));
+    }
+
+    .article-list-container {
+        display: flex;
+        flex-direction: column;
+        gap: calc(20 * var(--rpx-vw));
+        width: 70%;
+        margin: 0 auto;
+        background-color: #1e1e1e;
+        color: #ffffff;
+    }
+
+    .board-menu {
+        display: flex;
+        justify-content: center;
+        gap: calc(30 * var(--rpx-vw));
+        background-color: #252525;
+        border-radius: calc(8 * var(--rpx-vw));
+        padding: calc(8 * var(--rpx-vw)) 0;
+        width: 100%;
+    }
+
+    .board-menu li {
+        list-style: none;
+    }
+
+    .board-menu .board-name {
+        font-family: Audiowide;
+        font-size: calc(24 * var(--rpx-vw));
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .board-menu a:hover {
+        color: #cdf256;
+    }
+
+    .now-board-name {
+        color: #cdf256;
+    }
+
+    .article-container {
+        display: flex;
+        flex-direction: column;
+        gap: calc(10 * var(--rpx-vw));
+        width: 100%;
+    }
+
+    .article-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .article-count {
+        padding: 0 calc(8 * var(--rpx-vw)) 0 0;
+        font-size: calc(14 * var(--rpx-vw));
+    }
+
+    .article-list {
+        display: flex;
+        flex-direction: column;
+        gap: calc(16 * var(--rpx-vw));
+    }
+
+    .article-item {
+        padding: calc(16 * var(--rpx-vw));
+        background-color: #252525;
+        border-radius: calc(8 * var(--rpx-vw));
+        box-shadow: 0 calc(4 * var(--rpx-vw)) calc(8 * var(--rpx-vw)) rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+        gap: calc(8 * var(--rpx-vw));
+    }
+
+    .article-title {
+        font-size: calc(18 * var(--rpx-vw));
+        font-weight: bold;
+    }
+
+    .divider {
+        border: 0;
+        border-top: 1px solid #444;
+    }
+
+    .article-body {
+        background-color: #383838;
+        width: 100%;
+        border-radius: calc(8 * var(--rpx-vw));
+        padding: calc(8 * var(--rpx-vw));
+        overflow: hidden; /* 엘립시스 처리를 위해 필요 */
+    }
+
+    .article-body-text {
+        font-size: calc(14 * var(--rpx-vw));
+        line-height: calc(18 * var(--rpx-vw)); /* 줄 간격 조정 */
+        display: -webkit-box; /* Flexbox와 비슷한 레이아웃 (엘립시스 적용) */
+        -webkit-line-clamp: 2; /* 최대 두 줄까지만 표시 */
+        -webkit-box-orient: vertical; /* 블록 방향으로 정렬 */
+        overflow: hidden; /* 넘치는 텍스트를 숨김 */
+        text-overflow: ellipsis; /* ... 표시 */
+        white-space: pre-wrap; /* 줄바꿈(\n) 유지 */
+    }
+
+    .article-link {
+        color: #ffffff;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .article-link:hover {
+        color: #cdf256;
+    }
+
+    .article-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: calc(12 * var(--rpx-vw));
+        color: #888888;
+    }
+
+    .no-articles {
+        text-align: center;
+        font-size: calc(16 * var(--rpx-vw));
+        color: #888888;
+    }
+
+    .article-search-form {
+        display: flex;
+        gap: calc(10 * var(--rpx-vw));
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .search-select {
+        padding: calc(10 * var(--rpx-vw)) calc(12 * var(--rpx-vw));
+        height: 100%;
+        font-size: calc(14 * var(--rpx-vw));
+        border: 1px solid #444;
+        border-radius: calc(4 * var(--rpx-vw));
+        background-color: #252525;
+        color: #ffffff;
+    }
+
+    .search-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        gap: calc(10 * var(--rpx-vw));
+        font-size: calc(14 * var(--rpx-vw));
+    }
+
+    .search-input {
+        flex-grow: 1;
+        padding: calc(8 * var(--rpx-vw)) calc(12 * var(--rpx-vw));
+        border: 1px solid #444;
+        border-radius: calc(4 * var(--rpx-vw));
+        background-color: #252525;
+        color: #ffffff;
+    }
+
+    .search-input::placeholder {
+        color: #888888;
+    }
+
+    .search-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #cdf256;
+        border: none;
+        border-radius: calc(4 * var(--rpx-vw));
+        cursor: pointer;
+        padding: calc(9 * var(--rpx-vw));
+    }
+
+    .search-button svg {
+        width: calc(20 * var(--rpx-vw)); /* 아이콘 크기 */
+        height: calc(20 * var(--rpx-vw));
+        fill: #1e1e1e;
+    }
+
+    .search-button:hover {
+        background-color: #b0e040;
+    }
+
+    .pagination {
+        margin-top: calc(20 * var(--rpx-vw));
+        display: flex; /* 가로 정렬 */
+        justify-content: center; /* 중앙 정렬 */
+        gap: calc(8 * var(--rpx-vw)); /* 버튼 간격 */
+        flex-wrap: nowrap; /* 버튼이 한 줄에 유지되도록 설정 */
+    }
+
+    .pagination .pagination-btn {
+        margin: 0;
+        text-decoration: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: calc(30 * var(--rpx-vw));
+        height: calc(30 * var(--rpx-vw));
+        font-size: calc(22 * var(--rpx-vw));
+        border-radius: calc(4 * var(--rpx-vw));
+        background-color: #fff; /* 기본 배경 */
+        color: #1e1e1e; /* 기본 텍스트 색상 */
+        transition: background-color 0.2s;
+        font-family: Audiowide;
+    }
+
+    .pagination .pagination-btn-active {
+        background-color: #cdf256;
+    }
+</style>
 
 <body>
 <header th:replace="~{common/header-2 :: header-2}"></header>
 <div class="make-header-margin"></div>
 
-<section class="mt-24 text-xl px-4">
-    <div class="mx-auto">
-        <!-- ${articles} -->
+<section class="article-list-section">
+    <div class="article-list-container">
+        <!-- 게시판 목록 -->
+        <div class="boards">
+            <ul class="board-menu">
+                <li>
+                    <a th:class="${boardId == 1 ? 'board-name now-board-name' : 'board-name'}" href="/usr/article/list?boardId=1&page=1">NOTICE</a>
+                </li>
+                <li>
+                    <a th:class="${boardId == 2 ? 'board-name now-board-name' : 'board-name'}" href="/usr/article/list?boardId=2&page=1">ANALYSIS</a>
+                </li>
+                <li>
+                    <a th:class="${boardId == 3 ? 'board-name now-board-name' : 'board-name'}" href="/usr/article/list?boardId=3&page=1">FREE</a>
+                </li>
+            </ul>
+        </div>
 
-        <div class="mb-4 flex">
-            <div th:text="${articlesCount + '개'}"></div>
-            <div class="flex-grow"></div>
-            <form action="" method="get">
-                <input type="hidden" name="boardId" th:value="${param.boardId}" />
-                <div class="flex">
-                    <select class="select select-sm select-bordered max-w-xs" name="searchKeywordTypeCode" th:value="${param.searchKeywordTypeCode}">
-                        <option value="title">title</option>
-                        <option value="body">body</option>
-                        <option value="title,body">title+body</option>
-                        <option value="writer">writer</option>
-                    </select>
-                    <label class="ml-3 input input-bordered input-sm flex items-center gap-2">
-                        <input type="text" name="searchKeyword" placeholder="Search" th:value="${param.searchKeyword}" />
-                        <button type="submit">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="h-4 w-4 opacity-70">
-                                <path fill-rule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clip-rule="evenodd" />
-                            </svg>
-                        </button>
-                    </label>
+        <div class="article-container">
+            <!-- 게시글 목록 상단 -->
+            <div class="article-header">
+                <div class="article-count" th:text="${'총 ' + articlesCount + '개의 게시글이 있습니다.'}">0</div>
+                <!-- 공지사항 게시판이 아니면 로그인한 모든 회원 글쓰기 버튼 보이게, 공지사항 게시판이면 관리자만 보이게 -->
+                <div class="btn btn-sm" th:if="${rq.loginedMember != null and (rq.isAdmin() or (boardId != 1 and !rq.isAdmin()))}">
+                    <a href="/usr/article/write">글쓰기</a>
                 </div>
-            </form>
+            </div>
+
+            <!-- 게시글 목록 -->
+            <div class="article-list">
+                <div class="article-item" th:each="article : ${articles}">
+                    <div class="article-title">
+                        <a href="/usr/article/detail?id=1" class="article-link"
+                           th:href="@{/usr/article/detail(id=${article.id})}" th:text="${article.title}">제목</a>
+                    </div>
+                    <hr class="divider" />
+                    <div class="article-body">
+                        <span class="article-body-text" th:text="${article.body}">내용</span>
+                    </div>
+                    <div class="article-info">
+                        <span class="article-writer" th:text="${article.extra__writer}">작성자</span>
+                        <span class="article-date"
+                              th:text="${#strings.substring(article.regDate, 0, 10)}">2024-11-22</span>
+                    </div>
+                </div>
+                <div class="no-articles" th:if="${#lists.isEmpty(articles)}">게시글이 없습니다</div>
+            </div>
         </div>
 
-        <table class="table" border="1" cellspacing="0" cellpadding="5" style="width: 100%; border-collapse: collapse;">
-            <thead>
-            <tr>
-                <th style="text-align: center;">ID</th>
-                <th style="text-align: center;">Registration Date</th>
-                <th style="text-align: center;">Title</th>
-                <th style="text-align: center;">Writer</th>
-                <th style="text-align: center;">Like</th>
-                <th style="text-align: center;">Dislike</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="article : ${articles}" class="hover">
-                <td style="text-align: center;" th:text="${article.id}"></td>
-                <td style="text-align: center;" th:text="${#strings.substring(article.regDate, 0, 10)}"></td>
-                <td style="text-align: center;">
-                    <a class="hover:underline" th:href="@{/usr/article/detail(id=${article.id})}" th:text="${article.title}">
-                        <span th:if="${article.extra__repliesCount > 0}" style="color: red;" th:text="'[' + ${article.extra__repliesCount} + ']'"></span>
-                    </a>
-                </td>
-                <td style="text-align: center;" th:text="${article.extra__writer}"></td>
-                <td style="text-align: center;" th:text="${article.goodReactionPoint}"></td>
-                <td style="text-align: center;" th:text="${article.badReactionPoint}"></td>
-            </tr>
-            <tr th:if="${#lists.isEmpty(articles)}">
-                <td colspan="6" style="text-align: center;">게시글이 없습니다</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+        <!-- 검색 기능 -->
+        <form action="" method="get" class="article-search-form">
+            <input type="hidden" name="boardId" th:value="${param.boardId}"/>
+            <select name="searchKeywordTypeCode" class="search-select" th:value="${param.searchKeywordTypeCode}">
+                <option value="title">제목</option>
+                <option value="body">내용</option>
+                <option value="title,body">제목 및 내용</option>
+                <option value="writer">작성자</option>
+            </select>
+            <div class="search-wrapper">
+                <input type="text" name="searchKeyword" class="search-input" placeholder="검색어를 입력하세요."
+                       th:value="${param.searchKeyword}"/>
+                <button type="submit" class="search-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                        <path fill-rule="evenodd"
+                              d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                              clip-rule="evenodd"/>
+                    </svg>
+                </button>
+            </div>
+        </form>
 
-    <!-- 동적 페이징 -->
-    <div th:with="paginationLen=3, startPage=${page - paginationLen >= 1 ? page - paginationLen : 1}, endPage=${page + paginationLen <= pagesCount ? page + paginationLen : pagesCount}" class="pagination flex justify-center mt-3">
-        <div th:if="${startPage > 1}">
-            <a class="btn btn-sm" th:href="${baseUri + '&page=1'}">1</a>
-        </div>
-        <div th:if="${startPage > 2}">
-            <button class="btn btn-sm btn-disabled">...</button>
-        </div>
+        <!-- 페이지네이션 -->
+        <!-- 동적 페이징 -->
+        <div th:with="paginationLen=3,
+              startPage=${page - paginationLen >= 1 ? page - paginationLen : 1},
+              endPage=${page + paginationLen <= pagesCount ? page + paginationLen : pagesCount},
+              baseUri='?boardId=' + ${boardId} + '&searchKeywordTypeCode=' + ${searchKeywordTypeCode} + '&searchKeyword=' + ${searchKeyword}"
+             class="pagination">
 
-        <div th:each="i : ${#numbers.sequence(startPage, endPage)}">
-            <a class="btn btn-sm" th:classappend="${param.page == i ? 'btn-active' : ''}" th:href="${baseUri + '&page=' + i}" th:text="${i}"></a>
-        </div>
+            <!-- 첫 번째 페이지로 이동 -->
+            <div th:if="${startPage > 1}">
+                <a class="pagination-btn" th:href="${baseUri + '&page=1'}">1</a>
+            </div>
 
-        <div th:if="${endPage < pagesCount - 1}">
-            <button class="btn btn-sm btn-disabled">...</button>
-        </div>
+            <!-- 생략 표시 (앞부분) -->
+            <div th:if="${startPage > 2}">
+                <button class="pagination-btn">...</button>
+            </div>
 
-        <div th:if="${endPage < pagesCount}">
-            <a class="btn btn-sm" th:href="${baseUri + '&page=' + pagesCount}" th:text="${pagesCount}"></a>
-        </div>
-    </div>
+            <!-- 페이지 번호 반복 -->
+            <div th:each="i : ${#numbers.sequence(startPage, endPage)}"
+                 th:if="${i > 0}">
+                <a th:class="${page == i ? 'pagination-btn pagination-btn-active' : 'pagination-btn'}"
+                   th:href="${baseUri + '&page=' + i}"
+                   th:text="${i}"></a>
+            </div>
 
-    <!-- 직관적인 페이징 -->
-    <div class="pagination flex justify-center mt-3">
-        <div class="btn-group">
-            <a th:each="i : ${#numbers.sequence(1, pagesCount)}" class="btn btn-sm" th:classappend="${param.page == i ? 'btn-active' : ''}" th:href="${baseUri + '&page=' + i}" th:text="${i}"></a>
+            <!-- 생략 표시 (뒷부분) -->
+            <div th:if="${endPage < pagesCount - 1}">
+                <button class="pagination-btn">...</button>
+            </div>
+
+            <!-- 마지막 페이지로 이동 -->
+            <div th:if="${endPage < pagesCount}">
+                <a class="pagination-btn" th:href="${baseUri + '&page=' + pagesCount}" th:text="${pagesCount}"></a>
+            </div>
         </div>
     </div>
 </section>
 
+<footer th:replace="~{common/footer :: footer}"></footer>
 </body>
 </html>

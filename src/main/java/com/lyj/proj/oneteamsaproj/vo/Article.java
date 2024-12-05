@@ -28,4 +28,16 @@ public class Article {
 
     private boolean userCanModify;
     private boolean userCanDelete;
+
+    //  ---- 날짜/시간 표현 구간 시작 ----
+    private String formattedDate;
+
+    public String getFormattedDate() {
+        return formattedDate;
+    }
+
+    public void setFormattedDate(String formattedDate) {
+        this.formattedDate = formattedDate;
+    }
+    //  ---- 날짜/시간 표현 구간 끝 ----
 }

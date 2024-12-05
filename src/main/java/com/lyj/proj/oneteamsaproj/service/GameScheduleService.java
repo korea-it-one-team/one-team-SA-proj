@@ -68,6 +68,8 @@ public class GameScheduleService {
                             // DB에 기존 경기가 없으면 새로운 경기를 DB에 삽입
                             if (existingGame == null) {
                                 gameScheduleRepository.insert(matchSchedule);
+                                gameResultService.processGameResult(matchSchedule.getId(),
+                                        matchSchedule.getHomeTeamScore(), matchSchedule.getAwayTeamScore());
                             } else {
                                 // DB에 기존 경기가 있으면 점수를 업데이트
                                 existingGame.setHomeTeamScore(matchSchedule.getHomeTeamScore());
@@ -118,6 +120,8 @@ public class GameScheduleService {
                             // DB에 기존 경기가 없으면 새로운 경기를 DB에 삽입
                             if (existingGame == null) {
                                 gameScheduleRepository.insert(matchSchedule);
+                                gameResultService.processGameResult(matchSchedule.getId(),
+                                        matchSchedule.getHomeTeamScore(), matchSchedule.getAwayTeamScore());
                             } else {
                                 // DB에 기존 경기가 있으면 점수를 업데이트
                                 existingGame.setHomeTeamScore(matchSchedule.getHomeTeamScore());
@@ -142,6 +146,5 @@ public class GameScheduleService {
         System.out.println("scheduleData : " + scheduleData); // 크롤링한 데이터 출력
         return scheduleData; // 크롤링한 데이터 반환
     }
-
 }
 

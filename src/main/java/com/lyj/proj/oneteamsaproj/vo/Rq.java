@@ -112,7 +112,7 @@ public class Rq {
     public String historyBackOnView(String msg) {
         req.setAttribute("msg", msg);
         req.setAttribute("historyBack", true);
-        return "usr/common/js";
+        return "/common/js";
     }
 
     public String getCurrentUri() {
@@ -160,6 +160,10 @@ public class Rq {
 
     public String getImgUri(int id) {
         return "/common/genFile/file/article/" + id + "/extra/Img/1";
+    }
+
+    public String getVideoUri(int id) {
+        return "/common/genFile/file/article/" + id + "/extra/Video/1";
     }
 
     public String getProfileFallbackImgUri() {

@@ -18,7 +18,7 @@ public class WinDrawLose {
     public WinDrawLose(int gameId, int memberId, String prediction) {
         this.gameId = gameId;
         this.memberId = memberId;
-        this.prediction = prediction;
+       this.prediction = prediction;
     }
 }
 

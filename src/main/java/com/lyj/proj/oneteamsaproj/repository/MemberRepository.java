@@ -23,7 +23,8 @@ public interface MemberRepository {
             `name` = #{name}, 
             nickname = #{nickname}, 
             cellphoneNum = #{cellphoneNum}, 
-            email = #{email}
+            email = #{email},
+            points = 100
             """)
     public void doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum, String email);
 
@@ -197,5 +198,36 @@ public interface MemberRepository {
             WHERE id = #{id}
             </script>
             """)
+    // 관리자가 탈퇴처리
     public void deleteMember(int id);
+
+    @Update("""
+            UPDATE `member`
+            SET updateDate = NOW(),
+               delStatus = 1,
+               delDate = NOW(),
+               deletePendingDate = DATE_ADD(NOW(), INTERVAL #{gracePeriodDays} DAY)
+            WHERE id = #{memberId}
+            """)
+    // 회원이 직접 탈퇴처리(유예기간 7일)
+    int doDeleteMember(int memberId, int gracePeriodDays);
+
+    @Update("""
+            UPDATE `member`
+            SET updateDate = NOW(),
+               delStatus = 0,
+               delDate = NULL,
+              deletePendingDate = NULL
+          WHERE id = #{memberId} AND delStatus = 1 AND deletePendingDate > NOW()
+            """)
+    // 회원의 delStatus가 1이고, 완전 삭제 유예기간이 현재보다 나중인 경우
+    int restoreMember(int memberId);
+
+    @Update("""
+            UPDATE `member`
+            SET delStatus = 2, updateDate = NOW()
+            WHERE delStatus = 1 AND deletePendingDate <= NOW()
+            """)
+    // 회원 탈퇴 유예 기간이 지나지 않은 경우엔 복구가 가능하게
+    int markMembersAsUnrecoverable();
 }

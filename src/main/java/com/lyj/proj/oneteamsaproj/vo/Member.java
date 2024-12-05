@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,8 +22,9 @@ public class Member {
     private String cellphoneNum;
     private String email;
   	private int points;
-    private boolean delStatus;
+    private int delStatus;
     private String delDate;
+    private LocalDateTime deletePendingDate;
 
     public String getForPrintType1RegDate() {
         return regDate.substring(2, 16).replace(" ", "<br />");
