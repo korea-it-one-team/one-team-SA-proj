@@ -18,11 +18,7 @@ public class OneTeamSaProjApplication {
 
     public static void main(String[] args) {
 
-        String userDir = System.getProperty("user.dir");
-        Dotenv dotenv = Dotenv.configure()
-                .directory(userDir.equals("/app") ? "/app" : userDir) // 로컬 환경은 user.dir, Docker는 /app
-                .load();
-
+        Dotenv dotenv = Dotenv.configure().load();  // .env 파일을 기본 classpath나 작업 디렉토리에서 찾기
 
         // Dotenv로 로드한 값을 시스템 환경 변수로 설정
         System.setProperty("API_KEY", dotenv.get("API_KEY"));
