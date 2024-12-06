@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
@@ -72,15 +73,14 @@ public class OneTeamSaProjApplication {
     }
 
     private static String getEnvFilePath() {
-        // AWS 환경과 로컬 환경을 구분하여 .env 파일 경로를 반환
-        boolean isAws = System.getProperty("user.name").equals("ec2-user"); // AWS EC2 서버에서 기본 사용자명 확인
+        // 환경 변수나 다른 방법을 통해 AWS/로컬 환경을 구분할 수 있습니다.
+        boolean isAws = new File("/dockerProjects/oneteam/source/one-team-SA-proj/.env").exists();
 
         if (isAws) {
-            // AWS EC2에서의 .env 파일 경로
             return "/dockerProjects/oneteam/source/one-team-SA-proj";
         } else {
-            // 로컬 환경에서의 .env 파일 경로
             return "C:/work_oneteam/one-team-SA-proj";
         }
     }
+
 }
