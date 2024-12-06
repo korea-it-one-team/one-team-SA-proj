@@ -18,7 +18,12 @@ public class OneTeamSaProjApplication {
 
     public static void main(String[] args) {
 
-        Dotenv dotenv = Dotenv.configure().load();  // .env 파일을 기본 classpath나 작업 디렉토리에서 찾기
+        // 환경에 맞는 .env 파일 경로를 동적으로 설정
+        String envFilePath = getEnvFilePath();  // 환경에 맞는 경로를 얻기 위한 메서드 호출
+        Dotenv dotenv = Dotenv.configure()
+                .directory(envFilePath)  // 명시적으로 경로 설정
+                .load();  // .env 파일 로드
+        System.out.println("envFilePath : " + envFilePath);
 
         // Dotenv로 로드한 값을 시스템 환경 변수로 설정
         System.setProperty("API_KEY", dotenv.get("API_KEY"));
@@ -64,5 +69,18 @@ public class OneTeamSaProjApplication {
                 System.err.println("Flask 서버 종료 요청 중 연결 문제가 발생했습니다: " + e.getMessage());
             }
         }));
+    }
+
+    private static String getEnvFilePath() {
+        // AWS 환경과 로컬 환경을 구분하여 .env 파일 경로를 반환
+        boolean isAws = System.getProperty("user.name").equals("ec2-user"); // AWS EC2 서버에서 기본 사용자명 확인
+
+        if (isAws) {
+            // AWS EC2에서의 .env 파일 경로
+            return "/dockerProjects/oneteam/source/one-team-SA-proj";
+        } else {
+            // 로컬 환경에서의 .env 파일 경로
+            return "C:/work_oneteam/one-team-SA-proj";
+        }
     }
 }
