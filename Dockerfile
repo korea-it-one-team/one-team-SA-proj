@@ -42,11 +42,8 @@ COPY src/main/resources/templates /app/templates
 # 13. application.yml 파일 복사
 COPY src/main/resources/application.yml /app/application.yml
 
-# 14. .env 파일 복사
-COPY .env /app/.env
-
-# 15. 포트 노출
+# 14. 포트 노출
 EXPOSE 8088
 
-# 16. Spring Boot 애플리케이션 실행
+# 15. Spring Boot 애플리케이션 실행
 ENTRYPOINT ["java", "-jar", "/app/app.war"]
