@@ -29,7 +29,6 @@ RUN ./gradlew build --no-daemon -x test
 FROM openjdk:17-jdk-slim
 
 # 10. 환경 변수 설정
-ENV SPRING_PROFILES_ACTIVE=prod
 ENV SERVER_PORT=8088
 
 # 11. WAR 파일 복사
