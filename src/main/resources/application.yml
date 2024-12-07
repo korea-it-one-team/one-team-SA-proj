@@ -5,6 +5,9 @@ spring:
   profiles:
     active: secret # secret 프로파일 활성화
 
+  config:
+    import: classpath:${APPLICATION_SECRET_YML}  # 외부 YML 파일을 로드
+
   cloud:
     gcp:
       storage:
