@@ -1,0 +1,48 @@
+server:
+  port: 8088
+
+spring:
+  profiles:
+    active: secret # secret 프로파일 활성화
+
+  config:
+    import: classpath:/application-secret.yml  # application-secret.yml을 포함
+
+  devtools:
+    restart:
+      enabled: false
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+
+  datasource:
+    url: jdbc:mysql://172.17.0.2:3306/one-team-SA-proj?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password: koreait123414
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+web:
+  resources:
+    static-locations: classpath:/static/
+
+mybatis:
+  mapper-locations: classpath*:mapper/**/*.xml
+  type-aliases-package: com.lyj.proj.oneteamsaproj.vo
+
+custom:
+  type-aliases-package: com.lyj.proj.oneteamsaproj.vo
+  siteName: kicknalisys
+  siteMainUri: http://localhost:8088
+  emailFrom: no-reply@localhost
+  emailFromName: kicknalisys
+  genFileDirPath: C:\work_oneteam\one-team-SA-proj\images
+  videoFileDirPath: C:\work_oneteam\one-team-SA-proj\videos
+logging:
+  level:
+    org.springframework.security: DEBUG

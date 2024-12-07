@@ -28,6 +28,7 @@ public class GameScheduleCrawl {
             System.setProperty("webdriver.chrome.driver", "/dockerProjects/oneteam/source/one-team-SA-proj/chromedriver-linux64/chromedriver");
         }
 
+
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless"); // 필요 시 주석 해제
         options.addArguments("--no-sandbox");
