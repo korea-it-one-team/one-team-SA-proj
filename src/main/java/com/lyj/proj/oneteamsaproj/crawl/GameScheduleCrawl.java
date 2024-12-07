@@ -11,16 +11,25 @@ import org.springframework.stereotype.Component;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+
+
 @Component
 public class GameScheduleCrawl {
 
     public static Map<String, List<Map<String, Object>>> crawl() {
         Map<String, Map<String, List<GameSchedule>>> scheduleMap = new HashMap<>();
 
-        System.setProperty("webdriver.chrome.driver", "C:/work_oneteam/one-team-SA-proj/chromedriver-win64/chromedriver.exe");
+        // 운영 체제에 따른 Chromedriver 경로 설정
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("win")) {
+            System.setProperty("webdriver.chrome.driver", "C:/work_oneteam/one-team-SA-proj/chromedriver-win64/chromedriver.exe");
+        } else {
+            // AWS 배포용(리눅스용 크롬드라이버 설치 후 경로 봐야해서 그때 수정해야함)
+            System.setProperty("webdriver.chrome.driver", "/dockerProjects/oneteam/source/one-team-SA-proj/chromedriver-linux64/chromedriver.exe");
+        }
 
         ChromeOptions options = new ChromeOptions();
-//        options.addArguments("--headless"); // 필요 시 주석 해제
+        options.addArguments("--headless"); // 필요 시 주석 해제
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
 
