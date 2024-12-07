@@ -1,8 +1,9 @@
 server:
   port: 8088
+
 spring:
-  dotenv:
-    overload: true  # .env 파일의 값으로 덮어쓰게 설정
+  profiles:
+    active: secret # secret 프로파일 활성화
 
   cloud:
     gcp:

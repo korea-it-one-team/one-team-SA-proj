@@ -1,12 +1,10 @@
 package com.lyj.proj.oneteamsaproj;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
@@ -16,34 +14,7 @@ import java.net.URL;
 @SpringBootApplication
 @MapperScan("com.lyj.proj.oneteamsaproj.repository")
 public class OneTeamSaProjApplication {
-
     public static void main(String[] args) {
-
-        // 환경에 맞는 .env 파일 경로를 동적으로 설정
-        String envFilePath = getEnvFilePath();  // 환경에 맞는 경로를 얻기 위한 메서드 호출
-        Dotenv dotenv = Dotenv.configure()
-                .directory(envFilePath)  // 명시적으로 경로 설정
-                .load();  // .env 파일 로드
-        System.out.println("envFilePath : " + envFilePath);
-
-        // Dotenv로 로드한 값을 시스템 환경 변수로 설정
-        System.setProperty("API_KEY", dotenv.get("API_KEY"));
-        System.setProperty("API_SECRETKEY", dotenv.get("API_SECRETKEY"));
-        System.setProperty("BUCKET_KEY", dotenv.get("BUCKET_KEY"));
-        System.setProperty("CLASSPATH", dotenv.get("CLASSPATH"));
-        System.setProperty("PROJECT_ID", dotenv.get("PROJECT_ID"));
-
-        // GOOGLE_APPLICATION_CREDENTIALS 환경 변수 설정
-        String googleCredentialsPath = dotenv.get("GOOGLE_APPLICATION_CREDENTIALS");
-        if (googleCredentialsPath != null && !googleCredentialsPath.isEmpty()) {
-            System.setProperty("GOOGLE_APPLICATION_CREDENTIALS", googleCredentialsPath);
-        } else {
-            System.err.println("GOOGLE_APPLICATION_CREDENTIALS 환경 변수가 설정되지 않았습니다.");
-        }
-
-        // GOOGLE_APPLICATION_CREDENTIALS 값 확인
-        String googleAppCredentials = System.getProperty("GOOGLE_APPLICATION_CREDENTIALS");
-        System.out.println("설정된 GOOGLE_APPLICATION_CREDENTIALS: " + googleAppCredentials);
 
         SpringApplication.run(OneTeamSaProjApplication.class, args);
 
@@ -71,16 +42,4 @@ public class OneTeamSaProjApplication {
             }
         }));
     }
-
-    private static String getEnvFilePath() {
-        // 환경 변수나 다른 방법을 통해 AWS/로컬 환경을 구분할 수 있습니다.
-        boolean isAws = new File("/dockerProjects/oneteam/source/one-team-SA-proj/.env").exists();
-
-        if (isAws) {
-            return "/dockerProjects/oneteam/source/one-team-SA-proj";
-        } else {
-            return "C:/work_oneteam/one-team-SA-proj";
-        }
-    }
-
 }
