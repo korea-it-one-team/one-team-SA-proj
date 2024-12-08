@@ -28,15 +28,14 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # 5. Google Chrome 설치
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-    && apt-get update \
-    && apt-get install -y ./google-chrome-stable_current_amd64.deb \
-    && rm google-chrome-stable_current_amd64.deb
+COPY google-chrome-stable_current_amd64.deb /tmp/
+RUN apt-get update \
+    && apt-get install -y /tmp/google-chrome-stable_current_amd64.deb \
+    && rm /tmp/google-chrome-stable_current_amd64.deb
 
-# 6. 크롬 드라이버 다운로드
-RUN wget -q "https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.87/linux64/chromedriver-linux64.zip" -O /tmp/chromedriver-linux64.zip \
-    && unzip /tmp/chromedriver-linux64.zip -d /usr/local/bin/ \
-    && rm /tmp/chromedriver-linux64.zip
+# 6. 크롬 드라이버 복사
+COPY chromedriver-linux64 /usr/local/bin/chromedriver
+RUN chmod +x /usr/local/bin/chromedriver
 
 # 7. Xvfb 실행 및 DISPLAY 환경 변수 설정
 RUN Xvfb :99 -screen 0 1024x768x24 & export DISPLAY=:99
