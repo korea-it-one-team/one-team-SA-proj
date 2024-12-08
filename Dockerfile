@@ -28,17 +28,17 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # 5. Google Chrome 설치
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+RUN apt-get update && apt-get install -y wget \
+    && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
     && dpkg -i google-chrome-stable_current_amd64.deb \
-    && apt-get update \
     && apt-get install -y -f \
     && rm google-chrome-stable_current_amd64.deb
+
 # 6. 크롬 드라이버 복사
 COPY chromedriver-linux64 /usr/local/bin/chromedriver
 RUN chmod +x /usr/local/bin/chromedriver
 
 # 7. Xvfb 실행 및 DISPLAY 환경 변수 설정
-# Xvfb를 실행하는 스크립트 작성
 RUN echo "#!/bin/bash\nXvfb :99 -screen 0 1024x768x24 & export DISPLAY=:99" > /start_xvfb.sh \
     && chmod +x /start_xvfb.sh
 
@@ -77,4 +77,4 @@ COPY src/main/resources/application.yml /app/application.yml
 EXPOSE 8088
 
 # 19. Spring Boot 애플리케이션 실행
-CMD /start_xvfb.sh && java -jar -Dspring.profiles.active=prod /app/app.war
+CMD ["bash", "-c", "/start_xvfb.sh && java -jar -Dspring.profiles.active=prod /app/app.war"]
