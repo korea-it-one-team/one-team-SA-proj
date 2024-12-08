@@ -1,6 +1,9 @@
 # 1. JDK 17 기반 이미지 사용
 FROM openjdk:17-jdk-slim AS build
 
+# 필수 패키지 설치
+RUN apt-get update && apt-get install -y wget curl unzip
+
 # 2. Gradle을 설치하고 프로젝트 디렉터리 설정
 WORKDIR /app
 
@@ -10,18 +13,10 @@ COPY gradlew .
 COPY build.gradle .
 COPY settings.gradle .
 
-# 4. 필요한 도구 및 패키지 설치
-RUN apt-get update && apt-get install -y \
-    wget curl unzip \
-    libx11-6 libxcomposite1 libxrandr2 libxdamage1 libxss1 \
-    x11-apps ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
-
 # 5. Google Chrome 설치
-RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /tmp/google-chrome-stable_current_amd64.deb \
-    && apt-get install -y /tmp/google-chrome-stable_current_amd64.deb \
-    && apt-get install -y -f \
-    && rm /tmp/google-chrome-stable_current_amd64.deb
+RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+RUN apt-get install -y ./google-chrome-stable_current_amd64.deb
+RUN rm ./google-chrome-stable_current_amd64.deb
 
 # 6. 크롬 버전 확인
 RUN google-chrome --version
