@@ -11,37 +11,20 @@ COPY build.gradle .
 COPY settings.gradle .
 
 # 4. 필요한 도구 및 패키지 설치
-RUN apt-get update && apt-get install -y \
-    wget \
-    gnupg \
-    unzip \
-    curl \
-    libx11-6 \
-    libxcomposite1 \
-    libxrandr2 \
-    libxdamage1 \
-    libxss1 \
-    libgdk-pixbuf2.0-0 \
-    x11-apps \
-    ca-certificates \
-    xvfb \
-    lsb-release \
-    && rm -rf /var/lib/apt/lists/*
+# 필수 패키지 설치
+RUN apt-get update && apt-get install -y wget curl unzip
 
-# 5. Google Chrome 설치 (APT 저장소 사용)
-RUN echo "deb [signed-by=/usr/share/keyrings/google-archive-keyring.gpg] https://dl.google.com/linux/chrome/deb/ stable main" | tee -a /etc/apt/sources.list.d/google-chrome.list \
-    && curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | tee /usr/share/keyrings/google-archive-keyring.gpg \
-    && apt-get update \
-    && apt-get install -y google-chrome-stable \
-    && rm -rf /var/lib/apt/lists/*
+# 5. Google Chrome 설치
+# 크롬 설치
+RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+RUN apt-get install -y ./google-chrome-stable_current_amd64.deb
+RUN rm ./google-chrome-stable_current_amd64.deb
+# 크롬 버전 확인
+RUN google-chrome --version
 
 # 6. 크롬 드라이버 복사
 COPY chromedriver-linux64 /usr/local/bin/chromedriver
 RUN chmod +x /usr/local/bin/chromedriver
-
-# 7. Xvfb 실행 및 DISPLAY 환경 변수 설정
-RUN echo "#!/bin/bash\nXvfb :99 -screen 0 1024x768x24 & export DISPLAY=:99" > /start_xvfb.sh \
-    && chmod +x /start_xvfb.sh
 
 # 8. gradlew에 실행 권한 부여
 RUN chmod +x gradlew
@@ -78,4 +61,4 @@ COPY src/main/resources/application.yml /app/application.yml
 EXPOSE 8088
 
 # 19. Spring Boot 애플리케이션 실행
-CMD ["bash", "-c", "/start_xvfb.sh && java -jar -Dspring.profiles.active=prod /app/app.war"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "/app/app.war"]

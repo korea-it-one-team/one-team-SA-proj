@@ -33,6 +33,7 @@ public class GameScheduleCrawl {
         options.addArguments("--headless"); // 필요 시 주석 해제
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--disable-gpu"); // 추가한 옵션
 
         WebDriver driver = new ChromeDriver(options);
 

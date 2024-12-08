@@ -39,7 +39,7 @@ dependencies {
     //thymeleaf
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     // Selenium Java
-    implementation 'org.seleniumhq.selenium:selenium-java:4.1.2'
+    implementation 'org.seleniumhq.selenium:selenium-java:4.8.0'
     // Spring Boot Starter Mail 추가 (kgb, yml - email 추가.)
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     // 매일 보내기 위한 의존성 추가
