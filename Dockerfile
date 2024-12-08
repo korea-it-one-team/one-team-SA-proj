@@ -25,14 +25,15 @@ RUN apt-get update && apt-get install -y \
     x11-apps \
     ca-certificates \
     xvfb \
+    lsb-release \
     && rm -rf /var/lib/apt/lists/*
 
-# 5. Google Chrome 설치
-RUN apt-get update && apt-get install -y wget \
-    && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-    && dpkg -i google-chrome-stable_current_amd64.deb \
-    && apt-get install -y -f \
-    && rm google-chrome-stable_current_amd64.deb
+# 5. Google Chrome 설치 (APT 저장소 사용)
+RUN echo "deb [signed-by=/usr/share/keyrings/google-archive-keyring.gpg] https://dl.google.com/linux/chrome/deb/ stable main" | tee -a /etc/apt/sources.list.d/google-chrome.list \
+    && curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | tee /usr/share/keyrings/google-archive-keyring.gpg \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable \
+    && rm -rf /var/lib/apt/lists/*
 
 # 6. 크롬 드라이버 복사
 COPY chromedriver-linux64 /usr/local/bin/chromedriver
