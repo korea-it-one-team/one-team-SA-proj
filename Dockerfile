@@ -28,44 +28,50 @@ RUN apt-get update && apt-get install -y \
 
 # 5. Google Chrome 설치
 RUN apt-get update && apt-get install -y wget gnupg \
-    && wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list' \
+    && curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | tee /etc/apt/trusted.gpg.d/google-linux-signing.key \
+    && sh -c 'echo "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/google-linux-signing.key] https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list' \
     && apt-get update && apt-get install -y google-chrome-stable \
     && rm -rf /var/lib/apt/lists/*
 
-# 6. gradlew에 실행 권한 부여
+# 6. 크롬 드라이버 다운로드
+RUN LATEST_CHROMEDRIVER=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE) \
+    && wget -q "https://chromedriver.storage.googleapis.com/$LATEST_CHROMEDRIVER/chromedriver_linux64.zip" \
+    && unzip chromedriver_linux64.zip -d /usr/local/bin/ \
+    && rm chromedriver_linux64.zip
+
+# 7. gradlew에 실행 권한 부여
 RUN chmod +x gradlew
 
-# 7. CRLF to LF 변환
+# 8. CRLF to LF 변환
 RUN sed -i 's/\r//' gradlew
 
-# 8. 의존성 다운로드 (최초 빌드 단계)
+# 9. 의존성 다운로드 (최초 빌드 단계)
 RUN ./gradlew --no-daemon dependencies
 
-# 9. 프로젝트 소스 파일 복사
+# 10. 프로젝트 소스 파일 복사
 COPY src src
 
-# 10. Gradle 빌드 (JAR 파일 생성, 테스트 제외)
+# 11. Gradle 빌드 (JAR 파일 생성, 테스트 제외)
 RUN ./gradlew build --no-daemon -x test
 
-# 11. 최종 런타임 이미지를 설정 (빌드 결과물만 포함)
+# 12. 최종 런타임 이미지를 설정 (빌드 결과물만 포함)
 FROM openjdk:17-jdk-slim
 
-# 12. 환경 변수 설정
+# 13. 환경 변수 설정
 ENV SERVER_PORT=8088
 
-# 13. WAR 파일 복사
+# 14. WAR 파일 복사
 COPY --from=build /app/build/libs/*.war /app/app.war
 
-# 14. HTML, CSS, JS, Thymeleaf 템플릿 파일을 웹 서버에 복사 (빌드된 static과 templates)
+# 15. HTML, CSS, JS, Thymeleaf 템플릿 파일을 웹 서버에 복사 (빌드된 static과 templates)
 COPY src/main/resources/static /app/static
 COPY src/main/resources/templates /app/templates
 
-# 15. application.yml 파일 복사
+# 16. application.yml 파일 복사
 COPY src/main/resources/application.yml /app/application.yml
 
-# 16. 포트 노출
+# 17. 포트 노출
 EXPOSE 8088
 
-# 17. Spring Boot 애플리케이션 실행
+# 18. Spring Boot 애플리케이션 실행
 ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "/app/app.war"]
