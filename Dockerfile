@@ -45,4 +45,4 @@ COPY src/main/resources/application.yml /app/application.yml
 EXPOSE 8088
 
 # 15. Spring Boot 애플리케이션 실행
-ENTRYPOINT ["java", "-jar", "/app/app.war"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "/app/app.war"]
