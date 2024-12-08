@@ -11,22 +11,22 @@ COPY build.gradle .
 COPY settings.gradle .
 
 # 4. 필요한 도구 및 패키지 설치
-RUN apt-get update && apt-get install -y wget curl unzip
+RUN apt-get update && apt-get install -y \
+    wget curl unzip \
+    libx11-6 libxcomposite1 libxrandr2 libxdamage1 libxss1 \
+    x11-apps ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 # 5. Google Chrome 설치
-# 수정된 방식 (절대 경로 사용)
-# 5. Google Chrome 설치
-RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /tmp/google-chrome-stable_current_amd64.deb
-RUN apt-get install -y libx11-6 libxcomposite1 libxrandr2 libxdamage1 libxss1 x11-apps ca-certificates
-RUN apt-get install -y /tmp/google-chrome-stable_current_amd64.deb && apt-get install -y -f
-RUN rm /tmp/google-chrome-stable_current_amd64.deb
-# 크롬 버전 확인
+RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /tmp/google-chrome-stable_current_amd64.deb \
+    && apt-get install -y /tmp/google-chrome-stable_current_amd64.deb \
+    && apt-get install -y -f \
+    && rm /tmp/google-chrome-stable_current_amd64.deb
+
+# 6. 크롬 버전 확인
 RUN google-chrome --version
 
-# 크롬 버전 확인
-RUN google-chrome --version
-
-# 6. 크롬 드라이버 복사
+# 7. 크롬 드라이버 복사
 COPY chromedriver-linux64 /usr/local/bin/chromedriver
 RUN chmod +x /usr/local/bin/chromedriver
 
