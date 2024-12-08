@@ -28,10 +28,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # 5. Google Chrome 설치
-COPY google-chrome-stable_current_amd64.deb /tmp/
-RUN apt-get update \
-    && apt-get install -y /tmp/google-chrome-stable_current_amd64.deb \
-    && rm /tmp/google-chrome-stable_current_amd64.deb
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+RUN apt -y install ./google-chrome-stable_current_amd64.deb
 
 # 6. 크롬 드라이버 복사
 COPY chromedriver-linux64 /usr/local/bin/chromedriver
