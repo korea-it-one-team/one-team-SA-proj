@@ -11,13 +11,13 @@ COPY build.gradle .
 COPY settings.gradle .
 
 # 필수 패키지 설치
-RUN apt-get update && apt-get install -y --no-install-recommends libglib2.0-0 libnss3 libxcb1 wget unzip \
+RUN apt-get update && apt-get install -y --no-install-recommends libglib2.0-0 libnss3 libxcb1 wget unzip apt-transport-https ca-certificates curl \
     && apt-get clean
 
 # 5. Google Chrome 설치
-RUN apt update && apt install -y wget apt-transport-https ca-certificates curl \
-    && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-    && apt install -y ./google-chrome-stable_current_amd64.deb --fix-broken \
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+    && apt install -y ./google-chrome-stable_current_amd64.deb \
+    && apt-get install -f -y \
     && rm ./google-chrome-stable_current_amd64.deb
 
 # 6. 크롬 버전 확인
@@ -26,6 +26,7 @@ RUN google-chrome --version
 # 7. 크롬 드라이버 다운로드 및 설치
 RUN wget https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.87/linux64/chromedriver-linux64.zip \
     && unzip chromedriver-linux64.zip -d /usr/local/bin \
+    && chmod +x /usr/local/bin/chromedriver \
     && rm chromedriver-linux64.zip
 
 # 8. gradlew에 실행 권한 부여
