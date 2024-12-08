@@ -15,9 +15,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends libglib2.0-0 li
     && apt-get clean
 
 # 5. Google Chrome 설치
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-RUN apt install ./google-chrome-stable_current_amd64.deb
-RUN rm ./google-chrome-stable_current_amd64.deb
+RUN apt update && apt install -y wget apt-transport-https ca-certificates curl \
+    && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+    && apt install -y ./google-chrome-stable_current_amd64.deb --fix-broken \
+    && rm ./google-chrome-stable_current_amd64.deb
+
 
 # 6. 크롬 버전 확인
 RUN google-chrome --version
