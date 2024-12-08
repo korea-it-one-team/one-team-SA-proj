@@ -15,9 +15,14 @@ RUN apt-get update && apt-get install -y wget curl unzip
 
 # 5. Google Chrome 설치
 # 수정된 방식 (절대 경로 사용)
+# 5. Google Chrome 설치
 RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /tmp/google-chrome-stable_current_amd64.deb
-RUN apt-get install -y /tmp/google-chrome-stable_current_amd64.deb
+RUN apt-get install -y libx11-6 libxcomposite1 libxrandr2 libxdamage1 libxss1 x11-apps ca-certificates
+RUN apt-get install -y /tmp/google-chrome-stable_current_amd64.deb && apt-get install -y -f
 RUN rm /tmp/google-chrome-stable_current_amd64.deb
+# 크롬 버전 확인
+RUN google-chrome --version
+
 # 크롬 버전 확인
 RUN google-chrome --version
 
