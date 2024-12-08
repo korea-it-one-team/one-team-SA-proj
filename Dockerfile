@@ -23,9 +23,10 @@ RUN apt update && apt install -y wget apt-transport-https ca-certificates curl \
 # 6. 크롬 버전 확인
 RUN google-chrome --version
 
-# 7. 크롬 드라이버 복사
-COPY chromedriver-linux64/chromedriver /usr/local/bin
-RUN chmod +x /usr/local/bin/chromedriver
+# 7. 크롬 드라이버 다운로드 및 설치
+RUN wget https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.87/linux64/chromedriver-linux64.zip \
+    && unzip chromedriver-linux64.zip -d /usr/local/bin \
+    && rm chromedriver-linux64.zip
 
 # 8. gradlew에 실행 권한 부여
 RUN chmod +x gradlew

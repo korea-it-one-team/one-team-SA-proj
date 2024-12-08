@@ -20,7 +20,7 @@ public class NewsCrawl {
             System.setProperty("webdriver.chrome.driver", "C:/work_oneteam/one-team-SA-proj/chromedriver-win64/chromedriver.exe");
         } else {
             // AWS 배포용(리눅스용 크롬드라이버 설치 후 경로 봐야해서 그때 수정해야함)
-            System.setProperty("webdriver.chrome.driver", "/usr/local/bin/chromedriver");
+            System.setProperty("webdriver.chrome.driver", "/usr/local/bin/chromedriver-linux64/chromedriver");
         }
 
         ChromeOptions options = new ChromeOptions();
