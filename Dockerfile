@@ -28,14 +28,8 @@ RUN ./gradlew build --no-daemon -x test
 # 9. 최종 런타임 이미지를 설정 (빌드 결과물만 포함)
 FROM openjdk:17-jdk-slim
 
-# 10. 환경 변수 설정 (서버 포트 등)
-ENV SERVER_PORT=8088
-
-# 11. JAR 파일 복사
+# 10. JAR 파일 복사
 COPY --from=build /app/build/libs/*.jar /app/app.jar
 
-# 12. 포트 노출
-EXPOSE 8088
-
-# 13. Spring Boot 애플리케이션 실행
+# 11. Spring Boot 애플리케이션 실행
 ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "/app/app.jar"]
