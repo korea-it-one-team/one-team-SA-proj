@@ -3,6 +3,7 @@ server:
 
 spring:
   profiles:
+    active: prod
     include: secret
 
   devtools:
@@ -17,7 +18,6 @@ spring:
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
-
 
 web:
   resources:
