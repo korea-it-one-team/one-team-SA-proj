@@ -80,6 +80,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                 )
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // 쿠키로 전달
+                        .ignoringRequestMatchers("/openCV/analysisCompleted") // CSRF 보호 비활성화 경로 추가
                 )
                 .cors(Customizer.withDefaults())
                 .sessionManagement(session -> session

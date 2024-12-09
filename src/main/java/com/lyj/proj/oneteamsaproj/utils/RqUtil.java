@@ -1,6 +1,8 @@
 package com.lyj.proj.oneteamsaproj.utils;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -90,6 +92,30 @@ public class RqUtil {
 
     public String getVideoUri(int id) {
         return "/common/genFile/file/article/" + id + "/extra/Video/1";
+    }
+
+    public String getProcessedVideoUri(int articleId) {
+        // 파일 경로: 동영상
+        return "/video/processed_video_" + articleId + ".mp4";
+    }
+
+    public String getProcessedImageUri(int articleId) {
+        // 파일 경로: 요약 이미지
+        return "/summary/processed_summary_" + articleId + ".png";
+    }
+
+    public boolean isProcessedVideoAvailable(int articleId) {
+        String videoPath = "src/main/resources/static/video/processed_video_" + articleId + ".mp4";
+        System.out.println("videoPath: " + videoPath);
+        System.out.println("Files.exists(Path.of(videoPath)) : " + Files.exists(Path.of(videoPath)));
+        return Files.exists(Path.of(videoPath));
+    }
+
+    public boolean isProcessedImageAvailable(int articleId) {
+        String imagePath = "src/main/resources/static/summary/processed_summary_" + articleId + ".png";
+        System.out.println("imagePath: " + imagePath);
+        System.out.println("Files.exists(Path.of(imagePath)) : " + Files.exists(Path.of(imagePath)));
+        return Files.exists(Path.of(imagePath));
     }
 
     public String getProfileFallbackImgUri() {

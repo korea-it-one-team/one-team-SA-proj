@@ -278,7 +278,7 @@ public class UsrArticleController {
         }
 
         ResultData writeArticleRd = articleService.writeArticle(loginService.getLoginedMemberId(), title, body, boardId);
-        int id = (int) writeArticleRd.getData1();  // 게시물 ID
+        int articleId = (int) writeArticleRd.getData1();  // 게시물 ID
 
         // 이미지 URL들을 처리 (쉼표로 구분된 URL들)
         String[] images = imageUrls.split(",");
@@ -292,7 +292,7 @@ public class UsrArticleController {
                 // images 배열을 순차적으로 처리
                 for (String imageUrl : images) {
                     // 각 이미지 URL을 처리 (예: DB에 저장하거나, 다른 서비스에 저장)
-                    imageService.saveImage(imageUrl, id, boardId);  // 이미지 업로드
+                    imageService.saveImage(imageUrl, articleId, boardId);  // 이미지 업로드
                 }
             } catch (IOException e) {
                 return Ut.jsHistoryBack("F-4", "이미지 업로드 중 오류 발생.");
@@ -307,7 +307,7 @@ public class UsrArticleController {
 
             for (MultipartFile multipartFile : multipartFiles) {
                 if (!multipartFile.isEmpty()) {
-                    genFileSaveRs = genFileService.save(multipartFile, id); // 기존 파일 저장
+                    genFileSaveRs = genFileService.save(multipartFile, articleId); // 기존 파일 저장
                 }
             }
         }
@@ -334,10 +334,10 @@ public class UsrArticleController {
 
             try {
                 // Flask 서버로 파일과 팀 정보 전송
-                ResultData flaskResponse = flaskProcessingController.videoProcess(videoFilePath, homeTeam, awayTeam);
+                ResultData flaskResponse = flaskProcessingController.videoProcess(articleId, videoFilePath, homeTeam, awayTeam);
 
                 if (flaskResponse.isSuccess()) {
-                    return Ut.jsReplace("S-1", "동영상 처리가 시작되었습니다.", "../article/detail?id=" + id);
+                    return Ut.jsReplace("S-1", "동영상 처리가 시작되었습니다.", "../article/detail?id=" + articleId);
                 } else {
                     return Ut.jsHistoryBack(flaskResponse.getResultCode(), flaskResponse.getMsg());
                 }
@@ -347,7 +347,7 @@ public class UsrArticleController {
             }
         }
 
-        return Ut.jsReplace(writeArticleRd.getResultCode(), writeArticleRd.getMsg(), "../article/detail?id=" + id);
+        return Ut.jsReplace(writeArticleRd.getResultCode(), writeArticleRd.getMsg(), "../article/detail?id=" + articleId);
     }
 
     @RequestMapping("/usr/article/request")

@@ -1,6 +1,10 @@
 package com.lyj.proj.oneteamsaproj.openCV;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lyj.proj.oneteamsaproj.exception.ArticleProcessingException;
+import com.lyj.proj.oneteamsaproj.service.ArticleService;
+import com.lyj.proj.oneteamsaproj.utils.Ut;
+import com.lyj.proj.oneteamsaproj.vo.Article;
 import com.lyj.proj.oneteamsaproj.vo.ResultData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -9,8 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.FileOutputStream;
@@ -26,19 +29,18 @@ import java.util.Map;
 public class FlaskProcessingController {
 
     private final RestTemplate restTemplate;
-    private static final String FLASK_DOWNLOAD_URL = "http://localhost:5000/video/download_video";
-    private static final String FLASK_IMAGE_PROCESS_URL = "http://localhost:5000/image/process-image";
-
-    private static final String VIDEO_SAVE_PATH = "src/main/resources/static/video/processed_video_h264.mp4";
-    private static final String IMAGE_SAVE_PATH = "src/main/resources/static/images/gray_image.jpg";
+//    private static final String FLASK_IMAGE_PROCESS_URL = "http://localhost:5000/image/process-image";
+//    private static final String IMAGE_SAVE_PATH = "src/main/resources/static/images/gray_image.jpg";
+    private final ArticleService articleService;
 
     @Autowired
-    public FlaskProcessingController(RestTemplate restTemplate) {
+    public FlaskProcessingController(RestTemplate restTemplate, ArticleService articleService) {
         this.restTemplate = restTemplate;
+        this.articleService = articleService;
     }
 
     // 동영상 처리 요청을 보내고 처리 중 페이지로 리다이렉트
-    public ResultData videoProcess(String videoFilePath, String homeTeam, String awayTeam) {
+    public ResultData videoProcess(int articleId, String videoFilePath, String homeTeam, String awayTeam) {
         System.out.println("openCV video test");
 
         String flaskUrl = "http://localhost:5000/video/process_video";
@@ -53,6 +55,7 @@ public class FlaskProcessingController {
         body.add("video", new FileSystemResource(videoFilePath));
         body.add("home_team", homeTeam);
         body.add("away_team", awayTeam);
+        body.add("article_id", articleId);  // 추가된 부분
 
         System.out.println("body: " + body);
 
@@ -91,20 +94,24 @@ public class FlaskProcessingController {
 
     @GetMapping("video-status")
     @ResponseBody
-    public Map<String, String> videoStatus() {
+    public Map<String, String> videoStatus(@RequestParam int articleId) {
+
+        Article article = articleService.getArticleById(articleId);
+        if (article.getBoardId() != 4) {
+            throw new ArticleProcessingException("동영상 처리 요청을 하지 않은 article입니다.");
+        }
+
         Map<String, String> status = new HashMap<>();
 
         try {
-            Map<String, Object> flaskResponse = checkProcessingStatus();
+            Map<String, Object> flaskResponse = checkProcessingStatus(articleId);
 
             // 상태와 진행률 처리
             status.put("status", (String) flaskResponse.get("status"));
             status.put("progress", String.valueOf(flaskResponse.get("progress")));
 
-            // 로그 기록
-            System.out.println("보내주는 status와 progress:" + status);
+            System.out.println("보내주는 status와 progress: " + status);
         } catch (Exception e) {
-            // 예외 발생 시 에러 상태 반환
             status.put("status", "error");
             status.put("progress", "0");
             System.err.println("Flask 상태 확인 중 오류 발생: " + e.getMessage());
@@ -112,146 +119,89 @@ public class FlaskProcessingController {
         return status;
     }
 
-    private Map<String, Object> checkProcessingStatus() {
-        String url = "http://localhost:5000/video/video-status"; // Flask 서버 상태 확인 API
+    private Map<String, Object> checkProcessingStatus(int articleId) {
+        String url = "http://localhost:5000/video-status?article_id=" + articleId;
 
         try {
             Map<String, Object> response = restTemplate.getForObject(url, Map.class);
             System.out.println("Flask에서 받은 상태: " + response);
-            return response; // 정상적으로 반환
+            return response;
         } catch (Exception e) {
             System.err.println("Flask 상태 요청 실패: " + e.getMessage());
-            throw e; // 상위 호출 메서드에서 처리
+            throw e;
         }
     }
 
-    @GetMapping("openCV/result")
-    public String resultPage(Model model) {
+    @PostMapping("/openCV/analysisCompleted")
+    @ResponseBody
+    public ResponseEntity<?> receiveProcessingStatus(@RequestBody Map<String, String> payload) {
+
+        System.out.println("receiveProcessingStatus 실행됨");
+
+        String articleId = payload.get("article_id");
+        String status = payload.get("status");
+
+        if (articleId == null || status == null) {
+            return ResponseEntity.badRequest().body("Invalid payload. Missing article_id or status.");
+        }
+
+        // 처리 상태 로그
+        System.out.println("Received status update from Flask:");
+        System.out.println("Article ID: " + articleId);
+        System.out.println("Status: " + status);
 
         try {
-            Map<String, Object> flaskStatus = restTemplate.getForObject("http://localhost:5000/video/video-status", Map.class);
-            if (!"completed".equals(flaskStatus.get("status"))) {
-                if("error".equals(flaskStatus.get("status"))) {
-                    model.addAttribute("errorMessage", "flask에서 동영상 처리에 실패하였습니다.");
-                    return "usr/openCV/error";
-                }
-                model.addAttribute("errorMessage", "동영상 처리가 완료되지 않았습니다.");
-                return "usr/openCV/processing";
-            }
-
-            // Flask 서버에서 동영상 다운로드
-            if (downloadProcessedVideo()) {
-                model.addAttribute("videoSrc", "/video/processed_video_h264.mp4");
-                System.out.println("동영상 다운로드 및 저장 성공.");
-                return "usr/openCV/result";  // 결과 페이지로 이동
-            } else {
-                model.addAttribute("errorMessage", "동영상 처리가 실패했습니다.");
-                System.out.println("동영상 다운로드 실패.");
-                return "usr/openCV/error";  // 에러 페이지로 이동
-            }
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", "예외 발생: " + e.getMessage());
-            System.err.println("동영상 다운로드 중 예외 발생: " + e.getMessage());
-            e.printStackTrace();
-            return "usr/openCV/error";  // 에러 페이지로 이동
-        }
-    }
-
-    private boolean downloadProcessedVideo() {
-        try {
-            // Flask 서버로 GET 요청 보내기
-            ResponseEntity<byte[]> response = restTemplate.getForEntity(FLASK_DOWNLOAD_URL, byte[].class);
-
-            // 응답 상태 확인
-            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                // 파일 저장
-                saveVideoToFile(response.getBody(), VIDEO_SAVE_PATH);
-                return true;
-            } else {
-                System.err.println("Flask 서버 응답 실패. 상태 코드: " + response.getStatusCode());
-                return false;
-            }
-        } catch (IOException e) {
-            System.err.println("Flask 서버로부터 동영상 다운로드 중 IOException 발생: " + e.getMessage());
-            return false; // IOException 발생 시 실패로 처리
-        } catch (Exception e) {
-            System.err.println("Flask 서버 요청 중 일반 예외 발생: " + e.getMessage());
-            throw new RuntimeException("Flask 서버 요청 중 예외 발생", e); // 런타임 예외로 감싸서 처리
-        }
-    }
-
-    private void saveVideoToFile(byte[] videoBytes, String path) throws IOException {
-        try (FileOutputStream fos = new FileOutputStream(path)) {
-            fos.write(videoBytes);
-            fos.flush();
-            System.out.println("동영상이 성공적으로 저장되었습니다: " + path);
-        }
-    }
-
-    @GetMapping("openCV/imgProcess")
-    public String imgProcess(Model model) {
-        try {
-            // Flask 서버에 이미지 처리 요청 전송
-            if (sendImageProcessRequest()) {
-                System.out.println("이미지 처리 요청 성공. Flask에서 결과를 확인 중...");
-
-                // Flask에서 처리 완료 후 이미지 다운로드
-                if (waitForImageProcessing()) {
-                    model.addAttribute("imageSrc", "/images/gray_image.jpg");
-                    System.out.println("이미지 다운로드 및 저장 성공.");
-                    return "usr/openCV/result";  // JSP 페이지 반환
+            // 해당 상태에 따라 추가 처리 수행
+            if ("completed".equals(status)) {
+                // 동영상과 요약 이미지 다운로드
+                boolean filesDownloaded = downloadProcessedFiles(articleId);
+                if (filesDownloaded) {
+                    return ResponseEntity.ok("Processing completed and files downloaded.");
                 } else {
-                    model.addAttribute("error", "이미지 처리에 실패했습니다.");
-                    System.err.println("이미지 처리 실패.");
-                    return "usr/openCV/error";  // 에러 페이지 경로
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body("Failed to download the processed files.");
                 }
-            } else {
-                model.addAttribute("error", "Flask 서버에 이미지 요청을 보낼 수 없습니다.");
-                System.err.println("Flask 이미지 요청 실패.");
-                return "usr/openCV/error";
+            } else if ("error".equals(status)) {
+                // 에러 상태 처리
+                System.err.println("Error during video processing for article " + articleId);
             }
+
+            return ResponseEntity.ok("Status updated successfully.");
         } catch (Exception e) {
-            model.addAttribute("error", "예외 발생: " + e.getMessage());
-            System.err.println("이미지 처리 중 예외 발생: " + e.getMessage());
-            e.printStackTrace();
-            return "usr/openCV/error";  // 에러 페이지 경로
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error.");
         }
     }
 
-    private boolean sendImageProcessRequest() {
-        FileSystemResource imageFile = new FileSystemResource("src/main/resources/static/images/test-icon.jpg");
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+    private boolean downloadProcessedFiles(String articleId) {
+        boolean videoDownloaded = downloadFileFromFlask(articleId, "video");
+        boolean summaryDownloaded = downloadFileFromFlask(articleId, "summary");
 
-        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("image", imageFile);
+        return videoDownloaded && summaryDownloaded;
+    }
 
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+    private boolean downloadFileFromFlask(String articleId, String fileType) {
+        String flaskUrl = "http://localhost:5000/video/download_video?article_id=" + articleId + "&file_type=" + fileType;
+        String savePath = "src/main/resources/static/" + fileType + "/processed_" + fileType + "_" + articleId + "." + (fileType.equals("video") ? "mp4" : "png");
 
         try {
-            ResponseEntity<String> response = restTemplate.postForEntity(FLASK_IMAGE_PROCESS_URL, requestEntity, String.class);
-            return response.getStatusCode() == HttpStatus.OK;
+            ResponseEntity<byte[]> response = restTemplate.getForEntity(flaskUrl, byte[].class);
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                saveFileToDisk(response.getBody(), savePath);
+                return true;
+            }
+            System.err.println("Failed to download " + fileType + " from Flask.");
+            return false;
         } catch (Exception e) {
-            System.err.println("Flask 서버에 이미지 처리 요청 중 오류 발생: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
 
-    private boolean waitForImageProcessing() throws InterruptedException, IOException {
-        Path imagePath = Paths.get(IMAGE_SAVE_PATH);
-        int maxRetries = 10;
-        int retries = 0;
-
-        // 주기적으로 파일 생성 여부 확인
-        while (retries < maxRetries) {
-            if (Files.exists(imagePath) && Files.size(imagePath) > 0) {
-                System.out.println("파일이 성공적으로 생성되었습니다. 파일 크기: " + Files.size(imagePath));
-                return true;
-            }
-            System.out.println("파일 생성 대기 중... 시도 " + retries);
-            Thread.sleep(500);  // 500ms 대기
-            retries++;
+    private void saveFileToDisk(byte[] fileBytes, String path) throws IOException {
+        try (FileOutputStream fos = new FileOutputStream(path)) {
+            fos.write(fileBytes);
+            fos.flush();
+            System.out.println("File saved successfully: " + path);
         }
-        return false;  // 파일이 생성되지 않음
     }
 }
