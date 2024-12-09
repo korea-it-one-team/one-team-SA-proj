@@ -1,8 +1,10 @@
 server:
   port: 8088
 
-  config:
-    import: classpath:/application-secret.yml  # application-secret.yml을 포함
+spring:
+  profiles:
+    active: prod
+    include: secret
 
   devtools:
     restart:
@@ -18,7 +20,7 @@ server:
     suffix: .html
 
   datasource:
-    url: jdbc:mysql://172.17.0.1:3306/one-team-SA-proj?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://172.17.0.1:3306/one-team-SA-proj
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
