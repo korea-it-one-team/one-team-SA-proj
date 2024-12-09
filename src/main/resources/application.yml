@@ -45,4 +45,4 @@ custom:
   videoFileDirPath: C:\work_oneteam\one-team-SA-proj\videos
 logging:
   level:
-    org.springframework.security: DEBUG
+    org.springframework.cloud.gcp: DEBUG

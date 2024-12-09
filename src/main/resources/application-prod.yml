@@ -22,7 +22,7 @@ spring:
     suffix: .html
 
   datasource:
-    url: jdbc:mysql://172.17.0.2:3306/one-team-SA-proj?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://172.17.0.4:3306/one-team-SA-proj?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
