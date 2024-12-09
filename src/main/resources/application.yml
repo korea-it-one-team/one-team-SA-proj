@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: prod
+    active: dev
     include: secret
 
   devtools:
@@ -18,6 +18,12 @@ spring:
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/one-team-SA-proj?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useSSL=false
+    username: root
+    password:
 
 web:
   resources:

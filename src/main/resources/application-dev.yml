@@ -1,0 +1,6 @@
+server:
+  port: 8088
+
+custom:
+  site:
+    name: "My Site Dev"
