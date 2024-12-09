@@ -40,6 +40,7 @@ COPY src/main/resources/templates /app/templates
 
 # 13. application.yml 파일 복사
 COPY src/main/resources/application.yml /app/application.yml
+COPY src/main/resources/application-prod.yml /app/application-prod.yml
 
 # 14. 포트 노출
 EXPOSE 8088
