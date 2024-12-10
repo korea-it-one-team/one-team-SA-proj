@@ -30,7 +30,7 @@ CREATE TABLE gifticons (
                            `name` VARCHAR(255) NOT NULL,
                            points INT NOT NULL,
                            image_url VARCHAR(255),
-                           stock INT NOT NULL DEFAULT 1,
+                           stock INT NOT NULL DEFAULT 0,
                            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -514,6 +514,13 @@ CREATE TABLE consultations (
 );
 
 DELIMITER $$
+CREATE TRIGGER set_default_answer
+    BEFORE INSERT ON consultations    FOR EACH ROW
+BEGIN    IF NEW.answer IS NULL OR NEW.answer = '' THEN
+        SET NEW.answer = '답변 대기중';END IF;
+END $$
+
+DELIMITER ;
 
 CREATE TRIGGER set_default_answer
     BEFORE INSERT ON consultations
@@ -525,7 +532,6 @@ END IF;
 END $$
 
 DELIMITER ;
-
 
 
 INSERT INTO support_Category(`category_name`) VALUES
