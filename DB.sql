@@ -56,7 +56,7 @@ CREATE TABLE `member`(
                          nickname CHAR(20) NOT NULL,
                          cellphoneNum CHAR(20) NOT NULL,
                          email CHAR(50) NOT NULL,
-                         points INT NOT NULL DEFAULT 0 COMMENT '기본값은 0',
+                         points INT NOT NULL DEFAULT 100 COMMENT '기본값은 100',
                          delStatus TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴 여부 (0=탈퇴 전, 1=탈퇴 후)',
                          delDate DATETIME COMMENT '탈퇴 날짜'
 );
@@ -66,7 +66,7 @@ CREATE TABLE exchange_history (
                                   id INT AUTO_INCREMENT PRIMARY KEY,
                                   member_id INT NOT NULL,
                                   gifticon_id INT NOT NULL,
-                                  points INT NOT NULL ,
+                                  points INT NOT NULL,
                                   exchange_status CHAR(100) NOT NULL,
                                   exchange_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -218,14 +218,20 @@ updateDate = NOW(),
 INSERT INTO board
 SET regDate = NOW(),
 updateDate = NOW(),
-`code` = 'FREE',
-`name` = '자유';
+`code` = 'ANALYSIS',
+`name` = '분석게시판';
 
 INSERT INTO board
 SET regDate = NOW(),
 updateDate = NOW(),
-`code` = 'QnA',
-`name` = '질의응답';
+`code` = 'FREE',
+`name` = '자유게시판';
+
+INSERT INTO board
+SET regDate = NOW(),
+updateDate = NOW(),
+`code` = 'REQUEST',
+`name` = '영상 분석 요청 게시판';
 
 ALTER TABLE article ADD COLUMN boardId INT(10) UNSIGNED NOT NULL AFTER `memberId`;
 
@@ -311,7 +317,7 @@ UPDATE article AS A
     SUM(IF(RP.point > 0,RP.point,0)) AS goodReactionPoint,
     SUM(IF(RP.point < 0,RP.point * -1,0)) AS badReactionPoint
     FROM reactionPoint AS RP
-    GROUP BY RP.relTypeCode,Rp.relId
+    GROUP BY RP.relTypeCode,RP.relId
     ) AS RP_SUM
 ON A.id = RP_SUM.relId
     SET A.goodReactionPoint = RP_SUM.goodReactionPoint,
@@ -515,11 +521,10 @@ CREATE TRIGGER set_default_answer
 BEGIN
     IF NEW.answer IS NULL OR NEW.answer = '' THEN
         SET NEW.answer = '답변 대기중';
-END IF;
+    END IF;
 END $$
 
 DELIMITER ;
-
 
 
 INSERT INTO support_Category(`category_name`) VALUES

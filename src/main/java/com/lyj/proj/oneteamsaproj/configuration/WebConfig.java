@@ -42,6 +42,7 @@ public class WebConfig implements WebMvcConfigurer {
         // CORS 허용 설정
         registry.addMapping("/**") // 모든 경로에 대해
                 .allowedOrigins("http://localhost:5000") // Flask 서버 허용
+                .allowedOrigins("https://www.kicknalysis.ygcqwe.site") // 배포 서버 허용
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP 메서드
                 .allowCredentials(true); // 인증 정보 허용 (필요 시)
     }
