@@ -158,16 +158,18 @@ public class MemberService {
     }
 
     // 회원이 직접 탈퇴처리
-    public void doDeleteMember(int memberId, int gracePeriodDays) {
+    public ResultData doDeleteMember(int memberId, int gracePeriodDays) {
         Member member = memberRepository.getMemberById(memberId);
         if (member == null || member.getDelStatus() == 1 || member.getDelStatus() == 2) {
             throw new IllegalStateException("존재하지 않거나 이미 삭제된 회원입니다.");
         }
         memberRepository.doDeleteMember(memberId, gracePeriodDays);
+
+        return ResultData.from("S-1", "회원탈퇴 처리가 완료되었습니다.");
     }
 
     // 회원이 탈퇴처리 취소
-    public void restoreMember(int memberId) {
+    public ResultData restoreMember(int memberId) {
         Member member = memberRepository.getMemberById(memberId);
         if (member == null || member.getDelStatus() != 1) {
             throw new IllegalStateException("존재하지 않거나 정지되지 않은 회원입니다.");
@@ -180,6 +182,8 @@ public class MemberService {
         if (affectedRows == 0) {
             throw new IllegalStateException("회원 복구에 실패했습니다.");
         }
+
+        return ResultData.from("S-1", "회원탈퇴 취소가 완료되었습니다.");
     }
 
     public int deleteExpiredMembers() {

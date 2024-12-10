@@ -273,7 +273,11 @@ public class UsrMemberController {
         int loginedMemberId = loginService.getLoginedMemberId();
 
         // 7일 유예 기간 설정
-        memberService.doDeleteMember(loginedMemberId, 7);
+        ResultData doDelRd = memberService.doDeleteMember(loginedMemberId, 7);
+
+        if(doDelRd.isSuccess()) {
+            memberService.updateMemberInfo(loginService.getLoginedMemberId());
+        }
 
         return "redirect:/usr/member/myPage";
     }
@@ -283,7 +287,11 @@ public class UsrMemberController {
     public String doRestore() {
         int loginedMemberId = loginService.getLoginedMemberId();
 
-        memberService.restoreMember(loginedMemberId);
+        ResultData doRestoreRd = memberService.restoreMember(loginedMemberId);
+
+        if(doRestoreRd.isSuccess()) {
+            memberService.updateMemberInfo(loginService.getLoginedMemberId());
+        }
 
         return "redirect:/usr/member/myPage";
     }

@@ -116,6 +116,7 @@
     <div class="login-card">
         <h1 class="login-title">LOGIN</h1>
         <form th:action="@{/usr/member/doLogin}" method="POST">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <input type="hidden" name="afterLoginUri" th:value="${param.afterLoginUri}" />
             <div>
                 <label for="loginId" class="block label-login">아이디</label>

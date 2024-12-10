@@ -235,6 +235,7 @@
         <h2 class="join-member-title">JOIN MEMBER</h2>
         <form th:action="@{/usr/member/doJoin}" method="POST" onsubmit="JoinForm__submit(this); return false;">
             <div class="form-group">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 <label class="label-join-member" for="loginId">아이디</label>
                 <div class="input-with-message">
                     <input
