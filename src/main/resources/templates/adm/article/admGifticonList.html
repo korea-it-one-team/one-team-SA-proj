@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <title>Admin Gifticon Management</title>
+    <!-- daisyUI -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/daisyui/4.12.10/full.css"/>
+    <!-- 테일윈드 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.1.4/tailwind.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="/resource/common.css"/>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');</style>
+
+    <!-- Csrf 토큰 -->
+    <meta name="_csrf" th:content="${csrfToken.token}"/>
+    <meta name="_csrf_header" th:content="${csrfToken.headerName}"/>
+
+    <script th:inline="javascript">
+        $.ajaxSetup({
+            beforeSend: function (xhr) {
+                const csrfToken = $('meta[name="_csrf"]').attr('content');
+                const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            }
+        });
+    </script>
+
+</head>
+<style>
+    /* 기존 스타일 그대로 유지 */
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .gifticon-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        max-width: 1270px;
+        margin: 0 auto;
+    }
+
+    .gifticon-item {
+        padding: 15px;
+        width: 300px;
+        text-align: center;
+        border-radius: 8px;
+        transition: transform 0.2s;
+    }
+
+    .gifticon-item:hover {
+        transform: scale(1.05);
+    }
+
+    img {
+        max-width: 100%;
+        border-radius: 4px;
+    }
+
+    .head-h1 {
+        margin: 10px;
+        font-size: 4rem;
+        font-weight: bold;
+    }
+</style>
+<body>
+<header th:replace="~{common/header-2 :: header-2}"></header>
+<div class="make-header-margin"></div>
+
+<div class="head-h1">Admin Gifticon Management</div>
+
+<div class="gifticon-list">
+    <!-- 반복문 변환 -->
+    <div th:each="gifticon : ${gifticons}" class="card card-compact bg-base-100 w-96 shadow-xl gifticon-item">
+        <figure>
+            <img th:src="${gifticon.image_url}" th:alt="${gifticon.name}"/>
+        </figure>
+        <div class="card-body">
+            <h2 class="card-title" th:text="${gifticon.name}"></h2>
+            <p class="text-left font-semibold text-xl">Stock: <span th:text="${gifticon.stock}"></span></p>
+            <div class="card-actions justify-end">
+                <button class="btn btn-primary" th:onclick="'openUploadModal(' + ${gifticon.id} + ')'">재고 추가</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 동적 페이징 -->
+<div class="pagination flex justify-center mt-3"
+     th:with="
+        paginationLen=3,
+        startPage=${page - paginationLen >= 1} ? ${page - paginationLen} : 1,
+        endPage=${page + paginationLen <= pagesCount} ? ${page + paginationLen} : ${pagesCount},
+        baseUri='?'">
+
+    <!-- 첫 페이지로 이동 -->
+    <div th:if="${startPage > 1}">
+        <a class="btn btn-sm" th:href="${baseUri} + 'page=1'">1</a>
+    </div>
+
+    <!-- 첫 페이지와 시작 페이지 사이의 생략 -->
+    <div th:if="${startPage > 2}">
+        <button class="btn btn-sm btn-disabled">...</button>
+    </div>
+
+    <!-- 현재 페이지와 주변 페이지 번호 -->
+    <div th:each="i : ${#numbers.sequence(startPage, endPage)}">
+        <a class="btn btn-sm"
+           th:classappend="${page == i} ? 'btn-active'"
+           th:href="${baseUri} + 'page=' + ${i}"
+           th:text="${i}"></a>
+    </div>
+
+    <!-- 마지막 페이지와 끝 페이지 사이의 생략 -->
+    <div th:if="${endPage < pagesCount - 1}">
+        <button class="btn btn-sm btn-disabled">...</button>
+    </div>
+
+    <!-- 마지막 페이지로 이동 -->
+    <div th:if="${endPage < pagesCount}">
+        <a class="btn btn-sm" th:href="${baseUri} + 'page=' + ${pagesCount}" th:text="${pagesCount}"></a>
+    </div>
+</div>
+
+
+<!-- 모달: 재고 추가 및 파일 업로드 -->
+<div id="uploadModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">재고 추가 및 이미지 업로드</h3>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <input type="hidden" id="gifticonId" name="gifticonId">
+            <div class="form-control">
+                <label class="label">이미지 파일</label>
+                <input type="file" name="imageFile" class="input input-bordered" accept="image/*" multiple required
+                       onchange="updateStockCount(this)">
+            </div>
+            <div class="form-control">
+                <label class="label">재고 수량</label>
+                <input type="number" name="stock" id="stockCount" class="input input-bordered" min="1" readonly>
+            </div>
+            <div class="modal-action">
+                <button type="submit" class="btn btn-primary">저장</button>
+                <button type="button" class="btn" onclick="closeUploadModal()">취소</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    let getGifticonId;
+
+    // 모달 열기
+    function openUploadModal(gifticonId) {
+        getGifticonId = gifticonId;
+        $('#gifticonId').val(gifticonId);
+        $('#uploadModal').addClass('modal-open');
+    }
+
+    // 모달 닫기
+    function closeUploadModal() {
+        $('#uploadModal').removeClass('modal-open');
+        $('#uploadForm')[0].reset();
+    }
+
+    // 폼 제출: 재고 및 파일 업로드
+    $('#uploadForm').submit(function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+
+        // 파일 수량 추가
+        formData.append('stockCount', $('#stockCount').val());
+
+        // CSRF 토큰 추가
+        const csrfToken = $('meta[name="_csrf"]').attr('content');
+        const csrfHeader = $('meta[name="_csrf_header"]').attr('content');
+
+        $.ajax({
+            url: '/adm/exchange/gifticon/' + getGifticonId + '/upload', // URL 확인
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                [csrfHeader]: csrfToken
+            },
+            success: function (response) {
+                alert(response.message);
+                location.reload();  // 페이지 새로고침
+            },
+            error: function (xhr) {
+                const errorMessage = xhr.responseJSON && xhr.responseJSON.message
+                    ? xhr.responseJSON.message
+                    : '업로드 중 오류가 발생했습니다.';
+                alert(errorMessage);
+            }
+        });
+    });
+
+    // 파일 선택 시 재고 수량 업데이트
+    function updateStockCount(input) {
+        const fileCount = input.files.length;
+        $('#stockCount').val(fileCount);
+    }
+</script>
+</body>
+</html>

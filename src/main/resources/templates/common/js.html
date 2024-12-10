@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<body>
+<script th:with="isHistoryBack=${historyBack == true}" th:inline="javascript">
+    let historyBack = [[${isHistoryBack}]];
+    let msg = [[${msg}]].trim();
+    if (msg) {
+        alert(msg);
+    }
+    if (historyBack) {
+        history.back();
+    }
+</script>
+</body>
+</html>

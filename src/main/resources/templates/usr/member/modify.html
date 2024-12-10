@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head th:replace="~{common/head :: head}">
+  <title>MEMBER MODIFY</title>
+</head>
+<style>
+  :root {
+    --primary-color: #cdf256;
+  }
+
+  .modify-member-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    position: relative;
+    width: calc(1440 * var(--rpx-vw)); /* 가로 기준 비율 */
+    min-height: calc(1024 * var(--rpx-vh)); /* 세로 기준 비율 */
+    margin: 0 auto;
+    padding: calc(60 * var(--rpx-vh)) 0;
+    overflow: hidden;
+    gap: calc(80 * var(--rpx-vw));
+  }
+
+  .modify-member-card {
+    background: #252525;
+    padding: calc(32 * var(--rpx-vw));
+    border-radius: calc(16 * var(--rpx-vw));
+    box-shadow: 0 calc(8 * var(--rpx-vw)) calc(16 * var(--rpx-vw)) rgba(0, 0, 0, 0.1); /* 기본 그림자 */
+    width: calc(600 * var(--rpx-vw)); /* 카드 크기 증가 */
+  }
+
+  .modify-member-title {
+    font-size: calc(32 * var(--rpx-vw));
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: calc(24 * var(--rpx-vw));
+    font-family: Audiowide;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: calc(16 * var(--rpx-vw));
+    margin-bottom: calc(16 * var(--rpx-vw));
+  }
+
+  .label-modify-member {
+    font-size: calc(14 * var(--rpx-vw));
+    color: #ffffff;
+    width: calc(150 * var(--rpx-vw)); /* 라벨 너비 고정 */
+    text-align: left; /* 라벨 왼쪽 정렬 */
+  }
+
+  .modify-member-static,
+  .modify-member-input {
+    width: calc(400 * var(--rpx-vw)); /* 입력 필드 크기 */
+    padding: calc(6 * var(--rpx-vw)) calc(12 * var(--rpx-vw)) calc(4 * var(--rpx-vw)) calc(12 * var(--rpx-vw));
+    border: 1px solid #ddd;
+    border-radius: calc(8 * var(--rpx-vw));
+    font-size: calc(14 * var(--rpx-vw));
+    color: #ffffff;
+    background: #333333;
+  }
+
+  .modify-member-static {
+    background: #cdf256; /* 고정된 값의 배경색 */
+    color: #1e1e1e;
+  }
+
+  .modify-member-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 calc(4 * var(--rpx-vw)) rgba(205, 242, 86, 0.3);
+  }
+
+  .modify-member-button {
+    width: 100%;
+    background: var(--primary-color);
+    color: #1e1e1e;
+    padding: calc(12 * var(--rpx-vw));
+    font-size: calc(16 * var(--rpx-vw));
+    border: none;
+    border-radius: calc(8 * var(--rpx-vw));
+    margin-top: calc(16 * var(--rpx-vw));
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .modify-member-button:hover {
+    background: #b0e040;
+  }
+
+  .modify-member-back {
+    margin-top: calc(20 * var(--rpx-vw));
+    text-align: center;
+  }
+
+  .back-button {
+    font-size: calc(16 * var(--rpx-vw));
+    color: var(--primary-color);
+    cursor: pointer;
+  }
+
+  .back-button:hover {
+    text-decoration: underline;
+  }
+</style>
+<body>
+
+<script th:inline="javascript">
+  function MemberModify__submit(form) {
+    const loginPwValue = form.loginPw.value.trim();
+    const loginPwConfirmValue = form.loginPwConfirm.value.trim();
+
+    if (loginPwValue.length === 0 && loginPwConfirmValue.length > 0) {
+      alert('비밀번호를 입력 후 비밀번호 확인을 입력해주세요.');
+      return;
+    }
+    if (loginPwValue.length > 0) {
+      if (loginPwConfirmValue.length === 0) {
+        alert('비밀번호 확인을 입력해주세요.');
+        return;
+      }
+      if (loginPwValue !== loginPwConfirmValue) {
+        alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+        return;
+      }
+    }
+    form.submit();
+  }
+</script>
+<header th:replace="~{common/header-2 :: header-2}"></header>
+<div class="make-header-margin"></div>
+<section class="modify-member-section">
+  <div class="modify-member-card">
+    <h2 class="modify-member-title">MODIFY MEMBER INFO</h2>
+    <form onsubmit="MemberModify__submit(this); return false;" th:action="@{/usr/member/doModify}" method="POST">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+      <div class="form-group">
+        <label class="label-modify-member">가입일</label>
+        <div class="modify-member-static" th:text="${loginedMember.regDate}"></div>
+      </div>
+      <div class="form-group">
+        <label class="label-modify-member">아이디</label>
+        <div class="modify-member-static" th:text="${loginedMember.loginId}"></div>
+      </div>
+      <div class="form-group">
+        <label class="label-modify-member" for="loginPw">새 비밀번호</label>
+        <input id="loginPw" class="modify-member-input" name="loginPw" autocomplete="off" type="password" placeholder="새 비밀번호를 입력해" />
+      </div>
+      <div class="form-group">
+        <label class="label-modify-member" for="loginPwConfirm">새 비밀번호 확인</label>
+        <input id="loginPwConfirm" class="modify-member-input" name="loginPwConfirm" autocomplete="off" type="password" placeholder="새 비밀번호 확인을 입력해" />
+      </div>
+      <div class="form-group">
+        <label class="label-modify-member" for="name">이름</label>
+        <input id="name" class="modify-member-input" name="name" autocomplete="off" type="text" placeholder="이름을 입력해" th:value="${loginedMember.name}" />
+      </div>
+      <div class="form-group">
+        <label class="label-modify-member" for="nickname">닉네임</label>
+        <input id="nickname" class="modify-member-input" name="nickname" autocomplete="off" type="text" placeholder="닉네임을 입력해" th:value="${loginedMember.nickname}" />
+      </div>
+      <div class="form-group">
+        <label class="label-modify-member" for="email">이메일</label>
+        <input id="email" class="modify-member-input" name="email" autocomplete="off" type="email" placeholder="이메일을 입력해" th:value="${loginedMember.email}" />
+      </div>
+      <div class="form-group">
+        <label class="label-modify-member" for="cellphoneNum">전화번호</label>
+        <input id="cellphoneNum" class="modify-member-input" name="cellphoneNum" autocomplete="off" type="tel" placeholder="전화번호를 입력해" th:value="${loginedMember.cellphoneNum}" />
+      </div>
+      <button class="modify-member-button" type="submit">수정</button>
+    </form>
+    <div class="modify-member-back">
+      <button class="back-button" type="button" onclick="window.location.href='/usr/member/myPage'">뒤로가기</button>
+    </div>
+  </div>
+</section>
+<footer th:replace="~{common/footer :: footer}"></footer>
+</body>
+</html>
