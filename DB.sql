@@ -218,14 +218,20 @@ updateDate = NOW(),
 INSERT INTO board
 SET regDate = NOW(),
 updateDate = NOW(),
-`code` = 'FREE',
-`name` = '자유';
+`code` = 'ANALYSIS',
+`name` = '분석게시판';
 
 INSERT INTO board
 SET regDate = NOW(),
 updateDate = NOW(),
-`code` = 'QnA',
-`name` = '질의응답';
+`code` = 'FREE',
+`name` = '자유게시판';
+
+INSERT INTO board
+SET regDate = NOW(),
+updateDate = NOW(),
+`code` = 'REQUEST',
+`name` = '영상 분석 요청 게시판';
 
 ALTER TABLE article ADD COLUMN boardId INT(10) UNSIGNED NOT NULL AFTER `memberId`;
 
