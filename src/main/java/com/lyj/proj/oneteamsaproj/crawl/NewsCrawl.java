@@ -14,12 +14,20 @@ public class NewsCrawl {
     public List<News> crawl() {
         List<News> newsList = new ArrayList<>(); // 뉴스 정보를 저장할 리스트
 
-        System.setProperty("webdriver.chrome.driver", "C:/work_oneteam/one-team-SA-proj/chromedriver-win64/chromedriver.exe");
+        // 운영 체제에 따른 Chromedriver 경로 설정
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("win")) {
+            System.setProperty("webdriver.chrome.driver", "C:/work_oneteam/one-team-SA-proj/chromedriver-win64/chromedriver.exe");
+        } else {
+            // AWS 배포용(리눅스용 크롬드라이버 설치 후 경로 봐야해서 그때 수정해야함)
+            System.setProperty("webdriver.chrome.driver", "/usr/local/bin/chromedriver-linux64/chromedriver");
+        }
 
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless"); // 필요 시 주석 해제
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--disable-gpu"); // 추가한 옵션
 
         WebDriver driver = new ChromeDriver(options);
 

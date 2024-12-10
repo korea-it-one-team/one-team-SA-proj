@@ -1,7 +1,0 @@
-# data.yaml 예제
-path: C:/work_oneteam/one-team-SA-proj/SoccerNet/tracking/train  # 데이터셋 기본 경로
-train: images/train  # 학습 이미지 폴더 경로
-val: images/val      # 검증 이미지 폴더 경로
-
-nc: 10  # 클래스 개수 (예: 10개의 클래스가 있는 경우)
-names: ['class1', 'class2', ..., 'class10']  # 각 클래스 이름

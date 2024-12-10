@@ -1,9 +1,9 @@
 package com.lyj.proj.oneteamsaproj;
 
+import com.google.auth.oauth2.GoogleCredentials;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.io.IOException;
@@ -15,8 +15,8 @@ import java.net.URL;
 @SpringBootApplication
 @MapperScan("com.lyj.proj.oneteamsaproj.repository")
 public class OneTeamSaProjApplication {
-
     public static void main(String[] args) {
+
         SpringApplication.run(OneTeamSaProjApplication.class, args);
     }
 }

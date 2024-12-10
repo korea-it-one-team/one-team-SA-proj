@@ -1,52 +1,38 @@
 server:
   port: 8088
-  servlet:
-    session:
-      persistent: false
+
 spring:
-  security:
-    user:
-      name:
-      password:
-  cloud:
-    gcp:
-      storage:
-        credentials:
-          location: classpath:${CLASSPATH}
-        project-id: ${PROJECT_ID}
-        bucket: ${BUCKET_KEY}
+  profiles:
+    active: dev
+    include: secret
+
   devtools:
     restart:
       enabled: false
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: gasi758@gmail.com
-    password: ${EMAIL_KEY}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
+
   servlet:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
+
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/one-team-SA-proj?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useSSL=false
     username: root
     password:
+
 web:
   resources:
     static-locations: classpath:/static/
+
 mybatis:
   mapper-locations: classpath*:mapper/**/*.xml
   type-aliases-package: com.lyj.proj.oneteamsaproj.vo
+
 custom:
   type-aliases-package: com.lyj.proj.oneteamsaproj.vo
   siteName: kicknalisys
@@ -57,4 +43,4 @@ custom:
   videoFileDirPath: C:\work_oneteam\one-team-SA-proj\videos
 logging:
   level:
-    org.springframework.security: DEBUG
+    logging.level.org.springframework.security: DEBUG

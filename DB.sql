@@ -30,7 +30,7 @@ CREATE TABLE gifticons (
                            `name` VARCHAR(255) NOT NULL,
                            points INT NOT NULL,
                            image_url VARCHAR(255),
-                           stock INT NOT NULL,
+                           stock INT NOT NULL DEFAULT 1,
                            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -66,7 +66,7 @@ CREATE TABLE exchange_history (
                                   id INT AUTO_INCREMENT PRIMARY KEY,
                                   member_id INT NOT NULL,
                                   gifticon_id INT NOT NULL,
-                                  points INT NOT NULL,
+                                  points INT NOT NULL ,
                                   exchange_status CHAR(100) NOT NULL,
                                   exchange_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -131,6 +131,7 @@ INSERT INTO gifticons (`name`, points, image_url) VALUES
                                                       ('세븐일레븐 3만원 모바일상품권', 33000,'https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240912154104_1a61f09e37124547a3ff340a8df7c3ee.jpg'),
                                                       ('세븐일레븐 5만원 모바일상품권', 55000,'https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20240912153604_f76082cc041142628e89c389ebd20cd4.jpg');
 
+## 기프티콘 히스토리 테스트 데이터 생성
 INSERT INTO exchange_history
 SET member_id = 2,
 gifticon_id = 3,
@@ -306,7 +307,7 @@ ALTER TABLE article ADD COLUMN badReactionPoint INT(10) UNSIGNED NOT NULL DEFAUL
 # update join -> 기존 게시글의 good bad RP 값을 RP 테이블에서 추출해서 article table에 채운다
 UPDATE article AS A
     INNER JOIN (
-    SELECT RP.relTypeCode, Rp.relId,
+    SELECT RP.relTypeCode, RP.relId,
     SUM(IF(RP.point > 0,RP.point,0)) AS goodReactionPoint,
     SUM(IF(RP.point < 0,RP.point * -1,0)) AS badReactionPoint
     FROM reactionPoint AS RP
@@ -501,10 +502,24 @@ CREATE TABLE consultations (
                                title VARCHAR(255) NOT NULL,
                                content TEXT NOT NULL,
                                `status` CHAR(150) DEFAULT '대기중',
-                               answer TEXT DEFAULT '답변 대기중',
-                               created_at DATETIME DEFAULT NOW(),
-                               updated_at DATETIME DEFAULT NOW()
+                               answer TEXT DEFAULT NULL,
+                               created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                               updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+DELIMITER $$
+
+CREATE TRIGGER set_default_answer
+    BEFORE INSERT ON consultations
+    FOR EACH ROW
+BEGIN
+    IF NEW.answer IS NULL OR NEW.answer = '' THEN
+        SET NEW.answer = '답변 대기중';
+END IF;
+END $$
+
+DELIMITER ;
+
 
 
 INSERT INTO support_Category(`category_name`) VALUES
@@ -555,9 +570,9 @@ UPDATE `member`
 SET points = 100;
 
 # 승무패 예측결과에 따라 points가 올라가는지 테스트 하기 위해 승무패 테이블을 삭제했다 다시 만들어야한다.
-DROP TABLE winDrawLose;
+-- DROP TABLE winDrawLose;
 
-DROP TABLE gameSchedule;
+-- DROP TABLE gameSchedule;
 
 SELECT * FROM `member`;
 

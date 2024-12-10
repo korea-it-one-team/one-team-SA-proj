@@ -41,3 +41,8 @@ src/main/resources/static/video/*.mp4
 /SoccerNet/
 /TSN_preprocessed/
 
+### secret.yml (환경변수 설정) ###
+application-secret.yml
+
+
+
