@@ -259,6 +259,7 @@ selectElement.style.color = "#aaaaaa";
                     <option value="1" th:if="${loginedMember.isAdmin()}" th:selected="${article.boardId == 1}">NOTICE</option>
                     <option value="2" th:selected="${article.boardId == 2}">ANALYSIS</option>
                     <option value="3" th:selected="${article.boardId == 3}">FREE</option>
+                    <option value="4" th:selected="${article.boardId == 4}">REQUEST</option>
                 </select>
             </div>
             <div class="write-form-line">
@@ -268,12 +269,15 @@ selectElement.style.color = "#aaaaaa";
             </div>
             <div class="write-form-line">
                 <label class="write-form-label">동영상 첨부</label>
-                <div class="custom-file-wrapper">
+                <div class="custom-file-wrapper" th:unless="${article.boardId == 4}">
                     <label for="fileInput" class="custom-file-button">파일 선택</label>
                     <span id="fileName" class="custom-file-name"
                           th:text="${file != null ? file.originFileName : '선택된 파일 없음'}">선택된 파일 없음
                     </span>
                     <input id="fileInput" type="file" name="file" class="hidden" onchange="updateFileName(this)" accept="video/*">
+                </div>
+                <div class="custom-file-name" th:if="${article.boardId == 4}">
+                    request 게시판에서는 동영상 수정이 불가능합니다.
                 </div>
             </div>
             <div class="write-editor-container">

@@ -123,8 +123,6 @@ public class UsrArticleController {
     @RequestMapping("/usr/article/modify")
     public String showModify(HttpServletRequest req, Model model, int id) {
 
-        RqUtil rq = (RqUtil) req.getAttribute("rq");
-
         Article article = articleService.getForPrintArticle(loginService.getLoginedMemberId(), id);
 
         if (article == null) {
@@ -311,8 +309,6 @@ public class UsrArticleController {
                 }
             }
         }
-
-        System.out.println("genFileSaveRs : " + genFileSaveRs.toString());
 
         // REQUEST 처리
         if ("true".equals(request)) {
