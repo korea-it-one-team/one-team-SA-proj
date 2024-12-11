@@ -7,3 +7,12 @@ spring:
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+custom:
+  type-aliases-package: com.lyj.proj.oneteamsaproj.vo
+  siteName: kicknalisys
+  siteMainUri: https://www.kicknalysis.ygcqwe.site
+  emailFrom: no-reply@localhost
+  emailFromName: kicknalisys
+  genFileDirPath: /app/files/images
+  videoFileDirPath: /app/files/videos

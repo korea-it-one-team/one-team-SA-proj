@@ -40,7 +40,7 @@ custom:
   type-aliases-package: com.lyj.proj.oneteamsaproj.vo
   siteName: kicknalisys
   siteMainUri: http://localhost:8088
-  emailFrom: no-reply@localhost
+  emailFrom: Kicknalisys Support Team
   emailFromName: kicknalisys
   genFileDirPath: C:\work_oneteam\one-team-SA-proj\images
   videoFileDirPath: C:\work_oneteam\one-team-SA-proj\videos
