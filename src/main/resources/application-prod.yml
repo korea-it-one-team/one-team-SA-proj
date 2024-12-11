@@ -14,5 +14,6 @@ custom:
   siteMainUri: https://www.kicknalysis.ygcqwe.site
   emailFrom: no-reply@localhost
   emailFromName: kicknalisys
+  uploadDir: /app/files/uploads  # 이미지 업로드 디렉토리 경로 (업로드된 이미지를 저장하는 곳)
   genFileDirPath: /app/files/images
   videoFileDirPath: /app/files/videos
