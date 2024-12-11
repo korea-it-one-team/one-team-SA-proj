@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 public class ImageService {
 
     private final ArticleRepository articleRepository;
-    @Value("C:\\work_oneteam\\one-team-SA-proj\\src\\main\\resources\\static\\images") // application.yml에서 지정한 경로를 주입
+    @Value("${custom.uploadDir}") // application.yml에서 지정한 경로를 주입
     private String uploadDir; // 이미지 업로드 디렉토리 경로
 
     public ImageService(ArticleRepository articleRepository) {
