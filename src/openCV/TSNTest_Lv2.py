@@ -61,6 +61,9 @@ def load_model(model_path, device):
 
     checkpoint = torch.load(model_path)
     model.load_state_dict(checkpoint)  # 모델 파라미터 로드
+    # checkpoint = torch.load(model_path)
+    # model.load_state_dict(checkpoint['state_dict'])
+
     model.to(device)
     model.eval()  # 평가 모드로 전환
     return model
@@ -172,7 +175,7 @@ if __name__ == "__main__":
                 temporal_pool=args.temporal_pool,
                 non_local=args.non_local)
 
-    video_path = "C:/work_oneteam/one-team-SA-proj/videos/article/1.mp4"
+    video_path = "C:/work_oneteam/one-team-SA-proj/videos/article/1.mp4" #비디오 파일명 및 확장자 변수로 Spring Server에서 가져올 수 있게 수정 예정
     model_path = "C:/work_oneteam/one-team-SA-proj/TSM_model/model_epoch_29.pth"
     classes_path = "C:/work_oneteam/one-team-SA-proj/TSM_model/classes.txt"
     output_folder = "C:/work_oneteam/one-team-SA-proj/videos/article/frames"
