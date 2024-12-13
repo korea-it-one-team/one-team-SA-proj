@@ -1,31 +1,17 @@
 names:
-- player team left
-- player team left
-- player team right
-- player team right
-- player team right
-- player team right
-- player team right
-- player team right
-- player team right
-- player team right
-- player team left
-- player team left
-- player team left
-- referee
-- player team left
-- player team left
-- referee
-- ball
-- player team left
-- player team left
-- player team left
-- goalkeepers team left
-- player team right
-- player team right
-- goalkeeper team right
-- referee
-nc: 26
+- DRIVE
+- HIGH PASS
+- HEADER
+- PASS
+- CROSS
+- SHOT
+- BALL PLAYER BLOCK
+- OUT
+- THROW IN
+- PLAYER SUCCESSFUL TACKLE
+- FREE KICK
+- GOAL
+nc: 12
 path: C:/work_oneteam/one-team-SA-proj/SoccerNet/tracking
 train: train_images
 val: val_images

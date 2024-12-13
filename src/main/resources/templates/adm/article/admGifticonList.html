@@ -22,7 +22,7 @@
             flex-wrap: wrap;
             justify-content: center;
             gap: 20px;
-            max-width: 1270px;
+            max-width: 1300px;
             margin: 0 auto;
         }
         .gifticon-item {
@@ -45,6 +45,9 @@
             font-size: 4rem;
             font-weight: bold;
         }
+        h2{
+            width: 110%;
+        }
     </style>
 </head>
 <body>
@@ -59,7 +62,7 @@
 
 <div class="gifticon-list">
     <!-- 반복문 변환 -->
-    <div th:each="gifticon : ${gifticons}" class="card card-compact bg-base-100 w-96 shadow-xl gifticon-item">
+    <div th:each="gifticon : ${gifticons}" class="card card-compact bg-base-100 w-110 shadow-xl gifticon-item">
         <figure>
             <img th:src="${gifticon.image_url}" th:alt="${gifticon.name}" />
         </figure>

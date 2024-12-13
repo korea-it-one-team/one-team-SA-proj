@@ -71,16 +71,17 @@ def train_tsn():
     train_list_path = request.form.get("train_list", "C:/work_oneteam/one-team-SA-proj/TSN_preprocessed/train_list.txt")
     classes_file = request.form.get("classes_file", "C:/work_oneteam/one-team-SA-proj/TSN_preprocessed/classes.txt")
     num_epochs = int(request.form.get("num_epochs", 10))
-    batch_size = int(request.form.get("batch_size", 8))
+    batch_size = int(request.form.get("batch_size", 16))
     learning_rate = float(request.form.get("learning_rate", 0.001))
     model_save_path = request.form.get("model_save_path", "tsn_model.pth")
 
     # 데이터셋 준비
     transform = transforms.Compose([
-        transforms.Resize((128, 128)),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        transforms.Resize((224, 224)),  # 이미지 크기 조정
+        transforms.ToTensor(),  # Tensor로 변환
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  # 정규화
     ])
+
     train_dataset = TSNDataset(train_list_path, classes_file, transform=transform)
 
     # 라벨 값 확인
@@ -152,7 +153,7 @@ def train_tsn():
 
 
     # 모델 저장
-    torch.save(model.state_dict(), model_save_path)
+    torch.save(model, model_save_path)
     print(f"Model training complete and saved to {model_save_path}")
 
     return jsonify({"message": "Model training complete", "model_path": model_save_path})
