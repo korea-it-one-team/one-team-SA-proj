@@ -267,8 +267,8 @@ if __name__ == "__main__":
         data_length = 5
 
     video_path = "C:/work_oneteam/one-team-SA-proj/videos/article/2024_11/1_720p.mp4"
-    model_path = "C:/work_oneteam/학습데이터최종/상황데이터/ckpt.best.pth.tar"
-    classes_path = "C:/work_oneteam/학습데이터최종/상황데이터/classes.txt"
+    model_path = "C:/work_oneteam/one-team-SA-proj/TSM_model/model_epoch_29.pth"
+    classes_path = "C:/work_oneteam/one-team-SA-proj/TSM_model/classes.txt"
     output_folder = "C:/work_oneteam/one-team-SA-proj/videos/article/frames"
     predictions_file = "C:/work_oneteam/one-team-SA-proj/videos/article/predictions.json"
     frame_rate = 1
