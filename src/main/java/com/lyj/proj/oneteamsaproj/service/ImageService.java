@@ -84,7 +84,7 @@ public class ImageService {
         }
 
         // article/boardId 디렉토리 생성
-        Path directoryPath = Paths.get(uploadDir, "article", String.valueOf(boardId),String.valueOf(articleId));
+        Path directoryPath = Paths.get(uploadDir, "article", String.valueOf(boardId), String.valueOf(articleId));
         if (!Files.exists(directoryPath)) {
             Files.createDirectories(directoryPath);
         }
